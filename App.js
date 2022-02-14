@@ -1,33 +1,30 @@
-import { StatusBar } from "expo-status-bar";
+// import { StatusBar } from "expo-status-bar";
 import { Button, StyleSheet, Text, View } from "react-native";
-// import * as Firebase from "firebase";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import HomeScreen from "./screens/HomeScreen";
-import LoginScreen from "./screens/LoginScreen";
+import { HomeScreen } from "./screens";
+import { LoginScreen } from "./screens";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+
+import { NavigationRouter } from "./navigation/NavigationRouter";
+// import { AuthenticatedUserProvider } from "./contexts";
+import { AuthenticatedUserProvider } from "./contexts";
 
 const Stack = createNativeStackNavigator();
 
-// function HomeScreen({ navigation }) {
-//   return (
-//     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-//       <Text>Home Screen</Text>
-//       <Button
-//         title="Go to Details"
-//         onPress={() => navigation.navigate("Login")}
-//       />
-//     </View>
-//   );
-// }
-
 function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="">
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Login" component={LoginScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    // <NavigationContainer>
+    //   <Stack.Navigator initialRouteName="Login">
+    //     <Stack.Screen name="Home" component={HomeScreen} />
+    //     <Stack.Screen name="Login" component={LoginScreen} />
+    //   </Stack.Navigator>
+    // </NavigationContainer>
+    <AuthenticatedUserProvider>
+      <SafeAreaProvider>
+        <NavigationRouter />
+      </SafeAreaProvider>
+    </AuthenticatedUserProvider>
   );
 }
 

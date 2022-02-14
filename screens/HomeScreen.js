@@ -7,7 +7,7 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 
-function HomeScreen({ navigation }) {
+export function HomeScreen({ navigation }) {
   const [userSignIn, setUserSignIn] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
@@ -78,10 +78,10 @@ function HomeScreen({ navigation }) {
         value={password}
         onChangeText={(text) => setPassword(text)}
       />
-      {/* <Button
+      <Button
         title="Go to Login"
         onPress={() => navigation.navigate("Login")}
-      /> */}
+      />
       <Button title="Sign In" onPress={signInUser} />
       <Button title="Sign Out" onPress={signOutUser} />
       <Button title="Register" onPress={RegisterUser} />
@@ -89,4 +89,4 @@ function HomeScreen({ navigation }) {
   );
 }
 
-export default HomeScreen;
+// export default HomeScreen;

@@ -1,18 +1,13 @@
 import React from "react";
 import { KeyboardAvoidingView, Button, View, Text } from "react-native";
 
-const LoginScreen = ({ navigation }) => {
+export const LoginScreen = ({ navigation }) => {
   return (
-    <KeyboardAvoidingView>
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <Text>Login Screen!</Text>
-        <Button
-          title="Go back to homescreen "
-          onPress={() => navigation.navigate("Home")}
-        />
-      </View>
-    </KeyboardAvoidingView>
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <Text>Login Screen!</Text>
+      <Button title="SignUp" onPress={() => navigation.navigate("SignUp")} />
+    </View>
   );
 };
 
-export default LoginScreen;
+// export default LoginScreen;
