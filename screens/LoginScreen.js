@@ -1,20 +1,20 @@
 import React, { useState } from "react";
 import {
-  KeyboardAvoidingView,
-  Button,
   View,
   Text,
   TextInput,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  Keyboard,
+  Pressable,
 } from "react-native";
 import { auth } from "../config/firebase.js";
-import {
-  signOut,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import Logo from "../components/Logo/Logo";
+import { Images } from "../config/images";
 
 export const LoginScreen = ({ navigation }) => {
-  const [userSignIn, setUserSignIn] = useState();
+  // const [userSignIn, setUserSignIn] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
 
@@ -37,24 +37,71 @@ export const LoginScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Login Screen!</Text>
-      <TextInput
-        placeholder="email"
-        value={email}
-        autoCapitalize="none"
-        onChangeText={(text) => setEmail(text)}
-      />
-      <TextInput
-        placeholder="password"
-        value={password}
-        autoCapitalize="none"
-        onChangeText={(text) => setPassword(text)}
-      />
-      <Button title="Sign In" onPress={signInUser} />
-      <Button title="SignUp" onPress={() => navigation.navigate("SignUp")} />
-    </View>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <View style={styles.container}>
+        <View style={styles.logoContainer}>
+          <Logo uri={Images.logo} />
+          <Text style={styles.title}>The Scene</Text>
+        </View>
+
+        <TextInput
+          placeholder="email"
+          value={email}
+          autoCapitalize="none"
+          onChangeText={(text) => setEmail(text)}
+          style={styles.input}
+        />
+        <TextInput
+          placeholder="password"
+          value={password}
+          autoCapitalize="none"
+          onChangeText={(text) => setPassword(text)}
+          style={styles.input}
+        />
+        <Pressable style={styles.button} title="Sign In" onPress={signInUser}>
+          <Text style={styles.buttonText}>Sign In</Text>
+        </Pressable>
+        <Pressable
+          style={styles.button}
+          title="Sign Up"
+          onPress={() => navigation.navigate("SignUp")}
+        >
+          <Text style={styles.buttonText}>Sign Up</Text>
+        </Pressable>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  logoContainer: { width: "100%", height: "30%", alignItems: "center" },
+  title: {
+    fontSize: 40,
+    fontWeight: "700",
+    color: "black",
+  },
+  button: {
+    width: "70%",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 24,
+    backgroundColor: "blue",
+    padding: 10,
+    borderRadius: 8,
+  },
+  buttonText: { color: "white", fontSize: 18 },
+  input: {
+    width: "70%",
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
+  },
+});
 
 // export default LoginScreen;
