@@ -43,16 +43,19 @@ export default function CategoryList2({ title }) {
     getData();
   }, []);
 
+  const captailTitle = title.charAt(0).toUpperCase() + title.slice(1);
+
   return (
     <View>
-      <Text style={styles.sectionHeader}>{title}</Text>
+      <Text style={styles.sectionHeader}>{captailTitle}</Text>
       <FlatList
         horizontal
         data={feed}
         // keyExtractor={(item) => item.title}
         renderItem={({ item }) => (
           <TouchableOpacity
-            onPress={() => navigation.navigate("TestScreen", item.id)}
+            onPress={() => navigation.navigate("TestScreen2", item.id)}
+            // onPress={() => navigation.navigate("ProfileScreen")}
           >
             <ListItem item={item} />
           </TouchableOpacity>
@@ -73,7 +76,9 @@ const ListItem = ({ item }) => {
         style={styles.itemPhoto}
         resizeMode="cover"
       />
+      {/* <>{console.log(item)}</> */}
       <Text style={styles.itemText}>{item.title}</Text>
+      {/* <Text style={styles.itemText}>{item.id}</Text> */}
     </View>
   );
 };

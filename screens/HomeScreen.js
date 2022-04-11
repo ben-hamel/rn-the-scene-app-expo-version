@@ -21,6 +21,7 @@ import {
   getDocs,
   onSnapshot,
 } from "firebase/firestore";
+import Header from "../components/home/Header/Header.js";
 
 export function HomeScreen({ navigation }) {
   //!!!! DONT DELETE !!!!!!
@@ -50,17 +51,18 @@ export function HomeScreen({ navigation }) {
     const getData = async () => {
       let arr_Feed = [];
       const q = query(
-        collection(db, "audio")
+        collection(db, "categories")
         // where("title", "==", "test")
       );
       const querySnapshot = await getDocs(q);
+
       const data = querySnapshot.docs.map((doc) =>
         arr_Feed.push({
           ...doc.data(),
           id: doc.id,
         })
       );
-      setFeed(arr_Feed);
+      setFeed(data);
       // console.log(data);
     };
 
@@ -87,19 +89,15 @@ export function HomeScreen({ navigation }) {
   const audioCategory = Categories[0];
   const visualCategory = Categories[1];
 
-  // const entries = Object.entries(feed);
-  let x = 0;
   return (
     <View>
+      <Header />
       <ScrollView>
-        <CategoryList title={audioCategory.title} categories={audioCategory} />
-        <CategoryList
-          title={visualCategory.title}
-          categories={visualCategory}
-        />
+        <CategoryList2 title="audio" />
+        <CategoryList2 title="visual" />
       </ScrollView>
-      <Button onPress={() => console.log(feed[0])} title="Feed" />
-      <Button onPress={signOutUser} title="Sign Out" />
+      {/* <Button onPress={signOutUser} title="Sign Out" /> */}
+      <Text>HomeScreen</Text>
     </View>
   );
 }

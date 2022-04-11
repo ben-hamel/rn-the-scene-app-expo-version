@@ -12,7 +12,7 @@ import {
 import { auth } from "../config/firebase.js";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { db } from "../config/firebase";
-import { collection, addDoc, Timestamp } from "firebase/firestore";
+import { collection, addDoc, Timestamp, setDoc, doc } from "firebase/firestore";
 import Logo from "../components/Logo/Logo";
 import { Images } from "../config/images";
 
@@ -35,12 +35,28 @@ export const SignUpScreen = ({ navigation }) => {
         email,
         password
       );
-      const docRef = await addDoc(collection(db, "users"), {
+
+      // const docRef = await addDoc(collection(db, "users"), {
+      //   owner_uid: authUser.user.uid,
+      //   username: username,
+      //   email: authUser.user.email,
+      //   profile_picture: await getRandomPic(),
+      // });
+      const docRef = await setDoc(doc(db, "users", authUser.user.email), {
         owner_uid: authUser.user.uid,
         username: username,
         email: authUser.user.email,
         profile_picture: await getRandomPic(),
       });
+      // const docRef = await setDoc(
+      //   collection(db, "users", authUser.user.email),
+      //   {
+      //     owner_uid: authUser.user.uid,
+      //     username: username,
+      //     email: authUser.user.email,
+      //     profile_picture: await getRandomPic(),
+      //   }
+      // );
       console.log("Document written with ID: ", docRef.id);
     } catch (e) {
       console.error("Error adding document: ", e);
