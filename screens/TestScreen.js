@@ -11,6 +11,7 @@ import React, { useState, useEffect } from "react";
 import { db } from "../config/firebase";
 import { collection, query, where, getDocs } from "firebase/firestore";
 // console.log(navigation);
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function TestScreen({ route, navigation }) {
   const [users, setUsers] = useState([]);

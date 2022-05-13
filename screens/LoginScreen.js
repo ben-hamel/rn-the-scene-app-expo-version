@@ -12,6 +12,7 @@ import { auth } from "../config/firebase.js";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import Logo from "../components/Logo/Logo";
 import { Images } from "../config/images";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export const LoginScreen = ({ navigation }) => {
   // const [userSignIn, setUserSignIn] = useState();
@@ -37,6 +38,7 @@ export const LoginScreen = ({ navigation }) => {
   };
 
   return (
+    // <SafeAreaView>
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.container}>
         <View style={styles.logoContainer}>
@@ -70,6 +72,7 @@ export const LoginScreen = ({ navigation }) => {
         </Pressable>
       </View>
     </TouchableWithoutFeedback>
+    // </SafeAreaView>
   );
 };
 

@@ -22,8 +22,9 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 import Header from "../components/home/Header/Header.js";
-
+import { SafeAreaView } from 'react-native-safe-area-context';
 export function HomeScreen({ navigation }) {
+
   //!!!! DONT DELETE !!!!!!
   const [feed, setFeed] = useState();
 
@@ -90,15 +91,18 @@ export function HomeScreen({ navigation }) {
   const visualCategory = Categories[1];
 
   return (
-    <View>
-      <Header />
-      <ScrollView>
-        <CategoryList2 title="audio" />
-        <CategoryList2 title="visual" />
-      </ScrollView>
-      {/* <Button onPress={signOutUser} title="Sign Out" /> */}
-      <Text>HomeScreen</Text>
-    </View>
+    <SafeAreaView
+    >
+      <View>
+        <Header />
+        <ScrollView>
+          <CategoryList2 title="audio" />
+          <CategoryList2 title="visual" />
+        </ScrollView>
+        {/* <Button onPress={signOutUser} title="Sign Out" /> */}
+        <Text>HomeScreen</Text>
+      </View>
+    </SafeAreaView>
   );
 }
 

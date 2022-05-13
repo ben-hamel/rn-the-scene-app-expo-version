@@ -15,6 +15,7 @@ import { db } from "../config/firebase";
 import { collection, addDoc, Timestamp, setDoc, doc } from "firebase/firestore";
 import Logo from "../components/Logo/Logo";
 import { Images } from "../config/images";
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export const SignUpScreen = ({ navigation }) => {
   // const [userSignIn, setUserSignIn] = useState();
@@ -116,7 +117,7 @@ export const SignUpScreen = ({ navigation }) => {
         <Button
           title={"back to login screen"}
           onPress={() => navigation.navigate("Login")}
-          // style={styles.button}
+        // style={styles.button}
         />
       </View>
     </TouchableWithoutFeedback>

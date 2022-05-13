@@ -20,6 +20,7 @@ import {
   doc,
   getDoc,
 } from "firebase/firestore";
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ProfileScreen({ navigation }) {
   const [loading, setLoading] = useState(true);
@@ -90,9 +91,11 @@ export default function ProfileScreen({ navigation }) {
 
   if (loading || load2) {
     return (
-      <View>
-        <Text>Loading</Text>
-      </View>
+      <SafeAreaView>
+        <View>
+          <Text>Loading</Text>
+        </View>
+      </SafeAreaView>
     );
   }
 
@@ -226,44 +229,46 @@ export default function ProfileScreen({ navigation }) {
   };
 
   return (
-    <View>
+    <SafeAreaView>
       <View>
-        <Text>ProfileScreen</Text>
-        <Image
-          source={{
-            uri: users.profile_picture,
-          }}
-          style={styles.itemPhoto}
-          resizeMode="cover"
-        />
-        <Text>Username: {users.username}</Text>
-        <FlatList
-          data={users.skill}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <View>
-              <Text style={styles.itemText}>Skill/Interests: {item}</Text>
-            </View>
-          )}
-          showsHorizontalScrollIndicator={false}
-        />
-      </View>
+        <View>
+          <Text>ProfileScreen</Text>
+          <Image
+            source={{
+              uri: users.profile_picture,
+            }}
+            style={styles.itemPhoto}
+            resizeMode="cover"
+          />
+          <Text>Username: {users.username}</Text>
+          <FlatList
+            data={users.skill}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <View>
+                <Text style={styles.itemText}>Skill/Interests: {item}</Text>
+              </View>
+            )}
+            showsHorizontalScrollIndicator={false}
+          />
+        </View>
 
-      <View>
-        <Text>Category</Text>
-        <FlatList
-          data={arr_Test}
-          extraData={users.skill}
-          keyExtractor={(item) => item.id}
-          renderItem={renderItem2}
-        />
-      </View>
+        <View>
+          <Text>Category</Text>
+          <FlatList
+            data={arr_Test}
+            extraData={users.skill}
+            keyExtractor={(item) => item.id}
+            renderItem={renderItem2}
+          />
+        </View>
 
-      <Button title="My Skills" onPress={() => console.log(arr_Test)} />
-      <Button title="My Map" onPress={() => testMap()} />
-      <Button title="Go back" onPress={() => navigation.goBack()} />
-      <Button onPress={signOutUser} title="Sign Out" />
-    </View>
+        {/* <Button title="My Skills" onPress={() => console.log(arr_Test)} />
+        <Button title="My Map" onPress={() => testMap()} /> */}
+        <Button title="Go back" onPress={() => navigation.goBack()} />
+        <Button onPress={signOutUser} title="Sign Out" />
+      </View>
+    </SafeAreaView>
   );
 }
 
