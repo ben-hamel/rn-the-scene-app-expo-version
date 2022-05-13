@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import logo from "./../../../assets/icons8-shortcuts-50.png";
 
 export default function Header({ navigatation }) {
   const navigation = useNavigation();
@@ -10,7 +11,8 @@ export default function Header({ navigatation }) {
       <TouchableOpacity>
         <Image
           style={styles.logo}
-          source={require("../../../assets/icons8-shortcuts-150(@3x).png")}
+          // source={require("../../../assets/splash.png")}
+          source={logo}
         />
       </TouchableOpacity>
       <View style={styles.iconContainer}>
