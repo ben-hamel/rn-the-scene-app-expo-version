@@ -17,36 +17,31 @@ import { db } from "../config/firebase";
 import {
   collection,
   query,
-  where,
   getDocs,
-  onSnapshot,
 } from "firebase/firestore";
 import Header from "../components/home/Header/Header.js";
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+import CategorySectionList from "../components/categorySectionList.js/CategorySectionList.js";
+
+// export function HomeScreen({ navigation }) {
+
+
+//   return (
+//     <SafeAreaView>
+//       <CategorySectionList />
+//     </SafeAreaView>
+//   );
+// }
+
+
+/**
+ * Old code, Don't Delete
+ */
 export function HomeScreen({ navigation }) {
 
   //!!!! DONT DELETE !!!!!!
   const [feed, setFeed] = useState();
-
-  //!!!! DONT DELETE !!!!!!
-  // useEffect(() => {
-  //   const getData = async () => {
-  //     let arr_Feed = [];
-  //     const q = query(
-  //       collection(db, "categories")
-  //       // where("title", "==", "test")
-  //     );
-  //     const querySnapshot = await getDocs(q);
-  //     const data = querySnapshot.docs.map((doc) => ({
-  //       ...doc.data(),
-  //       id: doc.id,
-  //     }));
-  //     setFeed(data);
-  //     // console.log(data);
-  //   };
-
-  //   getData();
-  // }, []);
 
   useEffect(() => {
     const getData = async () => {
@@ -70,22 +65,6 @@ export function HomeScreen({ navigation }) {
     getData();
   }, []);
 
-  const signOutUser = () => {
-    signOut(auth)
-      .then(() => {
-        // Sign-out successful.
-        console.log("signed out");
-      })
-      .catch((error) => {
-        // An error happened.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log("singout error");
-        console.log("error code" + errorCode);
-        console.log("error message" + errorMessage);
-      });
-  };
-
   // console.log(Categories);
   const audioCategory = Categories[0];
   const visualCategory = Categories[1];
@@ -95,13 +74,15 @@ export function HomeScreen({ navigation }) {
     >
       <View>
         <Header />
-        <ScrollView>
-          <CategoryList2 title="audio" />
-          <CategoryList2 title="visual" />
-        </ScrollView>
+        {/* <ScrollView> */}
+        {/* <CategoryList2 title="audio" />
+          <CategoryList2 title="visual" /> */}
+        <CategorySectionList />
+        {/* </ScrollView> */}
         {/* <Button onPress={signOutUser} title="Sign Out" /> */}
-        <Text>HomeScreen</Text>
+        {/* <Text>HomeScreen</Text> */}
       </View>
+
     </SafeAreaView>
   );
 }

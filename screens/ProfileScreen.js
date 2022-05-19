@@ -12,34 +12,44 @@ import { AuthenticatedUserContext } from "../contexts";
 import { auth } from "../config/firebase.js";
 import { signOut } from "firebase/auth";
 import { db } from "../config/firebase.js";
-import {
-  collection,
-  query,
-  where,
-  getDocs,
-  doc,
-  getDoc,
-} from "firebase/firestore";
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { collection, query, getDocs, doc, getDoc, updateDoc } from "firebase/firestore";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { styleProps } from "react-native-web/dist/cjs/modules/forwardedProps";
 
 export default function ProfileScreen({ navigation }) {
+  /** Loading state */
   const [loading, setLoading] = useState(true);
   const [load2, setLoad2] = useState(true);
+  /** User State */
   const [users, setUsers] = useState();
+  const [userSkills, setUserSkills] = useState([]);
+
+  /** Category State */
   const [category, setCategory] = useState([]);
+
   const [selectedId, setSelectedId] = useState(null);
-  //pull in username from context
+
+  /** Pull in username from context */
   const userName = useContext(AuthenticatedUserContext);
   const arr_Test = [];
 
-  //pull user data from firebase
+  /** Pull user data from firebase */
   useEffect(() => {
     const getData = async () => {
       const docRef = doc(db, "users", userName.user.email);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
-        // console.log("Document data:", docSnap.data());
-        setUsers({ ...docSnap.data(), id: docSnap.id });
+        // console.log("Document data:", docSnap.data().skill);
+        /**
+         * grabs all user data from firebase
+         */
+        setUsers({ ...docSnap.data() });
+        setUserSkills([...docSnap.data().skill]);
+        /**
+         * grabs skill field from user data
+         */
+        // setUserSkills({ ...docSnap.data().skill, id: docSnap.id });
+
         setLoading(false);
       } else {
         console.log("No such document!");
@@ -49,7 +59,32 @@ export default function ProfileScreen({ navigation }) {
     getData();
   }, []);
 
-  //pull category data from firebase
+  /** V1 - This pulls all the category options from the categories collection in firebase */
+  // useEffect(() => {
+  //   const getData = async () => {
+  //     let arr_Data = [];
+
+  //     const q = query(collection(db, "categories"));
+
+  //     const querySnapshot = await getDocs(q);
+
+  //     const data = querySnapshot.docs.map((doc) =>
+  //       // console.log(doc.id, " => ", doc.data()),
+  //       arr_Data.push({
+  //         ...doc.data(),
+  //         id: doc.id,
+  //       })
+  //     );
+
+  //     setCategory(arr_Data);
+  //     setLoad2(false);
+  //     // console.log(arr_Data);
+  //   };
+
+  //   getData();
+  // }, []);
+
+  /** V2 - This pulls all the category options from the categories collection in firebase */
   useEffect(() => {
     const getData = async () => {
       let arr_Data = [];
@@ -58,13 +93,14 @@ export default function ProfileScreen({ navigation }) {
 
       const querySnapshot = await getDocs(q);
 
-      const data = querySnapshot.docs.map((doc) =>
-        // console.log(doc.id, " => ", doc.data()),
-        arr_Data.push({
-          ...doc.data(),
-          id: doc.id,
-        })
-      );
+      querySnapshot.forEach((doc) => {
+        data = doc.data().categories;
+        data.forEach((element) => {
+          arr_Data.push(element);
+          // console.log(element);
+        });
+      });
+
       setCategory(arr_Data);
       setLoad2(false);
     };
@@ -72,7 +108,7 @@ export default function ProfileScreen({ navigation }) {
     getData();
   }, []);
 
-  //sign out function
+  /** Sign out user from app */
   const signOutUser = () => {
     signOut(auth)
       .then(() => {
@@ -89,6 +125,16 @@ export default function ProfileScreen({ navigation }) {
       });
   };
 
+  /**
+   * This function is used to update the user's skills
+   */
+  const updateSkills = (id, skill) => {
+    const docRef = doc(db, "users", userName.user.email);
+    updateDoc(docRef, {
+      skill: userSkills,
+    })
+  }
+
   if (loading || load2) {
     return (
       <SafeAreaView>
@@ -99,172 +145,78 @@ export default function ProfileScreen({ navigation }) {
     );
   }
 
-  //WORKING DONT DELETE
-  // const renderItem = ({ item }) => (
-  //   <View>
-  //     {item.categories.map((item) => (
-  //       <>
-  //         <Text style={styles.itemText}>Item Title: {item.title}</Text>
-  //       </>
-  //     ))}
-  //   </View>
-  // );
-
-  // const renderItem = ({ item }) => <>{console.log(item)}</>;
-
-  // {
-  //   category.forEach((element) => {
-  //     console.log(element.categories);
-  //     arr_Test.push(element.categories);
-  //   });
-  // }
-
-  // const renderItem = ({ item }) => (
-  //   <View>
-  //     {item.categories.map((v) => (
-  //       <View>
-  //         {/* <Text style={styles.itemText}>Item Title: {v.title}</Text> */}
-  //         <View>
-  //           {users.skill.map((element) => (
-  //             <>
-  //               <Text style={styles.itemText}>
-  //                 {/* {console.log(element)} */}
-  //                 element Title: {element}
-  //               </Text>
-  //             </>
-  //           ))}
-  //         </View>
-  //       </View>
-  //     ))}
-  //   </View>
-  // );
-
-  const testMap = category.forEach((element) => {
-    element.categories.forEach((element) => {
-      console.log(element.title);
-      arr_Test.push(element);
-    });
-  });
-
-  // const renderItem = ({ item, index }) => (
-
-  //   <View>
-  //     <FlatList
-  //       data={item.categories}
-  //       renderItem={({ item }) => {
-  //         // console.log("test", item);
-  //         // console.log("skill", users.skill);
-  //         if (users.skill.includes(item.title)) {
-  //           return (
-  //             <View>
-  //               <Text style={styles.test}>{item.title}</Text>
-  //             </View>
-  //           );
-  //         } else {
-  //           return (
-  //             <View>
-  //               <Text>{item.title}</Text>
-  //             </View>
-  //           );
-  //         }
-  //       }}
-  //     />
-  //   </View>
-  // );
-
-  const Item = ({ item, onPress, backgroundColor, textColor }) => (
-    <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
-      <Text style={[styles.title, textColor]}>{item.title}</Text>
-    </TouchableOpacity>
-  );
-
-  const renderItem2 = ({ item }) => {
-    const backgroundColor = item.title === selectedId ? "#6e3b6e" : "#f9c2ff";
-    const color = item.title === selectedId ? "white" : "black";
+  /**
+   * renderItem for selecting skills/category
+   */
+  const renderItem = ({ item }) => {
+    const backgroundColor = userSkills.includes(item.title) ? "#6e3b6e" : "#f9c2ff";
+    const color = userSkills.includes(item.title) ? "white" : "black";
 
     return (
-      // <Item
-      //   item={item}
-      //   onPress={() => setSelectedId(item.id)}
-      //   backgroundColor={{ backgroundColor }}
-      //   textColor={{ color }}
-      // />
-      // <TouchableOpacity
-      //   onPress={() => setSelectedId(item.title)}
-      //   style={backgroundColor}
-      // >
-      //   <Text
-      //   //  style={[styles.title, color]
-      //   //  }
-      //   >
-      //     {item.title}
-      //   </Text>
-      // </TouchableOpacity>
-      // );
-
       <Item
         item={item}
-        onPress={() => setSelectedId(item.title)}
+        onPress={() => {
+          // setSelectedId(item.title);
+          if (userSkills.includes(item.title)) {
+            setUserSkills(userSkills.filter((skill) => skill !== item.title));
+          } else {
+            setUserSkills([...userSkills, item.title]);
+          }
+        }}
         backgroundColor={{ backgroundColor }}
         textColor={{ color }}
       />
     );
   };
 
-  const renderItem = ({ item, index }) => {
-    // console.log("test", item);
-    if (users.skill.includes(item.title)) {
-      return (
-        <View>
-          <Text style={styles.test}>{item.title}</Text>
-        </View>
-      );
-    } else {
-      return (
-        <View>
-          <Text>{item.title}</Text>
-        </View>
-      );
-    }
-  };
+  /**
+   * Item Component for renderItemV2
+   */
+  const Item = ({ item, onPress, backgroundColor, textColor }) => (
+    <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
+      <Text style={[styles.title, textColor]}>{item.title}</Text>
+    </TouchableOpacity>
+  );
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.container}>
+
       <View>
-        <View>
-          <Text>ProfileScreen</Text>
-          <Image
-            source={{
-              uri: users.profile_picture,
-            }}
-            style={styles.itemPhoto}
-            resizeMode="cover"
-          />
-          <Text>Username: {users.username}</Text>
-          <FlatList
-            data={users.skill}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <View>
-                <Text style={styles.itemText}>Skill/Interests: {item}</Text>
-              </View>
-            )}
-            showsHorizontalScrollIndicator={false}
-          />
-        </View>
+        <Text>ProfileScreen</Text>
+        <Image
+          source={{
+            uri: users.profile_picture,
+          }}
+          style={styles.itemPhoto}
+          resizeMode="cover"
+        />
+        <Text>Username: {users.username}</Text>
+        {/* <FlatList
+          data={userSkills}
+          keyExtractor={(item) => item}
+          renderItem={({ item }) => (
+            <View>
+              <Text style={styles.item}>Skill/Interests: {item}</Text>
+            </View>
+          )}
+          showsHorizontalScrollIndicator={false}
+        /> */}
+      </View>
 
-        <View>
-          <Text>Category</Text>
-          <FlatList
-            data={arr_Test}
-            extraData={users.skill}
-            keyExtractor={(item) => item.id}
-            renderItem={renderItem2}
-          />
-        </View>
+      <View style={styles.listContainer}>
+        <Text>Category</Text>
+        <FlatList
+          data={category}
+          extraData={userSkills}
+          keyExtractor={(item) => item.title}
+          renderItem={renderItem}
+        // renderItem={renderItemV2}
+        />
+      </View>
 
-        {/* <Button title="My Skills" onPress={() => console.log(arr_Test)} />
-        <Button title="My Map" onPress={() => testMap()} /> */}
+      <View style={styles.bottom}>
+        <Button title="Save" onPress={updateSkills} />
+        {/* <Button title="My Skills" onPress={() => console.log(userSkills)} /> */}
         <Button title="Go back" onPress={() => navigation.goBack()} />
         <Button onPress={signOutUser} title="Sign Out" />
       </View>
@@ -273,6 +225,10 @@ export default function ProfileScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    // alignItems: 'center'
+  },
   itemPhoto: {
     width: 200,
     height: 200,
@@ -280,10 +236,18 @@ const styles = StyleSheet.create({
   item: {
     padding: 20,
     marginVertical: 8,
-    marginHorizontal: 16,
+    width: "100%",
+    // marginHorizontal: 16,
   },
   title: {
     fontSize: 32,
   },
   test: { color: "red" },
+  bottom: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    marginBottom: 36
+  }, listContainer: {
+    height: "50%",
+  }
 });

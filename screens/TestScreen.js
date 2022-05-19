@@ -11,7 +11,7 @@ import React, { useState, useEffect } from "react";
 import { db } from "../config/firebase";
 import { collection, query, where, getDocs } from "firebase/firestore";
 // console.log(navigation);
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function TestScreen({ route, navigation }) {
   const [users, setUsers] = useState([]);
@@ -36,7 +36,8 @@ export default function TestScreen({ route, navigation }) {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      {/* <View style={styles.container}> */}
       {/* {"Route:"}
       {JSON.stringify(route.params.text)} */}
       {/* <Text style={styles.sectionHeader}>{route.params.text}</Text> */}
@@ -56,21 +57,24 @@ export default function TestScreen({ route, navigation }) {
         color="#841584"
         accessibilityLabel="Learn more about this purple button"
       />
-    </View>
+      {/* </View> */}
+    </SafeAreaView>
   );
 }
 const ListItem = ({ item }) => {
   return (
-    <View style={styles.item}>
-      <Image
-        source={{
-          uri: item.profile_picture,
-        }}
-        style={styles.itemPhoto}
-        resizeMode="cover"
-      />
-      <Text style={styles.itemText}>{item.username}</Text>
-    </View>
+    <SafeAreaView>
+      <View style={styles.item}>
+        <Image
+          source={{
+            uri: item.profile_picture,
+          }}
+          style={styles.itemPhoto}
+          resizeMode="cover"
+        />
+        <Text style={styles.itemText}>{item.username}</Text>
+      </View>
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({

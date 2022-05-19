@@ -36,7 +36,8 @@ export default function TestScreen2({ route, navigation }) {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      {/* <View style={styles.container}> */}
       <Text>Test Screen</Text>
       <Text>route name: {route.params}</Text>
       <FlatList
@@ -55,9 +56,10 @@ export default function TestScreen2({ route, navigation }) {
       >
         <Text style={styles.buttonText}>User Array</Text>
       </Pressable> */}
-      <Text>TestScreen</Text>
+      {/* <Text>TestScreen</Text> */}
       <Button title="Go back" onPress={() => navigation.goBack()} />
-    </View>
+      {/* </View> */}
+    </SafeAreaView>
   );
 }
 const ListItem = ({ item }) => {
