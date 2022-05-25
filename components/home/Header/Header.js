@@ -24,11 +24,6 @@ export default function Header({ navigatation }) {
             style={styles.icon}
           />
         </TouchableOpacity>
-        {/* <FontAwesome5 name="bars" size={24} color="black" style={styles.icon} />
-        <FontAwesome5 name="bars" size={24} color="black" style={styles.icon} /> */}
-        {/* <Text>Header</Text>
-        <Text>Header</Text>
-        <Text>Header</Text> */}
       </View>
     </View>
   );
@@ -39,16 +34,21 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginHorizontal: 10,
+    // marginHorizontal: 10,
+    // borderColor: "red",
+    // borderWidth: 1,
+    // borderStyle: "solid",
   },
   iconContainer: {
     flexDirection: "row",
+    marginRight: 10,
     // justifyContent: "space-between",
   },
   logo: {
     width: 40,
     height: 40,
     resizeMode: "contain",
+    marginLeft: 10
   },
-  icon: { marginLeft: 10 },
+  // icon: { marginLeft: 10 },
 });

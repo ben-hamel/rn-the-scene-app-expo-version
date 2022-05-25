@@ -4,6 +4,7 @@ import { SignUpScreen } from "./SignUpScreen";
 import TestScreen from "./TestScreen";
 import TestScreen2 from "./TestScreen2";
 import ProfileScreen from "./ProfileScreen";
+import CategoryDetailScreen from "./CategoryDetailScreen";
 
 export {
   LoginScreen,
@@ -12,4 +13,5 @@ export {
   TestScreen,
   TestScreen2,
   ProfileScreen,
+  CategoryDetailScreen,
 };

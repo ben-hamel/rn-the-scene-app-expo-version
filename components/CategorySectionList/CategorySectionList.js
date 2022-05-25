@@ -1,7 +1,7 @@
 import { View, Text, SectionList, FlatList, Button, StyleSheet, StatusBar, TouchableOpacity, Image } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { arrayRemove, collection, getDocs } from 'firebase/firestore';
-import { db } from './../../config/firebase';
+import { db } from '../../config/firebase';
 
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -42,7 +42,7 @@ const CategorySectionList = () => {
                 delete document.categories
 
                 arr_Data.push(document);
-                // console.log("TEST", datah);
+                console.log("Title", document.data);
             });
 
             /**
@@ -66,10 +66,13 @@ const CategorySectionList = () => {
         );
     }
 
+    /**
+     * List Item Component for the SectionList renderitem
+     */
     const ListItem = ({ item }) => {
         return (
             <TouchableOpacity
-                onPress={() => navigation.navigate("TestScreen2", item.id)}
+                onPress={() => navigation.navigate("CategoryDetailScreen", item.title)}
             // onPress={() => navigation.navigate("ProfileScreen")}
             >
                 <View style={styles.item}>
@@ -82,28 +85,17 @@ const CategorySectionList = () => {
                     />
                     {/* <>{console.log(item)}</> */}
                     <Text style={styles.itemText}>{item.title}</Text>
-                    {/* <Text style={styles.itemText}>{item.id}</Text> */}
+                    <Text style={styles.itemText}>{item.id}</Text>
                 </View>
             </TouchableOpacity>
         );
     };
 
-    // const renderItem = ({ item, index, section }) => <Text key={index}>{item.title}</Text>
-
-    // const renderItem = ({ item, index }) => (
-    //     <TouchableOpacity key={index}
-    //         onPress={() => navigation.navigate("TestScreen2", item.id)}
-    //     // onPress={() => navigation.navigate("ProfileScreen")}
-    //     >
-    //         <ListItem item={item} />
-    //     </TouchableOpacity>
-    // )
 
     return (
-        // <SafeAreaView>
-        <View>
+        <View >
+            {/* <Text>Cat Section List</Text> */}
             <SectionList
-                // horizontal
                 renderSectionHeader={({ section, index }) => (
                     <>
                         <Text style={styles.sectionHeader}>{section.title}</Text>
@@ -119,21 +111,11 @@ const CategorySectionList = () => {
                 )}
                 renderItem={() => {
                     return null;
-                    // return <ListItem item={item} />;
                 }}
-                // renderItem={renderItem}
-                // renderSectionHeader={({ section: { title } }) => (
-                //     <Text style={{ fontWeight: 'bold' }}>{title}</Text>
-                // )}
-                // renderSectionHeader={({ section: { title } }) => (
-                //     <Text style={{ fontWeight: 'bold' }}>{title}</Text>
-                // )}
                 sections={categories}
                 keyExtractor={(item, index) => item + index}
             />
-            <Button title='Show useEffect' onPress={() => console.log("Button", categories)} />
         </View>
-        // </SafeAreaView>
     )
 }
 
@@ -145,7 +127,6 @@ const styles = StyleSheet.create({
     sectionHeader: {
         fontWeight: "800",
         fontSize: 18,
-        // color: "#f4f4f4",
         marginTop: 20,
         marginLeft: 10,
         marginBottom: 5,
@@ -160,7 +141,9 @@ const styles = StyleSheet.create({
     itemText: {
         // color: "rgba(255, 255, 255, 0.5)",
         marginTop: 5,
-    },
+    }, padding: {
+        padding: 10,
+    }
 });
 
 export default CategorySectionList
