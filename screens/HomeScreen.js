@@ -20,8 +20,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
 
-    borderColor: "red",
-    borderWidth: 1,
-    borderStyle: "solid",
+    // borderColor: "red",
+    // borderWidth: 1,
+    // borderStyle: "solid",
   },
 });
