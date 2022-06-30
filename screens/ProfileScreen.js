@@ -12,7 +12,14 @@ import { AuthenticatedUserContext } from "../contexts";
 import { auth } from "../config/firebase.js";
 import { signOut } from "firebase/auth";
 import { db } from "../config/firebase.js";
-import { collection, query, getDocs, doc, getDoc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  query,
+  getDocs,
+  doc,
+  getDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { styleProps } from "react-native-web/dist/cjs/modules/forwardedProps";
 
@@ -94,7 +101,7 @@ export default function ProfileScreen({ navigation }) {
       const querySnapshot = await getDocs(q);
 
       querySnapshot.forEach((doc) => {
-        data = doc.data().categories;
+        const data = doc.data().categories;
         data.forEach((element) => {
           arr_Data.push(element);
           // console.log(element);
@@ -132,8 +139,8 @@ export default function ProfileScreen({ navigation }) {
     const docRef = doc(db, "users", userName.user.email);
     updateDoc(docRef, {
       skill: userSkills,
-    })
-  }
+    });
+  };
 
   if (loading || load2) {
     return (
@@ -149,7 +156,9 @@ export default function ProfileScreen({ navigation }) {
    * renderItem for selecting skills/category
    */
   const renderItem = ({ item }) => {
-    const backgroundColor = userSkills.includes(item.title) ? "#6e3b6e" : "#f9c2ff";
+    const backgroundColor = userSkills.includes(item.title)
+      ? "#6e3b6e"
+      : "#f9c2ff";
     const color = userSkills.includes(item.title) ? "white" : "black";
 
     return (
@@ -180,7 +189,6 @@ export default function ProfileScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-
       <View>
         <Text>ProfileScreen</Text>
         <Image
@@ -210,7 +218,7 @@ export default function ProfileScreen({ navigation }) {
           extraData={userSkills}
           keyExtractor={(item) => item.title}
           renderItem={renderItem}
-        // renderItem={renderItemV2}
+          // renderItem={renderItemV2}
         />
       </View>
 
@@ -245,9 +253,10 @@ const styles = StyleSheet.create({
   test: { color: "red" },
   bottom: {
     flex: 1,
-    justifyContent: 'flex-end',
-    marginBottom: 36
-  }, listContainer: {
+    justifyContent: "flex-end",
+    marginBottom: 36,
+  },
+  listContainer: {
     height: "50%",
-  }
+  },
 });
