@@ -11,12 +11,6 @@ const Stack = createNativeStackNavigator();
 
 function App() {
   return (
-    // <NavigationContainer>
-    //   <Stack.Navigator initialRouteName="Login">
-    //     <Stack.Screen name="Home" component={HomeScreen} />
-    //     <Stack.Screen name="Login" component={LoginScreen} />
-    //   </Stack.Navigator>
-    // </NavigationContainer>
     <AuthenticatedUserProvider>
       <SafeAreaProvider>
         <NavigationRouter />
