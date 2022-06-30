@@ -42,15 +42,15 @@ const CategorySectionList = () => {
         /**
          * store document in new variable
          */
-        document = doc.data();
+        const document_Category = doc.data();
         /**
          * change categories array to data array so its compatible with the SectionList.
          */
-        document.data = document.categories;
-        delete document.categories;
+        document_Category.data = document_Category.categories;
+        delete document_Category.categories;
 
-        arr_Data.push(document);
-        console.log("Title", document.data);
+        arr_Data.push(document_Category);
+        console.log("Title", document_Category.data);
       });
 
       /**
