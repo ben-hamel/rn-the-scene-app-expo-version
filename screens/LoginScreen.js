@@ -7,6 +7,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Pressable,
+  Platform,
 } from "react-native";
 import { auth } from "../config/firebase.js";
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -37,9 +38,16 @@ export const LoginScreen = ({ navigation }) => {
       });
   };
 
+  const dismissKeyboard = () => {
+    if (Platform.OS != "web") {
+      Keyboard.dismiss();
+    }
+  };
+
   return (
     // <SafeAreaView>
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+    <TouchableWithoutFeedback onPress={dismissKeyboard} accessible={false}>
+      {/* // <Pressable onPress={dismissKeyboard} accessible={false}> */}
       <View style={styles.container}>
         <View style={styles.logoContainer}>
           <Logo uri={Images.logo} />
@@ -71,6 +79,7 @@ export const LoginScreen = ({ navigation }) => {
           <Text style={styles.buttonText}>Sign Up</Text>
         </Pressable>
       </View>
+      {/* </Pressable> */}
     </TouchableWithoutFeedback>
     // </SafeAreaView>
   );
