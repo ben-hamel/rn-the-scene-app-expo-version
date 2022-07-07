@@ -1,12 +1,22 @@
-import { View, Text, FlatList, StyleSheet, Image } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  Image,
+  Pressable,
+} from "react-native";
 import React, { useState, useEffect } from "react";
 import { db } from "../../config/firebase";
 import { collection, query, where, getDocs } from "firebase/firestore";
+import { useNavigation } from "@react-navigation/native";
 
 const SkillFeed = ({ skill }) => {
   const [users, setUsers] = useState([]);
+  const navigation = useNavigation();
 
   /**
+   *
    * import users from the choosen skill
    */
   useEffect(() => {
@@ -21,6 +31,7 @@ const SkillFeed = ({ skill }) => {
         id: doc.id,
       }));
       setUsers(data);
+      console.log("skillfeed ");
     };
 
     getData();
@@ -40,9 +51,28 @@ const SkillFeed = ({ skill }) => {
           resizeMode="cover"
         />
         <View style={styles.itemInfo}>
-          <Text style={styles.itemText}>{item.username}</Text>
+          <Text style={styles.itemText}>Username: {item.username}</Text>
         </View>
       </View>
+    );
+  };
+
+  const PressableListItem = ({ item }) => {
+    return (
+      <Pressable onPress={() => navigation.navigate("UserDetailScreen")}>
+        <View style={styles.listItem}>
+          <Image
+            source={{
+              uri: item.profile_picture,
+            }}
+            style={styles.itemPhoto}
+            resizeMode="cover"
+          />
+          <View style={styles.itemInfo}>
+            <Text style={styles.itemText}>Username: {item.username}</Text>
+          </View>
+        </View>
+      </Pressable>
     );
   };
 
@@ -50,7 +80,7 @@ const SkillFeed = ({ skill }) => {
     <View>
       <FlatList
         data={users}
-        renderItem={({ item }) => <ListItem item={item} />}
+        renderItem={({ item }) => <PressableListItem item={item} />}
         showsHorizontalScrollIndicator={false}
       />
     </View>
