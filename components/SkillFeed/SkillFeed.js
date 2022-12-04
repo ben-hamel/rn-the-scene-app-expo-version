@@ -31,7 +31,7 @@ const SkillFeed = ({ skill }) => {
         id: doc.id,
       }));
       setUsers(data);
-      console.log("skillfeed ");
+      console.log("skillfeed ", data);
     };
 
     getData();
@@ -58,8 +58,11 @@ const SkillFeed = ({ skill }) => {
   };
 
   const PressableListItem = ({ item }) => {
+    // () => console.log("skillfeed item", item);
     return (
-      <Pressable onPress={() => navigation.navigate("UserDetailScreen")}>
+      <Pressable
+        onPress={() => navigation.navigate("UserDetailScreen", item.id)}
+      >
         <View style={styles.listItem}>
           <Image
             source={{
