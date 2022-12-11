@@ -85,12 +85,12 @@ const UserDetailScreen = ({ navigation, route }) => {
         />
         <Text>route name: {route.params}</Text>
         {videos.map((video, index) => {
-          videoRefs.current[index] = React.createRef();
+          // videoRefs.current[index] = React.createRef();
           return (
             <View key={video.id}>
               <Video
                 key={video.id}
-                ref={videoRefs.current[index]}
+                // ref={videoRefs.current[index]}
                 source={{ uri: video.url }}
                 // paused={currentVideo ? currentVideo.id !== video.id : false}
                 resizeMode="cover"
@@ -100,7 +100,7 @@ const UserDetailScreen = ({ navigation, route }) => {
                 //   console.log("activevi", activeVideo);
                 //   console.log("video id", video.id);
                 // }}
-                useNativeControls
+                // useNativeControls
                 style={styles.video}
               />
               <Button
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
   },
   video: {
     width: 300,
-    height: 200,
+    height: 168.75,
     marginBottom: 20,
     marginTop: 10,
   },
