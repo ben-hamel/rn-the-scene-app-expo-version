@@ -33,7 +33,6 @@ const SkillFeed = ({ skill }) => {
       setUsers(data);
       console.log("skillfeed ", data);
     };
-
     getData();
   }, []);
 

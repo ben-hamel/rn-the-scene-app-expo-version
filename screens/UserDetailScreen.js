@@ -1,14 +1,17 @@
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
-  View,
-  Text,
-  Button,
-  StyleSheet,
-  Dimensions,
   Animated,
-  Pressable,
+  Button,
+  Dimensions,
+  Image,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
 import { Video } from "expo-av";
-import React, { useRef, useState, useEffect, useCallback } from "react";
+import { AuthenticatedUserContext } from "../contexts";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { db } from "@config/firebase";
 
 const windowWidth = Dimensions.get("window").width;
 // const windowHeight = Dimensions.get("window").height;
@@ -17,23 +20,72 @@ const UserDetailScreen = ({ navigation, route }) => {
   /* Animated Header */
   const pan = useRef(new Animated.ValueXY()).current;
 
-  /* MOCK DATA */
-  const videos = [
-    {
-      id: 1,
-      title: "Video 1",
-      url: "https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
-    },
-    {
-      id: 2,
-      title: "Video 2",
-      url: "https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
-    },
-  ];
+  /** Pull in username from context, If user is the same as the route.param then render text */
+  const userName = useContext(AuthenticatedUserContext);
 
-  const videoRefs = useRef([]);
+  /* If user is the same as the route.param then render text */
+  const [isUser, setIsUser] = useState(false);
+
+  // store user info
+  const [user, setUser] = useState();
+
+  // grab user data from firestore using user email
+
+  useEffect(() => {
+    if (userName.user.email === route.params) {
+      setIsUser(true);
+    }
+    // grab user data from firestore using where email is equal to route.params
+    const getData = async () => {
+      const q = query(
+        collection(db, "users"),
+        where("email", "==", route.params)
+      );
+      const querySnapshot = await getDocs(q);
+      const data = querySnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      setUser(data[0]);
+      // console.log("user", data[0]);
+    };
+    getData();
+  }, []);
+
+  /* MOCK DATA */
+  // const videos = [
+  //   {
+  //     id: 1,
+  //     title: "Video 1",
+  //     url: "https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
+  //   },
+  //   {
+  //     id: 2,
+  //     title: "Video 2",
+  //     url: "https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
+  //   },
+  // ];
+
+  // const images = [
+  //   {
+  //     id: 1,
+  //     title: "Image 1",
+  //     img: "https://c4.wallpaperflare.com/wallpaper/500/442/354/outrun-vaporwave-hd-wallpaper-preview.jpg",
+  //   },
+  //   {
+  //     id: 2,
+  //     title: "Image 1",
+  //     img: "https://randomuser.me/api/portraits/women/89.jpg",
+  //   },
+  // ];
 
   const [activeVideo, setActiveVideo] = React.useState(null);
+
+  // if user then destructure user object
+  const { bio, coverPhoto, email, profilePicture, username, videos, images } =
+    user || {};
+
+  //  if videos then dynamically import useState hook
 
   return (
     <Animated.ScrollView
@@ -46,8 +98,9 @@ const UserDetailScreen = ({ navigation, route }) => {
         }
       )}
     >
+      {/* HEADER IMG */}
       <Animated.Image
-        source={require("../assets/Ben_DSC_0011.jpg")}
+        source={{ uri: user?.coverPhoto }}
         resizeMode="cover"
         style={{
           transform: [
@@ -70,55 +123,96 @@ const UserDetailScreen = ({ navigation, route }) => {
           width: "100%", // the image should fill the width of its
         }}
       />
-      <Text style={styles.textOverlay}>My Text Overlay</Text>
+      {/* USERNAME */}
+      {username && <Text style={styles.textOverlay}>{user?.username}</Text>}
 
-      {/*  VIDEOS */}
+      {/* EDIT PROFILE */}
+      {isUser && (
+        <View style={styles.editProfile}>
+          <Text style={styles.editProfileText}>Edit Profile</Text>
+          <Button
+            title="Edit Profile"
+            onPress={() => navigation.navigate("ProfileScreen")}
+          />
+        </View>
+      )}
+
       <View
         style={{
           alignItems: "center",
         }}
       >
-        <Text>UserDetailScreen</Text>
         <Button
           title="Test"
           onPress={() => navigation.navigate("TestScreen")}
         />
-        <Text>route name: {route.params}</Text>
-        {videos.map((video, index) => {
-          // videoRefs.current[index] = React.createRef();
-          return (
-            <View key={video.id}>
-              <Video
-                key={video.id}
-                // ref={videoRefs.current[index]}
-                source={{ uri: video.url }}
-                // paused={currentVideo ? currentVideo.id !== video.id : false}
-                resizeMode="cover"
-                shouldPlay={activeVideo === video.id}
-                // onPlaybackStatusUpdate={(status) => {
-                //   console.log(status);
-                //   console.log("activevi", activeVideo);
-                //   console.log("video id", video.id);
-                // }}
-                // useNativeControls
-                style={styles.video}
-              />
-              <Button
-                key={`button${video.id}`}
-                title={activeVideo === video.id ? "stop" : "play"}
-                onPress={() => {
-                  //if activevideo is equal to video id, stop playing immediately else set active video to video id
-                  if (activeVideo === video.id) {
-                    setActiveVideo(null);
-                  } else {
-                    setActiveVideo(video.id);
-                  }
-                }}
-              />
-              <Text>{activeVideo}</Text>
+        <Button title="Go back" onPress={() => navigation.goBack()} />
+        <Text>UserDetailScreen - route name: {route.params}</Text>
+
+        {/* ABOUT/BIO */}
+        <View style={styles.about}>
+          <Text style={styles.aboutTitle}> About</Text>
+          {/* <Text style={styles.aboutText}> {user?.bio}</Text> */}
+          {/* if bio then show bio */}
+          {bio ? (
+            <Text style={styles.aboutText}> {user?.bio}</Text>
+          ) : (
+            <Text>No BIo</Text>
+          )}
+        </View>
+
+        {/* DYNAMIC CONTENT */}
+        <View style={styles.dynamicContent}>
+          {/* IMAGES */}
+          {images && <Text style={styles.aboutTitle}> Images</Text>}
+          {images && (
+            <View style={styles.dynamicContent}>
+              {images.map((image, i) => {
+                return (
+                  <View key={image.id}>
+                    <Image
+                      key={image.id}
+                      source={{ uri: image.url }}
+                      style={styles.img}
+                    />
+                  </View>
+                );
+              })}
             </View>
-          );
-        })}
+          )}
+
+          {/* VIDEOS */}
+          {videos && <Text style={styles.aboutTitle}> Videos</Text>}
+          {videos && (
+            <View style={styles.dynamicContent}>
+              {videos.map((video, index) => {
+                return (
+                  <View key={video.id}>
+                    <Video
+                      key={video.id}
+                      source={{ uri: video.url }}
+                      resizeMode="cover"
+                      shouldPlay={activeVideo === video.id}
+                      style={styles.video}
+                    />
+                    <Button
+                      key={`button${video.id}`}
+                      title={activeVideo === video.id ? "stop" : "play"}
+                      onPress={() => {
+                        if (activeVideo === video.id) {
+                          setActiveVideo(null);
+                        } else {
+                          setActiveVideo(video.id);
+                        }
+                      }}
+                    />
+                  </View>
+                );
+              })}
+            </View>
+          )}
+        </View>
+        <Button title="user" onPress={() => console.log(user)} />
         <Button
           title="Test"
           onPress={() => navigation.navigate("TestScreen")}
@@ -134,8 +228,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   img: {
-    width: windowWidth,
-    height: 150,
+    width: 300,
+    height: 168.75,
+    marginBottom: 10,
   },
   textOverlay: {
     position: "absolute", // use absolute positioning
@@ -153,6 +248,21 @@ const styles = StyleSheet.create({
     height: 168.75,
     marginBottom: 20,
     marginTop: 10,
+  },
+  aboutTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  aboutText: {
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  about: {
+    margin: 20,
+  },
+  dynamicContent: {
+    margin: 20,
   },
 });
 

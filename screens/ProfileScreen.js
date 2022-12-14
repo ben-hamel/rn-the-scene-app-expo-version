@@ -1,32 +1,42 @@
+import { signOut } from "firebase/auth";
 import {
-  StyleSheet,
-  Text,
-  View,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  updateDoc,
+} from "firebase/firestore";
+import React, { useContext, useEffect, useState } from "react";
+import {
   Button,
   FlatList,
   Image,
+  StyleSheet,
+  Text,
   TouchableOpacity,
+  View,
 } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
-import { AuthenticatedUserContext } from "../contexts";
-import { auth } from "../config/firebase.js";
-import { signOut } from "firebase/auth";
-import { db } from "../config/firebase.js";
-import {
-  collection,
-  query,
-  getDocs,
-  doc,
-  getDoc,
-  updateDoc,
-} from "firebase/firestore";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { styleProps } from "react-native-web/dist/cjs/modules/forwardedProps";
+import { auth, db } from "../config/firebase.js";
+import { AuthenticatedUserContext } from "../contexts";
 
 export default function ProfileScreen({ navigation }) {
+  // console.log("user");
+
+  /* Console log the current user */
+  useEffect(() => {
+    // Get the currently authenticated user
+    const user = auth.currentUser;
+
+    // Log the user to the console
+    console.log("user auth", user);
+  }, []);
+
   /** Loading state */
   const [loading, setLoading] = useState(true);
   const [load2, setLoad2] = useState(true);
+
   /** User State */
   const [users, setUsers] = useState();
   const [userSkills, setUserSkills] = useState([]);
@@ -191,6 +201,7 @@ export default function ProfileScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <View>
         <Text>ProfileScreen</Text>
+
         <Image
           source={{
             uri: users.profile_picture,
@@ -199,6 +210,7 @@ export default function ProfileScreen({ navigation }) {
           resizeMode="cover"
         />
         <Text>Username: {users.username}</Text>
+        <Button title="user" onPress={() => console.log("user", userName)} />
         {/* <FlatList
           data={userSkills}
           keyExtractor={(item) => item}
