@@ -20,9 +20,32 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { auth, db } from "../config/firebase.js";
 import { AuthenticatedUserContext } from "../contexts";
+import * as ImagePicker from "expo-image-picker";
 
 export default function ProfileScreen({ navigation }) {
   // console.log("user");
+
+  /**
+   * Image picker
+   *
+   */
+  const [image, setImage] = useState(null);
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log("result", result);
+
+    if (!result.canceled) {
+      // Add the image firestore
+    }
+  };
 
   /* Console log the current user */
   useEffect(() => {
@@ -201,7 +224,10 @@ export default function ProfileScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <View>
         <Text>ProfileScreen</Text>
-
+        <Button title="Pick an image from camera roll" onPress={pickImage} />
+        {/* {image && (
+          <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
+        )} */}
         <Image
           source={{
             uri: users.profile_picture,
