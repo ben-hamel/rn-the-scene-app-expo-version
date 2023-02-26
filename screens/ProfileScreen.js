@@ -1,4 +1,3 @@
-import { signOut } from "firebase/auth";
 import {
   collection,
   doc,
@@ -20,42 +19,16 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { auth, db } from "../config/firebase.js";
 import { AuthenticatedUserContext } from "../contexts";
-import * as ImagePicker from "expo-image-picker";
+import {
+  uploadImageAndGetDownloadURL,
+  updateProfilePhoto,
+  signOutUser,
+} from "../config/firebase.js";
+import { pickImage } from "../utils/imagePicker.js";
 
 export default function ProfileScreen({ navigation }) {
-  // console.log("user");
-
-  /**
-   * Image picker
-   *
-   */
   const [image, setImage] = useState(null);
-
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    console.log("result", result);
-
-    if (!result.canceled) {
-      // Add the image firestore
-    }
-  };
-
-  /* Console log the current user */
-  useEffect(() => {
-    // Get the currently authenticated user
-    const user = auth.currentUser;
-
-    // Log the user to the console
-    console.log("user auth", user);
-  }, []);
-
+  const [uploading, setUploading] = useState(false);
   /** Loading state */
   const [loading, setLoading] = useState(true);
   const [load2, setLoad2] = useState(true);
@@ -66,12 +39,39 @@ export default function ProfileScreen({ navigation }) {
 
   /** Category State */
   const [category, setCategory] = useState([]);
-
   const [selectedId, setSelectedId] = useState(null);
 
   /** Pull in username from context */
   const userName = useContext(AuthenticatedUserContext);
   const arr_Test = [];
+
+  /**
+   * This function allows the user to select an image from their device's library using the ImagePicker library.
+   * If an image is selected, the function will proceed to upload the image using the uploadImage function,
+   * and the download URL of the uploaded image will be set as the value of the 'image' state.
+   * @returns {Promise<void>}
+   * @async
+   * @function
+   * @name handleProfileImage
+   */
+  const handleProfileImage = async () => {
+    const imageUri = await pickImage();
+    const uploadUrl = await uploadImageAndGetDownloadURL(imageUri);
+    await updateProfilePhoto(userName.user.email, uploadUrl);
+    // update the user's profile photo in the app
+    setImage(uploadUrl);
+    // set users profile picture to the image
+    setUsers({ ...users, profile_picture: uploadUrl });
+  };
+
+  /* Console log the current user */
+  useEffect(() => {
+    // Get the currently authenticated user
+    const user = auth.currentUser;
+
+    // Log the user to the console
+    console.log("user auth", user);
+  }, []);
 
   /** Pull user data from firebase */
   useEffect(() => {
@@ -99,31 +99,6 @@ export default function ProfileScreen({ navigation }) {
     getData();
   }, []);
 
-  /** V1 - This pulls all the category options from the categories collection in firebase */
-  // useEffect(() => {
-  //   const getData = async () => {
-  //     let arr_Data = [];
-
-  //     const q = query(collection(db, "categories"));
-
-  //     const querySnapshot = await getDocs(q);
-
-  //     const data = querySnapshot.docs.map((doc) =>
-  //       // console.log(doc.id, " => ", doc.data()),
-  //       arr_Data.push({
-  //         ...doc.data(),
-  //         id: doc.id,
-  //       })
-  //     );
-
-  //     setCategory(arr_Data);
-  //     setLoad2(false);
-  //     // console.log(arr_Data);
-  //   };
-
-  //   getData();
-  // }, []);
-
   /** V2 - This pulls all the category options from the categories collection in firebase */
   useEffect(() => {
     const getData = async () => {
@@ -148,28 +123,12 @@ export default function ProfileScreen({ navigation }) {
     getData();
   }, []);
 
-  /** Sign out user from app */
-  const signOutUser = () => {
-    signOut(auth)
-      .then(() => {
-        // Sign-out successful.
-        console.log("signed out");
-      })
-      .catch((error) => {
-        // An error happened.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log("singout error");
-        console.log("error code" + errorCode);
-        console.log("error message" + errorMessage);
-      });
-  };
-
   /**
    * This function is used to update the user's skills
    */
   const updateSkills = (id, skill) => {
-    const docRef = doc(db, "users", userName.user.email);
+    const docRef = doc(db, "users", userName.user.email); // in the users document find the user with the email of the current user
+    // update the skill field with the new skill
     updateDoc(docRef, {
       skill: userSkills,
     });
@@ -224,10 +183,10 @@ export default function ProfileScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <View>
         <Text>ProfileScreen</Text>
-        <Button title="Pick an image from camera roll" onPress={pickImage} />
-        {/* {image && (
-          <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
-        )} */}
+        <Button
+          title="Pick an image from camera roll"
+          onPress={handleProfileImage}
+        />
         <Image
           source={{
             uri: users.profile_picture,

@@ -11,7 +11,12 @@ import {
 import { Video } from "expo-av";
 import { AuthenticatedUserContext } from "../contexts";
 import { collection, query, where, getDocs } from "firebase/firestore";
-import { db } from "@config/firebase";
+import {
+  db,
+  updateCoverPhoto,
+  uploadImageAndGetDownloadURL,
+} from "@config/firebase";
+import { pickImage } from "../utils/imagePicker";
 
 const windowWidth = Dimensions.get("window").width;
 // const windowHeight = Dimensions.get("window").height;
@@ -28,6 +33,18 @@ const UserDetailScreen = ({ navigation, route }) => {
 
   // store user info
   const [user, setUser] = useState();
+
+  //store picture from handlePickImage
+  const [image, setImage] = useState(null);
+
+  /* Pick Image */
+  const handleCoverPhoto = async () => {
+    const imageUri = await pickImage();
+    const uploadUrl = await uploadImageAndGetDownloadURL(imageUri);
+    await updateCoverPhoto(userName.user.email, uploadUrl);
+    setImage(uploadUrl);
+    setUser({ ...user, coverPhoto: uploadUrl });
+  };
 
   // grab user data from firestore using user email
 
@@ -51,33 +68,6 @@ const UserDetailScreen = ({ navigation, route }) => {
     };
     getData();
   }, []);
-
-  /* MOCK DATA */
-  // const videos = [
-  //   {
-  //     id: 1,
-  //     title: "Video 1",
-  //     url: "https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
-  //   },
-  //   {
-  //     id: 2,
-  //     title: "Video 2",
-  //     url: "https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
-  //   },
-  // ];
-
-  // const images = [
-  //   {
-  //     id: 1,
-  //     title: "Image 1",
-  //     img: "https://c4.wallpaperflare.com/wallpaper/500/442/354/outrun-vaporwave-hd-wallpaper-preview.jpg",
-  //   },
-  //   {
-  //     id: 2,
-  //     title: "Image 1",
-  //     img: "https://randomuser.me/api/portraits/women/89.jpg",
-  //   },
-  // ];
 
   const [activeVideo, setActiveVideo] = React.useState(null);
 
@@ -125,6 +115,14 @@ const UserDetailScreen = ({ navigation, route }) => {
       />
       {/* USERNAME */}
       {username && <Text style={styles.textOverlay}>{user?.username}</Text>}
+
+      {/* display image form oicked img */}
+      {/* {image && (
+        <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
+      )} */}
+
+      {/* button to pick image */}
+      <Button title="Change Cover Photo " onPress={handleCoverPhoto} />
 
       {/* EDIT PROFILE */}
       {isUser && (
