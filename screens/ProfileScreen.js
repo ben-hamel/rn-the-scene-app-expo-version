@@ -27,6 +27,8 @@ import {
 import { pickImage } from "../utils/imagePicker.js";
 
 export default function ProfileScreen({ navigation }) {
+  /** Pull in username from context */
+  const userName = useContext(AuthenticatedUserContext);
   const [image, setImage] = useState(null);
   const [uploading, setUploading] = useState(false);
   /** Loading state */
@@ -40,10 +42,6 @@ export default function ProfileScreen({ navigation }) {
   /** Category State */
   const [category, setCategory] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
-
-  /** Pull in username from context */
-  const userName = useContext(AuthenticatedUserContext);
-  const arr_Test = [];
 
   /**
    * This function allows the user to select an image from their device's library using the ImagePicker library.
@@ -183,10 +181,6 @@ export default function ProfileScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <View>
         <Text>ProfileScreen</Text>
-        <Button
-          title="Pick an image from camera roll"
-          onPress={handleProfileImage}
-        />
         <Image
           source={{
             uri: users.profile_picture,
@@ -194,6 +188,7 @@ export default function ProfileScreen({ navigation }) {
           style={styles.itemPhoto}
           resizeMode="cover"
         />
+        <Button title="update profile pic" onPress={handleProfileImage} />
         <Text>Username: {users.username}</Text>
         <Button title="user" onPress={() => console.log("user", userName)} />
         {/* <FlatList
@@ -208,23 +203,23 @@ export default function ProfileScreen({ navigation }) {
         /> */}
       </View>
 
-      <View style={styles.listContainer}>
-        <Text>Category</Text>
-        <FlatList
-          data={category}
-          extraData={userSkills}
-          keyExtractor={(item) => item.title}
-          renderItem={renderItem}
-          // renderItem={renderItemV2}
-        />
-      </View>
+      {/* <View style={styles.listContainer}> */}
+      <Text>Category</Text>
+      <FlatList
+        data={category}
+        extraData={userSkills}
+        keyExtractor={(item) => item.title}
+        renderItem={renderItem}
+        // renderItem={renderItemV2}
+      />
+      {/* </View> */}
 
-      <View style={styles.bottom}>
-        <Button title="Save" onPress={updateSkills} />
-        {/* <Button title="My Skills" onPress={() => console.log(userSkills)} /> */}
-        <Button title="Go back" onPress={() => navigation.goBack()} />
-        <Button onPress={signOutUser} title="Sign Out" />
-      </View>
+      {/* <View style={styles.bottom}> */}
+      <Button title="Save" onPress={updateSkills} />
+      {/* <Button title="My Skills" onPress={() => console.log(userSkills)} /> */}
+      <Button title="Go back" onPress={() => navigation.goBack()} />
+      <Button onPress={signOutUser} title="Sign Out" />
+      {/* </View> */}
     </SafeAreaView>
   );
 }

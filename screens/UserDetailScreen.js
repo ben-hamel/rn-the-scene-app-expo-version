@@ -17,6 +17,11 @@ import {
   uploadImageAndGetDownloadURL,
 } from "@config/firebase";
 import { pickImage } from "../utils/imagePicker";
+import TsButton from "@components/TsButton/TsButton.jsx";
+// import { Dimensions } from 'react-native';
+
+const screenWidth = Dimensions.get("window").width;
+// import { SafeAreaView } from "react-native-safe-area-context";
 
 const windowWidth = Dimensions.get("window").width;
 // const windowHeight = Dimensions.get("window").height;
@@ -40,10 +45,15 @@ const UserDetailScreen = ({ navigation, route }) => {
   /* Pick Image */
   const handleCoverPhoto = async () => {
     const imageUri = await pickImage();
-    const uploadUrl = await uploadImageAndGetDownloadURL(imageUri);
-    await updateCoverPhoto(userName.user.email, uploadUrl);
-    setImage(uploadUrl);
-    setUser({ ...user, coverPhoto: uploadUrl });
+    //if imageUri is not null then upload image to firebase
+    if (imageUri) {
+      const uploadUrl = await uploadImageAndGetDownloadURL(imageUri);
+      await updateCoverPhoto(userName.user.email, uploadUrl);
+      setImage(uploadUrl);
+      setUser({ ...user, coverPhoto: uploadUrl });
+    } else {
+      console.log("No image selected");
+    }
   };
 
   // grab user data from firestore using user email
@@ -79,7 +89,9 @@ const UserDetailScreen = ({ navigation, route }) => {
 
   return (
     <Animated.ScrollView
-      style={styles.container}
+      style={{
+        flex: 1,
+      }}
       scrollEventThrottle={1}
       onScroll={Animated.event(
         [{ nativeEvent: { contentOffset: { y: pan.y } } }],
@@ -90,7 +102,7 @@ const UserDetailScreen = ({ navigation, route }) => {
     >
       {/* HEADER IMG */}
       <Animated.Image
-        source={{ uri: user?.coverPhoto }}
+        source={{ uri: user?.profile_picture }}
         resizeMode="cover"
         style={{
           transform: [
@@ -116,55 +128,39 @@ const UserDetailScreen = ({ navigation, route }) => {
       {/* USERNAME */}
       {username && <Text style={styles.textOverlay}>{user?.username}</Text>}
 
-      {/* display image form oicked img */}
-      {/* {image && (
-        <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
-      )} */}
-
-      {/* button to pick image */}
-      <Button title="Change Cover Photo " onPress={handleCoverPhoto} />
-
-      {/* EDIT PROFILE */}
-      {isUser && (
-        <View style={styles.editProfile}>
-          <Text style={styles.editProfileText}>Edit Profile</Text>
-          <Button
-            title="Edit Profile"
-            onPress={() => navigation.navigate("ProfileScreen")}
-          />
-        </View>
-      )}
-
-      <View
-        style={{
-          alignItems: "center",
-        }}
-      >
-        <Button
+      <View style={styles.container}>
+        {/* <Text>UserDetailScreen - route name: {route.params}</Text> */}
+        {isUser && (
+          <>
+            <TsButton
+              title="Edit Profile"
+              onPress={() => navigation.navigate("ProfileScreen")}
+            />
+            {/* <TsButton title="Change Cover Photo" onPress={handleCoverPhoto} /> */}
+          </>
+        )}
+        {/* <TsButton
           title="Test"
           onPress={() => navigation.navigate("TestScreen")}
-        />
-        <Button title="Go back" onPress={() => navigation.goBack()} />
-        <Text>UserDetailScreen - route name: {route.params}</Text>
+        /> */}
+        {/* <TsButton title="Go back" onPress={() => navigation.goBack()} /> */}
 
         {/* ABOUT/BIO */}
-        <View style={styles.about}>
-          <Text style={styles.aboutTitle}> About</Text>
-          {/* <Text style={styles.aboutText}> {user?.bio}</Text> */}
-          {/* if bio then show bio */}
-          {bio ? (
-            <Text style={styles.aboutText}> {user?.bio}</Text>
-          ) : (
-            <Text>No BIo</Text>
-          )}
-        </View>
+        <Text style={styles.header}>About</Text>
+        {/* <Text style={styles.aboutText}> {user?.bio}</Text> */}
+        {/* if bio then show bio */}
+        {bio ? (
+          <Text style={styles.aboutText}>{user?.bio}</Text>
+        ) : (
+          <Text>No BIo</Text>
+        )}
 
         {/* DYNAMIC CONTENT */}
-        <View style={styles.dynamicContent}>
+        <View>
           {/* IMAGES */}
-          {images && <Text style={styles.aboutTitle}> Images</Text>}
+          {images && <Text style={styles.header}>Images</Text>}
           {images && (
-            <View style={styles.dynamicContent}>
+            <View>
               {images.map((image, i) => {
                 return (
                   <View key={image.id}>
@@ -180,7 +176,7 @@ const UserDetailScreen = ({ navigation, route }) => {
           )}
 
           {/* VIDEOS */}
-          {videos && <Text style={styles.aboutTitle}> Videos</Text>}
+          {videos && <Text style={styles.header}> Videos</Text>}
           {videos && (
             <View style={styles.dynamicContent}>
               {videos.map((video, index) => {
@@ -193,7 +189,7 @@ const UserDetailScreen = ({ navigation, route }) => {
                       shouldPlay={activeVideo === video.id}
                       style={styles.video}
                     />
-                    <Button
+                    <TsButton
                       key={`button${video.id}`}
                       title={activeVideo === video.id ? "stop" : "play"}
                       onPress={() => {
@@ -210,13 +206,13 @@ const UserDetailScreen = ({ navigation, route }) => {
             </View>
           )}
         </View>
-        <Button title="user" onPress={() => console.log(user)} />
+        {/* <Button title="user" onPress={() => console.log(user)} />
         <Button
           title="Test"
           onPress={() => navigation.navigate("TestScreen")}
-        />
+        /> */}
+        <TsButton title="Go back" onPress={() => navigation.goBack()} />
       </View>
-      <Button title="Go back" onPress={() => navigation.goBack()} />
     </Animated.ScrollView>
   );
 };
@@ -224,30 +220,34 @@ const UserDetailScreen = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginHorizontal: 20,
   },
   img: {
-    width: 300,
-    height: 168.75,
+    width: "100%",
+    height: undefined,
+    aspectRatio: 16 / 9,
     marginBottom: 10,
+    resizeMode: "cover",
   },
   textOverlay: {
-    position: "absolute", // use absolute positioning
-    zIndex: 1, // set the z-index to ensure the text appears above the image
-    top: 230, // position the text at the top of the container
-    left: 30, // position the text at the left of the container
-    justifyContent: "center", // center the text vertically within the container
-    alignItems: "center", // center the text horizontally within the container
-    fontSize: 24, // set the font size of the text
-    color: "white", // set the color of the text
+    position: "absolute",
+    zIndex: 1,
+    top: 230,
+    left: 30,
+    justifyContent: "center",
+    alignItems: "center",
+    fontSize: 24,
+    color: "white",
     fontWeight: "bold",
   },
   video: {
-    width: 300,
-    height: 168.75,
+    width: "100%",
+    height: undefined,
+    aspectRatio: 16 / 9,
     marginBottom: 20,
     marginTop: 10,
   },
-  aboutTitle: {
+  header: {
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 10,
@@ -255,12 +255,6 @@ const styles = StyleSheet.create({
   aboutText: {
     fontSize: 16,
     marginBottom: 10,
-  },
-  about: {
-    margin: 20,
-  },
-  dynamicContent: {
-    margin: 20,
   },
 });
 
