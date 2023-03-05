@@ -15,7 +15,7 @@ import { db } from "../config/firebase";
 import { collection, addDoc, Timestamp, setDoc, doc } from "firebase/firestore";
 import Logo from "../components/Logo/Logo";
 import { Images } from "../config/images";
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export const SignUpScreen = ({ navigation }) => {
   // const [userSignIn, setUserSignIn] = useState();
@@ -44,7 +44,7 @@ export const SignUpScreen = ({ navigation }) => {
       //   profile_picture: await getRandomPic(),
       // });
       const docRef = await setDoc(doc(db, "users", authUser.user.email), {
-        owner_uid: authUser.user.uid,
+        uid: authUser.user.uid,
         username: username,
         email: authUser.user.email,
         profile_picture: await getRandomPic(),
@@ -117,7 +117,7 @@ export const SignUpScreen = ({ navigation }) => {
         <Button
           title={"back to login screen"}
           onPress={() => navigation.navigate("Login")}
-        // style={styles.button}
+          // style={styles.button}
         />
       </View>
     </TouchableWithoutFeedback>

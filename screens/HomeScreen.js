@@ -1,7 +1,5 @@
 import React from "react";
-import {
-  StyleSheet,
-} from "react-native";
+import { StyleSheet, Button } from "react-native";
 import Header from "../components/home/Header/Header.js";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -11,6 +9,7 @@ export function HomeScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <Header />
+      <Button title="Test" onPress={() => navigation.navigate("TestScreen")} />
       <CategorySectionList />
     </SafeAreaView>
   );

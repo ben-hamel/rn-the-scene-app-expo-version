@@ -1,44 +1,75 @@
 import {
-  StyleSheet,
-  Text,
-  View,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  updateDoc,
+} from "firebase/firestore";
+import React, { useContext, useEffect, useState } from "react";
+import {
   Button,
   FlatList,
   Image,
+  StyleSheet,
+  Text,
   TouchableOpacity,
+  View,
 } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
-import { AuthenticatedUserContext } from "../contexts";
-import { auth } from "../config/firebase.js";
-import { signOut } from "firebase/auth";
-import { db } from "../config/firebase.js";
-import {
-  collection,
-  query,
-  getDocs,
-  doc,
-  getDoc,
-  updateDoc,
-} from "firebase/firestore";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { styleProps } from "react-native-web/dist/cjs/modules/forwardedProps";
+import { auth, db } from "../config/firebase.js";
+import { AuthenticatedUserContext } from "../contexts";
+import {
+  uploadImageAndGetDownloadURL,
+  updateProfilePhoto,
+  signOutUser,
+} from "../config/firebase.js";
+import { pickImage } from "../utils/imagePicker.js";
 
 export default function ProfileScreen({ navigation }) {
+  /** Pull in username from context */
+  const userName = useContext(AuthenticatedUserContext);
+  const [image, setImage] = useState(null);
+  const [uploading, setUploading] = useState(false);
   /** Loading state */
   const [loading, setLoading] = useState(true);
   const [load2, setLoad2] = useState(true);
+
   /** User State */
   const [users, setUsers] = useState();
   const [userSkills, setUserSkills] = useState([]);
 
   /** Category State */
   const [category, setCategory] = useState([]);
-
   const [selectedId, setSelectedId] = useState(null);
 
-  /** Pull in username from context */
-  const userName = useContext(AuthenticatedUserContext);
-  const arr_Test = [];
+  /**
+   * This function allows the user to select an image from their device's library using the ImagePicker library.
+   * If an image is selected, the function will proceed to upload the image using the uploadImage function,
+   * and the download URL of the uploaded image will be set as the value of the 'image' state.
+   * @returns {Promise<void>}
+   * @async
+   * @function
+   * @name handleProfileImage
+   */
+  const handleProfileImage = async () => {
+    const imageUri = await pickImage();
+    const uploadUrl = await uploadImageAndGetDownloadURL(imageUri);
+    await updateProfilePhoto(userName.user.email, uploadUrl);
+    // update the user's profile photo in the app
+    setImage(uploadUrl);
+    // set users profile picture to the image
+    setUsers({ ...users, profile_picture: uploadUrl });
+  };
+
+  /* Console log the current user */
+  useEffect(() => {
+    // Get the currently authenticated user
+    const user = auth.currentUser;
+
+    // Log the user to the console
+    console.log("user auth", user);
+  }, []);
 
   /** Pull user data from firebase */
   useEffect(() => {
@@ -66,31 +97,6 @@ export default function ProfileScreen({ navigation }) {
     getData();
   }, []);
 
-  /** V1 - This pulls all the category options from the categories collection in firebase */
-  // useEffect(() => {
-  //   const getData = async () => {
-  //     let arr_Data = [];
-
-  //     const q = query(collection(db, "categories"));
-
-  //     const querySnapshot = await getDocs(q);
-
-  //     const data = querySnapshot.docs.map((doc) =>
-  //       // console.log(doc.id, " => ", doc.data()),
-  //       arr_Data.push({
-  //         ...doc.data(),
-  //         id: doc.id,
-  //       })
-  //     );
-
-  //     setCategory(arr_Data);
-  //     setLoad2(false);
-  //     // console.log(arr_Data);
-  //   };
-
-  //   getData();
-  // }, []);
-
   /** V2 - This pulls all the category options from the categories collection in firebase */
   useEffect(() => {
     const getData = async () => {
@@ -115,28 +121,12 @@ export default function ProfileScreen({ navigation }) {
     getData();
   }, []);
 
-  /** Sign out user from app */
-  const signOutUser = () => {
-    signOut(auth)
-      .then(() => {
-        // Sign-out successful.
-        console.log("signed out");
-      })
-      .catch((error) => {
-        // An error happened.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log("singout error");
-        console.log("error code" + errorCode);
-        console.log("error message" + errorMessage);
-      });
-  };
-
   /**
    * This function is used to update the user's skills
    */
   const updateSkills = (id, skill) => {
-    const docRef = doc(db, "users", userName.user.email);
+    const docRef = doc(db, "users", userName.user.email); // in the users document find the user with the email of the current user
+    // update the skill field with the new skill
     updateDoc(docRef, {
       skill: userSkills,
     });
@@ -198,7 +188,9 @@ export default function ProfileScreen({ navigation }) {
           style={styles.itemPhoto}
           resizeMode="cover"
         />
+        <Button title="update profile pic" onPress={handleProfileImage} />
         <Text>Username: {users.username}</Text>
+        <Button title="user" onPress={() => console.log("user", userName)} />
         {/* <FlatList
           data={userSkills}
           keyExtractor={(item) => item}
@@ -211,23 +203,23 @@ export default function ProfileScreen({ navigation }) {
         /> */}
       </View>
 
-      <View style={styles.listContainer}>
-        <Text>Category</Text>
-        <FlatList
-          data={category}
-          extraData={userSkills}
-          keyExtractor={(item) => item.title}
-          renderItem={renderItem}
-          // renderItem={renderItemV2}
-        />
-      </View>
+      {/* <View style={styles.listContainer}> */}
+      <Text>Category</Text>
+      <FlatList
+        data={category}
+        extraData={userSkills}
+        keyExtractor={(item) => item.title}
+        renderItem={renderItem}
+        // renderItem={renderItemV2}
+      />
+      {/* </View> */}
 
-      <View style={styles.bottom}>
-        <Button title="Save" onPress={updateSkills} />
-        {/* <Button title="My Skills" onPress={() => console.log(userSkills)} /> */}
-        <Button title="Go back" onPress={() => navigation.goBack()} />
-        <Button onPress={signOutUser} title="Sign Out" />
-      </View>
+      {/* <View style={styles.bottom}> */}
+      <Button title="Save" onPress={updateSkills} />
+      {/* <Button title="My Skills" onPress={() => console.log(userSkills)} /> */}
+      <Button title="Go back" onPress={() => navigation.goBack()} />
+      <Button onPress={signOutUser} title="Sign Out" />
+      {/* </View> */}
     </SafeAreaView>
   );
 }

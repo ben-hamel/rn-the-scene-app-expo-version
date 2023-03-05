@@ -58,6 +58,7 @@ const CategorySectionList = () => {
        */
       setCategories(arr_Data);
       setLoading(false);
+      console.log("categories retrieved");
     };
 
     getData();
