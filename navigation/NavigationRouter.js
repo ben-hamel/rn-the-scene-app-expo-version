@@ -7,11 +7,32 @@ import { AuthenticatedUserContext } from "../contexts";
 import { AuthStack } from "./AuthStack.js";
 import { AppStack } from "./AppStack";
 
+import { useColorScheme } from "react-native";
+import { DefaultTheme, DarkTheme } from "@react-navigation/native";
+
 import { auth } from "../config/firebase.js";
+
+const MyTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: "#6a5acd",
+  },
+};
+
+const MyDarkTheme = {
+  ...DarkTheme,
+  colors: {
+    ...DarkTheme.colors,
+    primary: "#6a5acd",
+    secondary: "#6a5acd",
+  },
+};
 
 export const NavigationRouter = () => {
   const { user, setUser } = useContext(AuthenticatedUserContext);
   //   const [isLoading, setIsLoading] = useState(true);
+  const scheme = useColorScheme();
 
   useEffect(() => {
     // onAuthStateChanged returns an unsubscriber
@@ -32,7 +53,9 @@ export const NavigationRouter = () => {
   //   }
 
   return (
-    <NavigationContainer>
+    <NavigationContainer
+      theme={scheme === "dark" ? MyDarkTheme : MyTheme /*  */}
+    >
       {user ? <AppStack /> : <AuthStack />}
     </NavigationContainer>
   );
