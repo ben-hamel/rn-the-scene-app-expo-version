@@ -8,9 +8,11 @@ This app is designed to help you find local creatives and collaborators, this ap
 
 ## Screenshots
 
-![App Screenshot](docs/assets/demo.gif)
+![App Screenshot](docs/demo.gif)
 
 ## Common Deb Commands
 
 iOS Simulator Dark mode: Command + Shift + A
 Run Project: npx expo
+
+![Farmers Market Finder - Animated gif demo](demo/demo.gif)
