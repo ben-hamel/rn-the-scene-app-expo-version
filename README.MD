@@ -8,7 +8,7 @@ This app is designed to help you find local creatives and collaborators, this ap
 
 ## Screenshots
 
-![App Screenshot](https://giphy.com/clips/SWAG-nba-heat-miami-tasI3bbXi970kU6ok2)
+![](https://giphy.com/clips/SWAG-nba-heat-miami-tasI3bbXi970kU6ok2)
 
 ## Common Deb Commands
 
