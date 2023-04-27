@@ -8,7 +8,7 @@ This app is designed to help you find local creatives and collaborators, this ap
 
 ## Screenshots
 
-![App Screenshot](docs/demo.gif)
+![App Screenshot](docs/App_Example.gif)
 
 ## Common Deb Commands
 
