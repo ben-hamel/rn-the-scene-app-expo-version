@@ -25,7 +25,7 @@ function HomeStackScreen() {
     >
       <HomeStack.Screen name="home" component={HomeScreen} />
       {/* <HomeStack.Screen name="TestScreen" component={TestScreen} /> */}
-      {/* <HomeStack.Screen name="ProfileScreen" component={ProfileScreen} /> */}
+      <HomeStack.Screen name="ProfileScreen" component={ProfileScreen} />
       <HomeStack.Screen
         name="CategoryDetailScreen"
         component={CategoryDetailScreen}

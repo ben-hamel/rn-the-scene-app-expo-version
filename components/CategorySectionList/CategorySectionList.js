@@ -16,6 +16,8 @@ import { db } from "../../config/firebase";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 
+import { useTheme } from "@react-navigation/native";
+
 const Item = ({ title }) => (
   <View style={styles.item}>
     <Text style={styles.title}>{title}</Text>
@@ -27,6 +29,9 @@ const CategorySectionList = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const { colors } = useTheme();
+
+  const styles = styling(colors);
   useEffect(() => {
     const getData = async () => {
       /**
@@ -68,7 +73,7 @@ const CategorySectionList = () => {
     return (
       <SafeAreaView>
         <View>
-          <Text>Loading</Text>
+          <Text style={{ color: colors.text }}>Loading</Text>
         </View>
       </SafeAreaView>
     );
@@ -93,7 +98,7 @@ const CategorySectionList = () => {
           />
           {/* <>{console.log(item)}</> */}
           <Text style={styles.itemText}>{item.title}</Text>
-          <Text style={styles.itemText}>{item.id}</Text>
+          {/* <Text style={(styles.itemText, { color: "red" })}>{item.id}</Text> */}
         </View>
       </TouchableOpacity>
     );
@@ -105,7 +110,9 @@ const CategorySectionList = () => {
       <SectionList
         renderSectionHeader={({ section, index }) => (
           <>
-            <Text style={styles.sectionHeader}>{section.title}</Text>
+            <Text style={[styles.sectionHeader, { color: colors.text }]}>
+              {section.title}
+            </Text>
             <FlatList
               horizontal
               data={section.data}
@@ -126,32 +133,33 @@ const CategorySectionList = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#121212",
-  },
-  sectionHeader: {
-    fontWeight: "800",
-    fontSize: 18,
-    marginTop: 20,
-    marginLeft: 10,
-    marginBottom: 5,
-  },
-  item: {
-    margin: 10,
-  },
-  itemPhoto: {
-    width: 200,
-    height: 200,
-  },
-  itemText: {
-    // color: "rgba(255, 255, 255, 0.5)",
-    marginTop: 5,
-  },
-  padding: {
-    padding: 10,
-  },
-});
+const styling = (theme) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: "#121212",
+    },
+    sectionHeader: {
+      fontWeight: "800",
+      fontSize: 18,
+      marginTop: 20,
+      marginLeft: 10,
+      marginBottom: 5,
+    },
+    item: {
+      margin: 10,
+    },
+    itemPhoto: {
+      width: 200,
+      height: 200,
+    },
+    itemText: {
+      color: theme.text,
+      marginTop: 5,
+    },
+    padding: {
+      padding: 10,
+    },
+  });
 
 export default CategorySectionList;

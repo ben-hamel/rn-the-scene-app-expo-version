@@ -13,4 +13,9 @@ This app is designed to help you find local creatives and collaborators, this ap
 ## Common Dev Commands
 
 iOS Simulator Dark mode: Command + Shift + A
+
 Run Project: npx expo
+
+[Link Text](COMMAND_CHEAT_SHEET.txt)
+
+[Cheat Sheet](COMMAND_CHEAT_SHEET.md)

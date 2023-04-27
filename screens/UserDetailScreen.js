@@ -82,7 +82,7 @@ const UserDetailScreen = ({ navigation, route }) => {
   const [activeVideo, setActiveVideo] = React.useState(null);
 
   // if user then destructure user object
-  const { bio, coverPhoto, email, profilePicture, username, videos, images } =
+  const { bio, coverPhoto, email, profile_picture, username, videos, images } =
     user || {};
 
   //  if videos then dynamically import useState hook
@@ -102,7 +102,7 @@ const UserDetailScreen = ({ navigation, route }) => {
     >
       {/* HEADER IMG */}
       <Animated.Image
-        source={{ uri: user?.profile_picture }}
+        source={{ uri: profile_picture }}
         resizeMode="cover"
         style={{
           transform: [
