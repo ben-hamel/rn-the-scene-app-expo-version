@@ -16,6 +16,6 @@ iOS Simulator Dark mode: Command + Shift + A
 
 Run Project: npx expo
 
-[Link Text](COMMAND_CHEAT_SHEET.txt)
+[Text Cheat Sheet](COMMAND_CHEAT_SHEET.txt)
 
-[Cheat Sheet](COMMAND_CHEAT_SHEET.md)
+[Markdown Cheat Sheet](COMMAND_CHEAT_SHEET.md)
