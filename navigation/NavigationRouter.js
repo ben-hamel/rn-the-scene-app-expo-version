@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from "react";
+// import { ActivityIndicator, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { onAuthStateChanged } from "firebase/auth";
 
@@ -44,19 +45,19 @@ export const NavigationRouter = () => {
         console.log("user is signed out");
         setUser(null);
       }
-
-      // rework the code to be in AuthContext: https://devpress.csdn.net/react/62eb6826648466712833a0b6.html
-      // https://firebase.google.com/docs/auth/web/manage-users (Manage Users in Firebase)
-      // https://firebase.google.com/docs/auth/users (Get User Data)
     });
 
     // unsubscribe auth listener on unmount
     return unsubscribeAuthStateChanged;
   }, [user]);
 
-  //   if (isLoading) {
-  //     return <LoadingIndicator />;
-  //   }
+  // if (isLoading) {
+  //   return (
+  //     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+  //       <ActivityIndicator size="large" />
+  //     </View>
+  //   );
+  // }
 
   return (
     <NavigationContainer theme={scheme === "dark" ? MyDarkTheme : MyTheme}>
