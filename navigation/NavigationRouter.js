@@ -31,18 +31,24 @@ const MyDarkTheme = {
 
 export const NavigationRouter = () => {
   const { user, setUser } = useContext(AuthenticatedUserContext);
-  //   const [isLoading, setIsLoading] = useState(true);
+  // const [isLoading, setIsLoading] = useState(true);
   const scheme = useColorScheme();
 
   useEffect(() => {
     // onAuthStateChanged returns an unsubscriber
-    const unsubscribeAuthStateChanged = onAuthStateChanged(
-      auth,
-      (authenticatedUser) => {
-        authenticatedUser ? setUser(authenticatedUser) : setUser(null);
-        // setIsLoading(false);
+    const unsubscribeAuthStateChanged = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log("user is signed in");
+        setUser(user);
+      } else {
+        console.log("user is signed out");
+        setUser(null);
       }
-    );
+
+      // rework the code to be in AuthContext: https://devpress.csdn.net/react/62eb6826648466712833a0b6.html
+      // https://firebase.google.com/docs/auth/web/manage-users (Manage Users in Firebase)
+      // https://firebase.google.com/docs/auth/users (Get User Data)
+    });
 
     // unsubscribe auth listener on unmount
     return unsubscribeAuthStateChanged;
@@ -53,9 +59,7 @@ export const NavigationRouter = () => {
   //   }
 
   return (
-    <NavigationContainer
-      theme={scheme === "dark" ? MyDarkTheme : MyTheme /*  */}
-    >
+    <NavigationContainer theme={scheme === "dark" ? MyDarkTheme : MyTheme}>
       {user ? <AppStack /> : <AuthStack />}
     </NavigationContainer>
   );

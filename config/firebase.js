@@ -68,17 +68,12 @@ export const updateCoverPhoto = async (userEmail, photoUrl) => {
 
 /** Sign out user from the app */
 export const signOutUser = () => {
-  signOut(auth)
-    .then(() => {
-      // Sign-out successful.
-      console.log("signed out");
-    })
-    .catch((error) => {
-      // An error happened.
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.log("signout error");
-      console.log("error code" + errorCode);
-      console.log("error message" + errorMessage);
-    });
+  signOut(auth).catch((error) => {
+    // An error happened.
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    console.log("signout error");
+    console.log("error code" + errorCode);
+    console.log("error message" + errorMessage);
+  });
 };

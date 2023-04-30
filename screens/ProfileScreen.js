@@ -1,11 +1,3 @@
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  updateDoc,
-} from "firebase/firestore";
 import React, { useContext, useEffect, useState } from "react";
 import {
   Button,
@@ -17,9 +9,18 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { auth, db } from "../config/firebase.js";
 import { AuthenticatedUserContext } from "../contexts";
 import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  updateDoc,
+} from "firebase/firestore";
+import {
+  auth,
+  db,
   uploadImageAndGetDownloadURL,
   updateProfilePhoto,
   signOutUser,
@@ -29,6 +30,11 @@ import { pickImage } from "../utils/imagePicker.js";
 export default function ProfileScreen({ navigation }) {
   /** Pull in username from context */
   const userName = useContext(AuthenticatedUserContext);
+
+  // log username to console in a prettier way
+  console.log("username", userName.user);
+
+  //console log the destructured user object
   const [image, setImage] = useState(null);
   const [uploading, setUploading] = useState(false);
   /** Loading state */
@@ -63,13 +69,13 @@ export default function ProfileScreen({ navigation }) {
   };
 
   /* Console log the current user */
-  useEffect(() => {
-    // Get the currently authenticated user
-    const user = auth.currentUser;
+  // useEffect(() => {
+  //   // Get the currently authenticated user
+  //   const user = auth.currentUser;
 
-    // Log the user to the console
-    console.log("user auth", user);
-  }, []);
+  //   // Log the user to the console
+  //   // console.log("user auth", user);
+  // }, []);
 
   /** Pull user data from firebase */
   useEffect(() => {
