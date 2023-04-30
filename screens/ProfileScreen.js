@@ -1,11 +1,3 @@
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  updateDoc,
-} from "firebase/firestore";
 import React, { useContext, useEffect, useState } from "react";
 import {
   Button,
@@ -17,9 +9,18 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { auth, db } from "../config/firebase.js";
 import { AuthenticatedUserContext } from "../contexts";
 import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  updateDoc,
+} from "firebase/firestore";
+import {
+  auth,
+  db,
   uploadImageAndGetDownloadURL,
   updateProfilePhoto,
   signOutUser,
@@ -28,7 +29,13 @@ import { pickImage } from "../utils/imagePicker.js";
 
 export default function ProfileScreen({ navigation }) {
   /** Pull in username from context */
-  const userName = useContext(AuthenticatedUserContext);
+  // const userName = useContext(AuthenticatedUserContext);
+  const { user } = useContext(AuthenticatedUserContext);
+
+  // log username to console in a prettier way
+  // console.log("username", user);
+
+  //console log the destructured user object
   const [image, setImage] = useState(null);
   const [uploading, setUploading] = useState(false);
   /** Loading state */
@@ -55,26 +62,17 @@ export default function ProfileScreen({ navigation }) {
   const handleProfileImage = async () => {
     const imageUri = await pickImage();
     const uploadUrl = await uploadImageAndGetDownloadURL(imageUri);
-    await updateProfilePhoto(userName.user.email, uploadUrl);
+    await updateProfilePhoto(user.email, uploadUrl);
     // update the user's profile photo in the app
     setImage(uploadUrl);
     // set users profile picture to the image
     setUsers({ ...users, profile_picture: uploadUrl });
   };
 
-  /* Console log the current user */
-  useEffect(() => {
-    // Get the currently authenticated user
-    const user = auth.currentUser;
-
-    // Log the user to the console
-    console.log("user auth", user);
-  }, []);
-
   /** Pull user data from firebase */
   useEffect(() => {
     const getData = async () => {
-      const docRef = doc(db, "users", userName.user.email);
+      const docRef = doc(db, "users", user.email);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         // console.log("Document data:", docSnap.data().skill);
@@ -125,7 +123,7 @@ export default function ProfileScreen({ navigation }) {
    * This function is used to update the user's skills
    */
   const updateSkills = (id, skill) => {
-    const docRef = doc(db, "users", userName.user.email); // in the users document find the user with the email of the current user
+    const docRef = doc(db, "users", user.email); // in the users document find the user with the email of the current user
     // update the skill field with the new skill
     updateDoc(docRef, {
       skill: userSkills,
@@ -190,7 +188,7 @@ export default function ProfileScreen({ navigation }) {
         />
         <Button title="update profile pic" onPress={handleProfileImage} />
         <Text>Username: {users.username}</Text>
-        <Button title="user" onPress={() => console.log("user", userName)} />
+        <Button title="user" onPress={() => console.log("user", user)} />
         {/* <FlatList
           data={userSkills}
           keyExtractor={(item) => item}

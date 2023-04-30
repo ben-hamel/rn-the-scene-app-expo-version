@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from "react";
+// import { ActivityIndicator, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { onAuthStateChanged } from "firebase/auth";
 
@@ -31,31 +32,35 @@ const MyDarkTheme = {
 
 export const NavigationRouter = () => {
   const { user, setUser } = useContext(AuthenticatedUserContext);
-  //   const [isLoading, setIsLoading] = useState(true);
+  // const [isLoading, setIsLoading] = useState(true);
   const scheme = useColorScheme();
 
   useEffect(() => {
     // onAuthStateChanged returns an unsubscriber
-    const unsubscribeAuthStateChanged = onAuthStateChanged(
-      auth,
-      (authenticatedUser) => {
-        authenticatedUser ? setUser(authenticatedUser) : setUser(null);
-        // setIsLoading(false);
+    const unsubscribeAuthStateChanged = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log("user is signed in");
+        setUser(user);
+      } else {
+        console.log("user is signed out");
+        setUser(null);
       }
-    );
+    });
 
     // unsubscribe auth listener on unmount
     return unsubscribeAuthStateChanged;
   }, [user]);
 
-  //   if (isLoading) {
-  //     return <LoadingIndicator />;
-  //   }
+  // if (isLoading) {
+  //   return (
+  //     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+  //       <ActivityIndicator size="large" />
+  //     </View>
+  //   );
+  // }
 
   return (
-    <NavigationContainer
-      theme={scheme === "dark" ? MyDarkTheme : MyTheme /*  */}
-    >
+    <NavigationContainer theme={scheme === "dark" ? MyDarkTheme : MyTheme}>
       {user ? <AppStack /> : <AuthStack />}
     </NavigationContainer>
   );
