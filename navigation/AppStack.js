@@ -3,6 +3,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useTheme } from "@react-navigation/native";
+import { Button } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 import {
   HomeScreen,
@@ -10,9 +12,11 @@ import {
   ProfileScreen,
   CategoryDetailScreen,
   UserDetailScreen,
+  EditProfileScreen,
 } from "../screens";
 
 const HomeStack = createStackNavigator();
+const ProfileStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function HomeStackScreen() {
@@ -31,9 +35,53 @@ function HomeStackScreen() {
         component={CategoryDetailScreen}
       />
       <HomeStack.Screen name="UserDetailScreen" component={UserDetailScreen} />
+      <HomeStack.Screen
+        name="EditProfileScreen"
+        component={EditProfileScreen}
+      />
     </HomeStack.Navigator>
   );
 }
+
+const ProfileStackScreen = () => {
+  const navigation = useNavigation();
+  const { colors } = useTheme();
+  return (
+    <ProfileStack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <ProfileStack.Screen name="ProfileScreen" component={ProfileScreen} />
+      <ProfileStack.Screen
+        name="EditProfileScreen"
+        component={EditProfileScreen}
+        options={{
+          headerShown: true,
+          presentation: "modal",
+          headerRight: () => (
+            <Button
+              onPress={() => {
+                // navigate to profile screen
+                navigation.navigate("ProfileScreen");
+              }}
+              title="Save"
+            />
+          ),
+          headerLeft: () => (
+            <Button
+              onPress={() => {
+                // go back to the previous screen
+                navigation.navigate("ProfileScreen");
+              }}
+              title="Cancel"
+            />
+          ),
+        }}
+      />
+    </ProfileStack.Navigator>
+  );
+};
 
 export const AppStack = () => {
   const { colors } = useTheme();
@@ -75,7 +123,7 @@ export const AppStack = () => {
     >
       <Tab.Screen name="Home" component={HomeStackScreen} />
       <Tab.Screen name="TestScreen" component={TestScreen} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
+      <Tab.Screen name="Profile" component={ProfileStackScreen} />
     </Tab.Navigator>
   );
 };

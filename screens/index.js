@@ -5,6 +5,7 @@ import TestScreen from "./TestScreen";
 import ProfileScreen from "./ProfileScreen";
 import CategoryDetailScreen from "./CategoryDetailScreen";
 import UserDetailScreen from "./UserDetailScreen";
+import EditProfileScreen from "./EditProfileScreen";
 
 export {
   LoginScreen,
@@ -14,4 +15,5 @@ export {
   ProfileScreen,
   CategoryDetailScreen,
   UserDetailScreen,
+  EditProfileScreen,
 };

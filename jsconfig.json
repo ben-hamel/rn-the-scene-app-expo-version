@@ -4,8 +4,8 @@
     "paths": {
       "@config/*": ["config/*"],
       "@components/*": ["components/*"],
-      //utils
-      "@utils/*": ["utils/*"]
+      "@utils/*": ["utils/*"],
+      "@contexts/*": ["contexts/*"]
     }
   }
 }
