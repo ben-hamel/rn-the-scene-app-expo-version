@@ -9,6 +9,8 @@ import TsButton from "@components/TsButton/TsButton.jsx";
 import { useTheme } from "@react-navigation/native";
 import { AuthenticatedUserContext } from "../contexts";
 import { Video } from "expo-av";
+// import { WebView } from "react-native-webview";
+import YoutubePlayer from "react-native-youtube-iframe";
 
 const ProfileScreen = ({ navigation }) => {
   /** Theme Context */
@@ -61,6 +63,15 @@ const ProfileScreen = ({ navigation }) => {
             })}
           </View>
         )}
+
+        <YoutubePlayer
+          height={400 / (16 / 9)}
+          width={"100%"}
+          play={false}
+          videoId={"vAoB4VbhRzM"}
+          style={styles.video}
+          // onChangeState={onStateChange}
+        />
 
         {/* VIDEOS */}
         {videos && <Text style={styles.header}> Videos</Text>}
@@ -126,5 +137,9 @@ const styles = StyleSheet.create({
     aspectRatio: 16 / 9,
     marginBottom: 20,
     marginTop: 10,
+  },
+  test: {
+    width: "100%",
+    height: undefined,
   },
 });
