@@ -1,6 +1,6 @@
 import { View, Text, Animated, StyleSheet } from "react-native";
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { AuthenticatedUserContext } from "../../contexts";
+// import { AuthenticatedUserContext } from "../../contexts";
 // import { useTheme } from "@react-navigation/native";
 
 export default function ProfileHero(props) {
@@ -10,7 +10,7 @@ export default function ProfileHero(props) {
   //   const { colors } = useTheme();
 
   /** Pull in username from context, If user is the same as the route.param then render text */
-  const userName = useContext(AuthenticatedUserContext);
+  // const userName = useContext(AuthenticatedUserContext);
 
   /* Animated Header */
   const pan = useRef(new Animated.ValueXY()).current;

@@ -13,6 +13,7 @@ import {
   CategoryDetailScreen,
   UserDetailScreen,
   EditProfileScreen,
+  EditSkillsScreen,
 } from "../screens";
 
 const HomeStack = createStackNavigator();
@@ -78,6 +79,10 @@ const ProfileStackScreen = () => {
             />
           ),
         }}
+      />
+      <ProfileStack.Screen
+        name="EditSkillsScreen"
+        component={EditSkillsScreen}
       />
     </ProfileStack.Navigator>
   );

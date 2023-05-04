@@ -57,10 +57,12 @@ const SkillFeed = ({ skill }) => {
   };
 
   const PressableListItem = ({ item }) => {
-    // () => console.log("skillfeed item", item);
+    () => console.log("skillfeed item", item);
     return (
       <Pressable
-        onPress={() => navigation.navigate("UserDetailScreen", item.id)}
+        // onPress={() => navigation.navigate("UserDetailScreen", item.id)}
+        onPress={() => navigation.navigate("UserDetailScreen", item.username)}
+        // onPress={() => console.log("skillfeed item", item)}
       >
         <View style={styles.listItem}>
           <Image

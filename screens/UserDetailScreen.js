@@ -1,15 +1,10 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import {
-  Animated,
-  Button,
-  Dimensions,
-  Image,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { useEffect, useState } from "react";
+import { Image, StyleSheet, Text, View } from "react-native";
 import { Video } from "expo-av";
-import { AuthenticatedUserContext } from "../contexts";
+import { useTheme } from "@react-navigation/native";
+import { getUserWithUsername } from "../lib/firebase";
+import ProfileHero from "@components/ProfileHero/ProfileHero";
+
 import { collection, query, where, getDocs } from "firebase/firestore";
 import {
   db,
@@ -18,20 +13,12 @@ import {
 } from "@config/firebase";
 import { pickImage } from "../utils/imagePicker";
 import TsButton from "@components/TsButton/TsButton.jsx";
-// import { Dimensions } from 'react-native';
-
-const screenWidth = Dimensions.get("window").width;
-// import { SafeAreaView } from "react-native-safe-area-context";
-
-const windowWidth = Dimensions.get("window").width;
-// const windowHeight = Dimensions.get("window").height;
 
 const UserDetailScreen = ({ navigation, route }) => {
-  /* Animated Header */
-  const pan = useRef(new Animated.ValueXY()).current;
-
-  /** Pull in username from context, If user is the same as the route.param then render text */
-  const userName = useContext(AuthenticatedUserContext);
+  const username = route.params;
+  const [userData, setUserData] = useState();
+  /** Contexts */
+  const { colors } = useTheme();
 
   /* If user is the same as the route.param then render text */
   const [isUser, setIsUser] = useState(false);
@@ -59,106 +46,37 @@ const UserDetailScreen = ({ navigation, route }) => {
   // grab user data from firestore using user email
 
   useEffect(() => {
-    if (userName.user.email === route.params) {
-      setIsUser(true);
+    async function getUserData() {
+      const userDoc = await getUserWithUsername(username);
+      const userDocData = userDoc.data();
+      setUserData(userDocData);
     }
-    // grab user data from firestore using where email is equal to route.params
-    const getData = async () => {
-      const q = query(
-        collection(db, "users"),
-        where("email", "==", route.params)
-      );
-      const querySnapshot = await getDocs(q);
-      const data = querySnapshot.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
-      setUser(data[0]);
-      // console.log("user", data[0]);
-    };
-    getData();
+
+    getUserData();
   }, []);
 
-  const [activeVideo, setActiveVideo] = React.useState(null);
+  const [activeVideo, setActiveVideo] = useState(null);
 
-  // if user then destructure user object
-  const { bio, coverPhoto, email, profile_picture, username, videos, images } =
-    user || {};
-
-  //  if videos then dynamically import useState hook
+  const { bio, profile_picture, videos, images } = userData || {};
 
   return (
-    <Animated.ScrollView
-      style={{
-        flex: 1,
-      }}
-      scrollEventThrottle={1}
-      onScroll={Animated.event(
-        [{ nativeEvent: { contentOffset: { y: pan.y } } }],
-        {
-          useNativeDriver: true,
-        }
-      )}
-    >
-      {/* HEADER IMG */}
-      <Animated.Image
-        source={{ uri: profile_picture }}
-        resizeMode="cover"
-        style={{
-          transform: [
-            {
-              translateY: pan.y.interpolate({
-                inputRange: [-200, 0],
-                outputRange: [-150, 0],
-                extrapolate: "clamp",
-              }),
-            },
-            {
-              scale: pan.y.interpolate({
-                inputRange: [-200, 0],
-                outputRange: [2, 1],
-                extrapolate: "clamp",
-              }),
-            },
-          ],
-          height: 300, // specify the height of the image explicitly
-          width: "100%", // the image should fill the width of its
-        }}
-      />
+    <ProfileHero img={profile_picture} username={username}>
       {/* USERNAME */}
-      {username && <Text style={styles.textOverlay}>{user?.username}</Text>}
+      {username && <Text style={styles.textOverlay}>{username}</Text>}
 
       <View style={styles.container}>
-        {/* <Text>UserDetailScreen - route name: {route.params}</Text> */}
-        {isUser && (
-          <>
-            <TsButton
-              title="Edit Profile"
-              onPress={() => navigation.navigate("ProfileScreen")}
-            />
-            {/* <TsButton title="Change Cover Photo" onPress={handleCoverPhoto} /> */}
-          </>
-        )}
-        {/* <TsButton
-          title="Test"
-          onPress={() => navigation.navigate("TestScreen")}
-        /> */}
-        {/* <TsButton title="Go back" onPress={() => navigation.goBack()} /> */}
-
         {/* ABOUT/BIO */}
-        <Text style={styles.header}>About</Text>
-        {/* <Text style={styles.aboutText}> {user?.bio}</Text> */}
-        {/* if bio then show bio */}
-        {bio ? (
-          <Text style={styles.aboutText}>{user?.bio}</Text>
-        ) : (
-          <Text>No BIo</Text>
-        )}
+        <Text style={[styles.header, { color: colors.text }]}>About</Text>
+        <Text style={[styles.aboutText, { color: colors.text }]}>
+          {bio ? bio : "No Bio"}
+        </Text>
 
         {/* DYNAMIC CONTENT */}
         <View>
           {/* IMAGES */}
-          {images && <Text style={styles.header}>Images</Text>}
+          {images && (
+            <Text style={[styles.header, { color: colors.text }]}>Images</Text>
+          )}
           {images && (
             <View>
               {images.map((image, i) => {
@@ -176,7 +94,9 @@ const UserDetailScreen = ({ navigation, route }) => {
           )}
 
           {/* VIDEOS */}
-          {videos && <Text style={styles.header}> Videos</Text>}
+          {videos && (
+            <Text style={[styles.header, { color: colors.text }]}> Videos</Text>
+          )}
           {videos && (
             <View style={styles.dynamicContent}>
               {videos.map((video, index) => {
@@ -206,14 +126,9 @@ const UserDetailScreen = ({ navigation, route }) => {
             </View>
           )}
         </View>
-        {/* <Button title="user" onPress={() => console.log(user)} />
-        <Button
-          title="Test"
-          onPress={() => navigation.navigate("TestScreen")}
-        /> */}
         <TsButton title="Go back" onPress={() => navigation.goBack()} />
       </View>
-    </Animated.ScrollView>
+    </ProfileHero>
   );
 };
 
