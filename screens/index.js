@@ -6,6 +6,7 @@ import ProfileScreen from "./ProfileScreen";
 import CategoryDetailScreen from "./CategoryDetailScreen";
 import UserDetailScreen from "./UserDetailScreen";
 import EditProfileScreen from "./EditProfileScreen";
+import EditSkillsScreen from "./EditSkillsScreen";
 
 export {
   LoginScreen,
@@ -16,4 +17,5 @@ export {
   CategoryDetailScreen,
   UserDetailScreen,
   EditProfileScreen,
+  EditSkillsScreen,
 };

@@ -1,37 +1,32 @@
-import { StyleSheet, Text, View, Button, Image } from "react-native";
-import React, { useState, useEffect, useContext } from "react";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "@config/firebase";
+import { StyleSheet, Text, View, Image } from "react-native";
+import { useState, useEffect, useContext } from "react";
+import { useTheme } from "@react-navigation/native";
+import YoutubePlayer from "react-native-youtube-iframe";
+import { Video } from "expo-av";
 //Componets
 import ProfileHero from "@components/ProfileHero/ProfileHero";
 import TsButton from "@components/TsButton/TsButton.jsx";
 //Misc
-import { useTheme } from "@react-navigation/native";
-import { AuthenticatedUserContext } from "../contexts";
-import { Video } from "expo-av";
-// import { WebView } from "react-native-webview";
-import YoutubePlayer from "react-native-youtube-iframe";
+import { getUserWithUsername } from "../lib/firebase";
+import { UserContext } from "../contexts/context";
 
 const ProfileScreen = ({ navigation }) => {
-  /** Theme Context */
+  /** Contexts */
   const { colors } = useTheme();
-  const { user } = useContext(AuthenticatedUserContext);
-
+  const { username } = useContext(UserContext);
+  /** State */
   const [userData, setUserData] = useState();
   const [activeVideo, setActiveVideo] = useState(null);
-  const { profile_picture, username, bio, images, videos } = userData || {};
+  const { profile_picture, bio, images, videos } = userData || {};
 
-  //  get data from collection where document name is equal to user.uid
   useEffect(() => {
-    const getData = async () => {
-      const docRef = doc(db, "users", user.uid);
-      const docSnap = await getDoc(docRef);
+    async function getUserData() {
+      const userDoc = await getUserWithUsername(username);
+      const userDocData = userDoc.data();
+      setUserData(userDocData);
+    }
 
-      if (docSnap.exists()) {
-        setUserData(docSnap.data());
-      }
-    };
-    getData();
+    getUserData();
   }, []);
 
   return (
@@ -47,7 +42,9 @@ const ProfileScreen = ({ navigation }) => {
           {bio ? bio : "No Bio"}
         </Text>
         {/* IMAGES */}
-        {images && <Text style={styles.header}>Images</Text>}
+        {images && (
+          <Text style={[styles.header, { color: colors.text }]}>Images</Text>
+        )}
         {images && (
           <View>
             {images.map((image, i) => {
@@ -74,7 +71,9 @@ const ProfileScreen = ({ navigation }) => {
         />
 
         {/* VIDEOS */}
-        {videos && <Text style={styles.header}> Videos</Text>}
+        {videos && (
+          <Text style={[styles.header, { color: colors.text }]}> Videos</Text>
+        )}
         {videos && (
           <View style={styles.dynamicContent}>
             {videos.map((video, index) => {
