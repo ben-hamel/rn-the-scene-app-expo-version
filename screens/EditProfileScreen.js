@@ -28,10 +28,16 @@ export default function EditProfileScreen({ navigation }) {
    * @name handleProfileImage
    */
   const handleProfileImage = async () => {
-    const imageUri = await pickImage();
-    const uploadUrl = await uploadImageAndGetDownloadURL(imageUri);
-    updateProfilePhoto(user.uid, uploadUrl);
-    setUserData({ ...userData, profile_picture: uploadUrl });
+    // if image isnt cancelled then upload image and get download url
+    const image = await pickImage();
+    if (image) {
+      // const imageUri = await pickImage();
+      const uploadUrl = await uploadImageAndGetDownloadURL(imageUri);
+      updateProfilePhoto(user.uid, uploadUrl);
+      setUserData({ ...userData, profile_picture: uploadUrl });
+    } else {
+      console.log("image cancelled");
+    }
   };
 
   /**
