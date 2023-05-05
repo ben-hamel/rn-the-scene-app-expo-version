@@ -2,15 +2,19 @@ import { useEffect, useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { Video } from "expo-av";
 import { useTheme } from "@react-navigation/native";
-import { getUserWithUsername } from "../lib/firebase";
+import {
+  getUserWithUsername,
+  updateCoverPhoto,
+  uploadImageAndGetDownloadURL,
+} from "@lib/firebase";
 import ProfileHero from "@components/ProfileHero/ProfileHero";
 
 import { collection, query, where, getDocs } from "firebase/firestore";
-import {
-  db,
-  updateCoverPhoto,
-  uploadImageAndGetDownloadURL,
-} from "@config/firebase";
+// import {
+//   db,
+//   updateCoverPhoto,
+//   uploadImageAndGetDownloadURL,
+// } from "@lib/firebase";
 import { pickImage } from "../utils/imagePicker";
 import TsButton from "@components/TsButton/TsButton.jsx";
 

@@ -9,6 +9,11 @@ module.exports = function (api) {
           alias: {
             "@config": "./config",
             "@components": "./components",
+            "@screens": "./screens",
+            "@lib": "./lib",
+            "@utils": "./utils",
+            "@hooks": "./hooks",
+            "@contexts": "./contexts",
           },
           // extensions: [".js", ".jsx", ".ts", ".tsx"],
         },

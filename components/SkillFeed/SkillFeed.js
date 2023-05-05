@@ -7,7 +7,7 @@ import {
   Pressable,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import { db } from "../../config/firebase";
+import { db } from "@lib/firebase.js";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
 
