@@ -1,21 +1,21 @@
 // import { StatusBar } from "expo-status-bar";
-import { Button, StyleSheet, Text, View } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-
 import { NavigationRouter } from "./navigation/NavigationRouter";
-// import { AuthenticatedUserProvider } from "./contexts";
-import { AuthenticatedUserProvider } from "./contexts";
+import { UserContext } from "./contexts/context";
+import { useUserData } from "./hooks/hooks";
 
 const Stack = createNativeStackNavigator();
 
 function App() {
+  const userData = useUserData();
+
   return (
-    <AuthenticatedUserProvider>
+    <UserContext.Provider value={userData}>
       <SafeAreaProvider>
         <NavigationRouter />
       </SafeAreaProvider>
-    </AuthenticatedUserProvider>
+    </UserContext.Provider>
   );
 }
 

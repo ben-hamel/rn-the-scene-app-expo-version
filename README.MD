@@ -9,13 +9,3 @@ This app is designed to help you find local creatives and collaborators, this ap
 ## Screenshots
 
 ![App Screenshot](docs/assets/App_Example.gif)
-
-## Common Dev Commands
-
-iOS Simulator Dark mode: Command + Shift + A
-
-Run Project: npx expo
-
-[Text Cheat Sheet](COMMAND_CHEAT_SHEET.txt)
-
-[Markdown Cheat Sheet](COMMAND_CHEAT_SHEET.md)

@@ -9,9 +9,8 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import { auth } from "../config/firebase.js";
+import { auth, db } from "../lib/firebase.js";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { db } from "../config/firebase";
 import { collection, addDoc, Timestamp, setDoc, doc } from "firebase/firestore";
 import Logo from "../components/Logo/Logo";
 import { Images } from "../config/images";

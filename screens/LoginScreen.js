@@ -9,7 +9,7 @@ import {
   Pressable,
   Platform,
 } from "react-native";
-import { auth } from "../config/firebase.js";
+import { auth } from "../lib/firebase.js";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import Logo from "../components/Logo/Logo";
 import { Images } from "../config/images";

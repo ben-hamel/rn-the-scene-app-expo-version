@@ -1,6 +1,6 @@
 import React from "react";
-import { StyleSheet, Button, TouchableOpacity, Text } from "react-native";
-import Header from "../components/home/Header/Header.js";
+import { StyleSheet, Button } from "react-native";
+// import Header from "../components/home/Header/Header.js";
 import { SafeAreaView } from "react-native-safe-area-context";
 // import { useTheme } from "@react-navigation/native";
 
@@ -11,8 +11,8 @@ export function HomeScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.lightContainer}>
-      <Header />
-      <Button title="Test" onPress={() => navigation.navigate("TestScreen")} />
+      {/* <Header /> */}
+      {/* <Button title="Test" onPress={() => navigation.navigate("TestScreen")} /> */}
       <CategorySectionList />
     </SafeAreaView>
   );
