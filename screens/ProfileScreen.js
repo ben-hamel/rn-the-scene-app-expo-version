@@ -67,7 +67,6 @@ const ProfileScreen = ({ navigation }) => {
           play={false}
           videoId={"vAoB4VbhRzM"}
           style={styles.video}
-          // onChangeState={onStateChange}
         />
 
         {/* VIDEOS */}
