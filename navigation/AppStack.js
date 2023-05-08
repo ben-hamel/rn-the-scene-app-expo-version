@@ -2,9 +2,10 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { useTheme } from "@react-navigation/native";
+import { useTheme, useNavigation } from "@react-navigation/native";
 import { Button } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+
+// import { useNavigation } from "@react-navigation/native";
 
 import {
   HomeScreen,
@@ -21,7 +22,6 @@ const ProfileStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function HomeStackScreen() {
-  const { colors } = useTheme();
   return (
     <HomeStack.Navigator
       screenOptions={{
@@ -46,7 +46,6 @@ function HomeStackScreen() {
 
 const ProfileStackScreen = () => {
   const navigation = useNavigation();
-  const { colors } = useTheme();
   return (
     <ProfileStack.Navigator
       screenOptions={{
@@ -91,20 +90,6 @@ const ProfileStackScreen = () => {
 export const AppStack = () => {
   const { colors } = useTheme();
   return (
-    // <Stack.Navigator
-    //   screenOptions={{
-    //     headerShown: false,
-    //   }}
-    // >
-    //   <Stack.Screen name="Home" component={HomeScreen} />
-    //   <Stack.Screen name="TestScreen" component={TestScreen} />
-    //   <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
-    //   <Stack.Screen
-    //     name="CategoryDetailScreen"
-    //     component={CategoryDetailScreen}
-    //   />
-    //   <Stack.Screen name="UserDetailScreen" component={UserDetailScreen} />
-    // </Stack.Navigator>
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {

@@ -3,61 +3,49 @@ import {
   View,
   Text,
   TextInput,
-  Button,
   StyleSheet,
-  Pressable,
   TouchableWithoutFeedback,
   Keyboard,
+  Pressable,
+  Platform,
 } from "react-native";
-import { auth, db } from "../lib/firebase.js";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { setDoc, doc } from "firebase/firestore";
+import { auth } from "../lib/firebase.js";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import Logo from "../components/Logo/Logo";
 import { Images } from "../config/images";
-// import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-export const SignUpScreen = ({ navigation }) => {
+export const LoginScreen = ({ navigation }) => {
+  // const [userSignIn, setUserSignIn] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
 
-  const getRandomPic = async () => {
-    const picApiResponse = await fetch("https://randomuser.me/api/");
-    const data = await picApiResponse.json(); //https://developer.mozilla.org/en-US/docs/Web/API/Response/json
-    return data.results[0].picture.large;
+  const signInUser = () => {
+    signInWithEmailAndPassword(auth, email, password).catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log("Signed In Error");
+      console.log("error code" + errorCode);
+      console.log("error message" + errorMessage);
+    });
   };
 
-  /**
-   * Register a user with email and password
-   */
-  const RegisterUser = async () => {
-    try {
-      const authUser = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-
-      const docRef = doc(db, "users", authUser.user.uid);
-      await setDoc(docRef, {
-        uid: authUser.user.uid,
-        email: authUser.user.email,
-        profile_picture: await getRandomPic(),
-      });
-
-      //log success
-      console.log("Document written with ID: ", docRef.id);
-    } catch {
-      console.error("Error adding document");
+  const dismissKeyboard = () => {
+    if (Platform.OS != "web") {
+      Keyboard.dismiss();
     }
   };
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+    // <SafeAreaView>
+    <TouchableWithoutFeedback onPress={dismissKeyboard} accessible={false}>
+      {/* // <Pressable onPress={dismissKeyboard} accessible={false}> */}
       <View style={styles.container}>
         <View style={styles.logoContainer}>
           <Logo uri={Images.logo} />
           <Text style={styles.title}>The Scene</Text>
         </View>
+
         <TextInput
           placeholder="email"
           value={email}
@@ -72,19 +60,20 @@ export const SignUpScreen = ({ navigation }) => {
           onChangeText={(text) => setPassword(text)}
           style={styles.input}
         />
+        <Pressable style={styles.button} title="Sign In" onPress={signInUser}>
+          <Text style={styles.buttonText}>Sign In</Text>
+        </Pressable>
         <Pressable
           style={styles.button}
-          title="Register"
-          onPress={RegisterUser}
+          title="Sign Up"
+          onPress={() => navigation.navigate("SignUp")}
         >
-          <Text style={styles.buttonText}>Register</Text>
+          <Text style={styles.buttonText}>Sign Up</Text>
         </Pressable>
-        <Button
-          title={"back to login screen"}
-          onPress={() => navigation.navigate("Login")}
-        />
       </View>
+      {/* </Pressable> */}
     </TouchableWithoutFeedback>
+    // </SafeAreaView>
   );
 };
 
@@ -106,7 +95,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: 24,
-    marginBottom: 24,
     backgroundColor: "blue",
     padding: 10,
     borderRadius: 8,

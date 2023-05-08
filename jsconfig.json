@@ -2,12 +2,12 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      // "@config/*": ["config/*"],
-      // "@components/*": ["components/*"],
-      // "@utils/*": ["utils/*"],
-      // "@contexts/*": ["contexts/*"],
-      // "@hooks/*": ["hooks/*"],
-      // "@lib/*": ["lib/*"]
+      "@config/*": ["config/*"],
+      "@components/*": ["components/*"],
+      "@utils/*": ["utils/*"],
+      "@contexts/*": ["contexts/*"],
+      "@hooks/*": ["hooks/*"],
+      "@lib/*": ["lib/*"]
     }
   }
 }

@@ -13,12 +13,13 @@ import { auth } from "../lib/firebase.js";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import Logo from "../components/Logo/Logo";
 import { Images } from "../config/images";
-import { SafeAreaView } from "react-native-safe-area-context";
+// import { SafeAreaView } from "react-native-safe-area-context";
+import { useTheme } from "@react-navigation/native";
 
 export const LoginScreen = ({ navigation }) => {
-  // const [userSignIn, setUserSignIn] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  const { colors } = useTheme();
 
   const signInUser = () => {
     signInWithEmailAndPassword(auth, email, password).catch((error) => {
@@ -39,11 +40,10 @@ export const LoginScreen = ({ navigation }) => {
   return (
     // <SafeAreaView>
     <TouchableWithoutFeedback onPress={dismissKeyboard} accessible={false}>
-      {/* // <Pressable onPress={dismissKeyboard} accessible={false}> */}
       <View style={styles.container}>
         <View style={styles.logoContainer}>
           <Logo uri={Images.logo} />
-          <Text style={styles.title}>The Scene</Text>
+          <Text style={[styles.title, { color: colors.text }]}>The Scene</Text>
         </View>
 
         <TextInput
@@ -51,14 +51,20 @@ export const LoginScreen = ({ navigation }) => {
           value={email}
           autoCapitalize="none"
           onChangeText={(text) => setEmail(text)}
-          style={styles.input}
+          style={[
+            styles.input,
+            { color: colors.text, borderColor: colors.text },
+          ]}
         />
         <TextInput
           placeholder="password"
           value={password}
           autoCapitalize="none"
           onChangeText={(text) => setPassword(text)}
-          style={styles.input}
+          style={[
+            styles.input,
+            { color: colors.text, borderColor: colors.text },
+          ]}
         />
         <Pressable style={styles.button} title="Sign In" onPress={signInUser}>
           <Text style={styles.buttonText}>Sign In</Text>
@@ -71,7 +77,6 @@ export const LoginScreen = ({ navigation }) => {
           <Text style={styles.buttonText}>Sign Up</Text>
         </Pressable>
       </View>
-      {/* </Pressable> */}
     </TouchableWithoutFeedback>
     // </SafeAreaView>
   );
@@ -80,7 +85,6 @@ export const LoginScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -88,7 +92,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 40,
     fontWeight: "700",
-    color: "black",
   },
   button: {
     width: "70%",
