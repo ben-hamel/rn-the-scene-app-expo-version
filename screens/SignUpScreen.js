@@ -15,10 +15,12 @@ import { setDoc, doc } from "firebase/firestore";
 import Logo from "../components/Logo/Logo";
 import { Images } from "../config/images";
 // import { SafeAreaView } from "react-native-safe-area-context";
+import { useTheme } from "@react-navigation/native";
 
 export const SignUpScreen = ({ navigation }) => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  const { colors } = useTheme();
 
   const getRandomPic = async () => {
     const picApiResponse = await fetch("https://randomuser.me/api/");
@@ -63,14 +65,20 @@ export const SignUpScreen = ({ navigation }) => {
           value={email}
           autoCapitalize="none"
           onChangeText={(text) => setEmail(text)}
-          style={styles.input}
+          style={[
+            styles.input,
+            { color: colors.text, borderColor: colors.text },
+          ]}
         />
         <TextInput
           placeholder="password"
           value={password}
           autoCapitalize="none"
           onChangeText={(text) => setPassword(text)}
-          style={styles.input}
+          style={[
+            styles.input,
+            { color: colors.text, borderColor: colors.text },
+          ]}
         />
         <Pressable
           style={styles.button}
@@ -91,7 +99,6 @@ export const SignUpScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
   },
