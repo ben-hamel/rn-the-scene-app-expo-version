@@ -1,14 +1,11 @@
-import React, { useState, useRef, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { View, Button, StyleSheet, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getUserWithUsername } from "../lib/firebase";
-// import { AuthenticatedUserContext } from "../contexts";
 import { UserContext } from "../contexts/context";
 
 const TestScreen = () => {
-  // const { user } = useContext(AuthenticatedUserContext);
   const [userData, setUserData] = useState();
-  // user context
   const { username } = useContext(UserContext);
 
   useEffect(() => {

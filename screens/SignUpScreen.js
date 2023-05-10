@@ -11,16 +11,16 @@ import {
 } from "react-native";
 import { auth, db } from "../lib/firebase.js";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { collection, addDoc, Timestamp, setDoc, doc } from "firebase/firestore";
+import { setDoc, doc } from "firebase/firestore";
 import Logo from "../components/Logo/Logo";
 import { Images } from "../config/images";
-import { SafeAreaView } from "react-native-safe-area-context";
+// import { SafeAreaView } from "react-native-safe-area-context";
+import { useTheme } from "@react-navigation/native";
 
 export const SignUpScreen = ({ navigation }) => {
-  // const [userSignIn, setUserSignIn] = useState();
-  const [username, setUsername] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  const { colors } = useTheme();
 
   const getRandomPic = async () => {
     const picApiResponse = await fetch("https://randomuser.me/api/");
@@ -28,6 +28,9 @@ export const SignUpScreen = ({ navigation }) => {
     return data.results[0].picture.large;
   };
 
+  /**
+   * Register a user with email and password
+   */
   const RegisterUser = async () => {
     try {
       const authUser = await createUserWithEmailAndPassword(
@@ -36,76 +39,47 @@ export const SignUpScreen = ({ navigation }) => {
         password
       );
 
-      // const docRef = await addDoc(collection(db, "users"), {
-      //   owner_uid: authUser.user.uid,
-      //   username: username,
-      //   email: authUser.user.email,
-      //   profile_picture: await getRandomPic(),
-      // });
-      const docRef = await setDoc(doc(db, "users", authUser.user.email), {
+      const docRef = doc(db, "users", authUser.user.uid);
+      await setDoc(docRef, {
         uid: authUser.user.uid,
-        username: username,
         email: authUser.user.email,
         profile_picture: await getRandomPic(),
       });
-      // const docRef = await setDoc(
-      //   collection(db, "users", authUser.user.email),
-      //   {
-      //     owner_uid: authUser.user.uid,
-      //     username: username,
-      //     email: authUser.user.email,
-      //     profile_picture: await getRandomPic(),
-      //   }
-      // );
-      console.log("Document written with ID: ", docRef.id);
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
 
-    // createUserWithEmailAndPassword(auth, email, password)
-    //   .then((userCredential) => {
-    //     // Signed in
-    //     const user = userCredential.user;
-    //     console.log("Registered");
-    //   })
-    //   .catch((error) => {
-    //     const errorCode = error.code;
-    //     const errorMessage = error.message;
-    //     console.log("error code" + errorCode);
-    //     console.log("error message" + errorMessage);
-    //     // ..
-    //   });
+      //log success
+      console.log("Document written with ID: ", docRef.id);
+    } catch {
+      console.error("Error adding document");
+    }
   };
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.container}>
-        {/* <Text>Sign Up</Text> */}
         <View style={styles.logoContainer}>
           <Logo uri={Images.logo} />
           <Text style={styles.title}>The Scene</Text>
         </View>
         <TextInput
-          placeholder="username"
-          value={username}
-          autoCapitalize="none"
-          onChangeText={(text) => setUsername(text)}
-          style={styles.input}
-        />
-        <TextInput
           placeholder="email"
           value={email}
           autoCapitalize="none"
           onChangeText={(text) => setEmail(text)}
-          style={styles.input}
+          style={[
+            styles.input,
+            { color: colors.text, borderColor: colors.text },
+          ]}
         />
         <TextInput
           placeholder="password"
           value={password}
           autoCapitalize="none"
           onChangeText={(text) => setPassword(text)}
-          style={styles.input}
+          style={[
+            styles.input,
+            { color: colors.text, borderColor: colors.text },
+          ]}
         />
-        {/* <Button title="Register" onPress={RegisterUser} /> */}
         <Pressable
           style={styles.button}
           title="Register"
@@ -116,7 +90,6 @@ export const SignUpScreen = ({ navigation }) => {
         <Button
           title={"back to login screen"}
           onPress={() => navigation.navigate("Login")}
-          // style={styles.button}
         />
       </View>
     </TouchableWithoutFeedback>
@@ -126,7 +99,6 @@ export const SignUpScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
   },

@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { AuthStack } from "./AuthStack.js";
 import { AppStack } from "./AppStack";
+import { UsernameStack } from "./UsernameStack";
 import { useColorScheme } from "react-native";
 import { DefaultTheme, DarkTheme } from "@react-navigation/native";
 import { UserContext } from "../contexts/context";
@@ -26,11 +27,17 @@ const MyDarkTheme = {
 export const NavigationRouter = () => {
   const scheme = useColorScheme();
 
-  const { user } = useContext(UserContext);
+  const { user, username } = useContext(UserContext);
 
   return (
     <NavigationContainer theme={scheme === "dark" ? MyDarkTheme : MyTheme}>
-      {user ? <AppStack /> : <AuthStack />}
+      {user && username ? (
+        <AppStack />
+      ) : user && !username ? (
+        <UsernameStack />
+      ) : (
+        <AuthStack />
+      )}
     </NavigationContainer>
   );
 };
