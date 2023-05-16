@@ -53,10 +53,10 @@ const UserDetailScreen = ({ navigation, route }) => {
   }, []);
   const [activeVideo, setActiveVideo] = useState(null);
 
-  const { bio, profile_picture, videos, images } = userData || {};
+  const { bio, profileImage, videos, images } = userData || {};
 
   return (
-    <ProfileHero img={profile_picture} username={username}>
+    <ProfileHero img={profileImage} username={username}>
       {/* USERNAME */}
       {username && <Text style={styles.textOverlay}>{username}</Text>}
 

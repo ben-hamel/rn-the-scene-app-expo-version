@@ -47,7 +47,7 @@ const SkillFeed = ({ skill }) => {
         <View style={styles.listItem}>
           <Image
             source={{
-              uri: item.profile_picture,
+              uri: item.profileImage,
             }}
             style={styles.itemPhoto}
             resizeMode="cover"
