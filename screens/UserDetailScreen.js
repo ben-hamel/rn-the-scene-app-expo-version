@@ -6,6 +6,7 @@ import {
   getUserWithUsername,
   updateCoverPhoto,
   uploadImageAndGetDownloadURL,
+  getUserImages,
 } from "@lib/firebase";
 import ProfileHero from "@components/ProfileHero/ProfileHero";
 
@@ -20,32 +21,18 @@ import TsButton from "@components/TsButton/TsButton.jsx";
 
 const UserDetailScreen = ({ navigation, route }) => {
   const username = route.params;
-  const [userData, setUserData] = useState();
+  console.log(
+    "🚀 ~ file: UserDetailScreen.js:24 ~ UserDetailScreen ~ username:",
+    username
+  );
+
   /** Contexts */
   const { colors } = useTheme();
 
-  /* If user is the same as the route.param then render text */
-  const [isUser, setIsUser] = useState(false);
-
-  // store user info
-  const [user, setUser] = useState();
-
-  //store picture from handlePickImage
-  const [image, setImage] = useState(null);
-
-  /* Pick Image */
-  const handleCoverPhoto = async () => {
-    const imageUri = await pickImage();
-    //if imageUri is not null then upload image to firebase
-    if (imageUri) {
-      const uploadUrl = await uploadImageAndGetDownloadURL(imageUri);
-      await updateCoverPhoto(userName.user.email, uploadUrl);
-      setImage(uploadUrl);
-      setUser({ ...user, coverPhoto: uploadUrl });
-    } else {
-      console.log("No image selected");
-    }
-  };
+  //
+  const [userData, setUserData] = useState();
+  const [userImages, setUserImages] = useState();
+  const [userId, setUserId] = useState();
 
   // grab user data from firestore using user email
 
@@ -54,11 +41,16 @@ const UserDetailScreen = ({ navigation, route }) => {
       const userDoc = await getUserWithUsername(username);
       const userDocData = userDoc.data();
       setUserData(userDocData);
+      setUserId(userDoc.id);
+      console.log("userid", userDoc.id);
+
+      const userImages = await getUserImages(userDoc.id);
+      console.log(userImages);
+      setUserImages(userImages);
     }
 
     getUserData();
   }, []);
-
   const [activeVideo, setActiveVideo] = useState(null);
 
   const { bio, profile_picture, videos, images } = userData || {};
@@ -74,21 +66,20 @@ const UserDetailScreen = ({ navigation, route }) => {
         <Text style={[styles.aboutText, { color: colors.text }]}>
           {bio ? bio : "No Bio"}
         </Text>
-
         {/* DYNAMIC CONTENT */}
         <View>
           {/* IMAGES */}
-          {images && (
+          {userImages && (
             <Text style={[styles.header, { color: colors.text }]}>Images</Text>
           )}
-          {images && (
+          {userImages && (
             <View>
-              {images.map((image, i) => {
+              {userImages.map((image, i) => {
                 return (
-                  <View key={image.id}>
+                  <View key={i}>
                     <Image
-                      key={image.id}
-                      source={{ uri: image.url }}
+                      key={i}
+                      source={{ uri: image.imageUrl }}
                       style={styles.img}
                     />
                   </View>

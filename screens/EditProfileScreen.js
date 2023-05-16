@@ -16,7 +16,7 @@ export default function EditProfileScreen({ navigation }) {
   const { username, user } = useContext(UserContext);
   const [userData, setUserData] = useState({});
 
-  const { profile_picture } = userData || {};
+  const { profileImage } = userData || {};
 
   /**
    * This function allows the user to select an image from their device's library using the ImagePicker library.
@@ -31,10 +31,9 @@ export default function EditProfileScreen({ navigation }) {
     // if image isnt cancelled then upload image and get download url
     const image = await pickImage();
     if (image) {
-      // const imageUri = await pickImage();
-      const uploadUrl = await uploadImageAndGetDownloadURL(imageUri);
+      const uploadUrl = await uploadImageAndGetDownloadURL(image);
       updateProfilePhoto(user.uid, uploadUrl);
-      setUserData({ ...userData, profile_picture: uploadUrl });
+      setUserData({ ...userData, profileImage: uploadUrl });
     } else {
       console.log("image cancelled");
     }
@@ -59,7 +58,7 @@ export default function EditProfileScreen({ navigation }) {
         <Text>ProfileScreen</Text>
         <Image
           source={{
-            uri: profile_picture,
+            uri: profileImage,
           }}
           style={styles.itemPhoto}
           resizeMode="cover"

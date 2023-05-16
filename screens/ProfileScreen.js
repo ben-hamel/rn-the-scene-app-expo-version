@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, Image } from "react-native";
 import { useState, useEffect, useContext } from "react";
 import { useTheme } from "@react-navigation/native";
-import YoutubePlayer from "react-native-youtube-iframe";
+// import YoutubePlayer from "react-native-youtube-iframe";
 import { Video } from "expo-av";
 //Componets
 import ProfileHero from "@components/ProfileHero/ProfileHero";
@@ -17,7 +17,7 @@ const ProfileScreen = ({ navigation }) => {
   /** State */
   const [userData, setUserData] = useState();
   const [activeVideo, setActiveVideo] = useState(null);
-  const { profile_picture, bio, images, videos } = userData || {};
+  const { profileImage, bio, images, videos } = userData || {};
 
   useEffect(() => {
     async function getUserData() {
@@ -30,7 +30,7 @@ const ProfileScreen = ({ navigation }) => {
   }, []);
 
   return (
-    <ProfileHero img={profile_picture} username={username}>
+    <ProfileHero img={profileImage} username={username}>
       <View style={styles.container}>
         <TsButton
           title="Edit Profile"
@@ -61,13 +61,13 @@ const ProfileScreen = ({ navigation }) => {
           </View>
         )}
 
-        <YoutubePlayer
+        {/* <YoutubePlayer
           height={400 / (16 / 9)}
           width={"100%"}
           play={false}
           videoId={"vAoB4VbhRzM"}
           style={styles.video}
-        />
+        /> */}
 
         {/* VIDEOS */}
         {videos && (
