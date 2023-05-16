@@ -43,7 +43,7 @@ export const SignUpScreen = ({ navigation }) => {
       await setDoc(docRef, {
         uid: authUser.user.uid,
         email: authUser.user.email,
-        profile_picture: await getRandomPic(),
+        profileImage: await getRandomPic(),
       });
 
       //log success
