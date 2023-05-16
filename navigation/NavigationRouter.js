@@ -3,9 +3,10 @@ import { NavigationContainer } from "@react-navigation/native";
 import { AuthStack } from "./AuthStack.js";
 import { AppStack } from "./AppStack";
 import { UsernameStack } from "./UsernameStack";
-import { useColorScheme } from "react-native";
+import { useColorScheme, Text } from "react-native";
 import { DefaultTheme, DarkTheme } from "@react-navigation/native";
 import { UserContext } from "../contexts/context";
+import { LoadingScreen } from "../screens";
 
 const MyTheme = {
   ...DefaultTheme,
@@ -27,7 +28,11 @@ const MyDarkTheme = {
 export const NavigationRouter = () => {
   const scheme = useColorScheme();
 
-  const { user, username } = useContext(UserContext);
+  const { user, username, isLoading } = useContext(UserContext);
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <NavigationContainer theme={scheme === "dark" ? MyDarkTheme : MyTheme}>
