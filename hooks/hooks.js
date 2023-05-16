@@ -6,6 +6,7 @@ import { onAuthStateChanged } from "firebase/auth";
 export function useUserData() {
   const [user, setUser] = useState(null);
   const [username, setUsername] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribeAuthStateChanged = onAuthStateChanged(auth, (user) => {
@@ -25,6 +26,7 @@ export function useUserData() {
       const ref = doc(db, "users", user.uid);
       unsubscribe = onSnapshot(ref, (doc) => {
         setUsername(doc.data()?.username);
+        setIsLoading(false);
       });
     } else {
       setUsername(null);
@@ -37,5 +39,5 @@ export function useUserData() {
     };
   }, [user]);
 
-  return { user, username };
+  return { user, username, isLoading };
 }
