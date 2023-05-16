@@ -31,30 +31,10 @@ const SkillFeed = ({ skill }) => {
         id: doc.id,
       }));
       setUsers(data);
-      console.log("skillfeed ", data);
+      // console.log("skillfeed ", data);
     };
     getData();
   }, []);
-
-  /**
-   * ListItem Component for the FlatList
-   */
-  const ListItem = ({ item }) => {
-    return (
-      <View style={styles.listItem}>
-        <Image
-          source={{
-            uri: item.profile_picture,
-          }}
-          style={styles.itemPhoto}
-          resizeMode="cover"
-        />
-        <View style={styles.itemInfo}>
-          <Text style={styles.itemText}>Username: {item.username}</Text>
-        </View>
-      </View>
-    );
-  };
 
   const PressableListItem = ({ item }) => {
     () => console.log("skillfeed item", item);

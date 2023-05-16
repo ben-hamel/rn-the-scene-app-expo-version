@@ -8,6 +8,8 @@ import UserDetailScreen from "./UserDetailScreen";
 import EditProfileScreen from "./EditProfileScreen";
 import EditSkillsScreen from "./EditSkillsScreen";
 import UsernameScreen from "./UsernameScreen";
+import AddContentScreen from "./AddContentScreen";
+import LoadingScreen from "./LoadingScreen";
 
 export {
   LoginScreen,
@@ -20,4 +22,6 @@ export {
   EditProfileScreen,
   EditSkillsScreen,
   UsernameScreen,
+  AddContentScreen,
+  LoadingScreen,
 };

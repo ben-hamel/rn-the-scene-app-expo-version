@@ -15,6 +15,7 @@ import {
   UserDetailScreen,
   EditProfileScreen,
   EditSkillsScreen,
+  AddContentScreen,
 } from "../screens";
 
 const HomeStack = createStackNavigator();
@@ -97,6 +98,8 @@ export const AppStack = () => {
 
           if (route.name === "Home") {
             iconName = focused ? "home" : "home-outline";
+          } else if (route.name === "AddContent") {
+            iconName = focused ? "add-circle" : "add-circle-outline";
           } else if (route.name === "TestScreen") {
             iconName = focused ? "ios-list" : "ios-list-outline";
           } else if (route.name === "Profile") {
@@ -112,6 +115,7 @@ export const AppStack = () => {
       })}
     >
       <Tab.Screen name="Home" component={HomeStackScreen} />
+      <Tab.Screen name="AddContent" component={AddContentScreen} />
       <Tab.Screen name="TestScreen" component={TestScreen} />
       <Tab.Screen name="Profile" component={ProfileStackScreen} />
     </Tab.Navigator>

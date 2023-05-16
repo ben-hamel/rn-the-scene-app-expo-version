@@ -7,8 +7,6 @@ export const pickImage = async () => {
     aspect: [4, 3],
   });
 
-  console.log(result);
-
   if (!result.canceled) {
     return result.assets[0].uri;
   } else {
