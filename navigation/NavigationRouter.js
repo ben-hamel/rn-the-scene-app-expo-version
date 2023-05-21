@@ -1,10 +1,12 @@
-import React, { useContext, useEffect } from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import React, { useContext } from "react";
+import {
+  NavigationContainer,
+  DefaultTheme,
+  DarkTheme,
+} from "@react-navigation/native";
 import { AuthStack } from "./AuthStack.js";
 import { AppStack } from "./AppStack";
-import { UsernameStack } from "./UsernameStack";
-import { useColorScheme, Text } from "react-native";
-import { DefaultTheme, DarkTheme } from "@react-navigation/native";
+import { useColorScheme } from "react-native";
 import { UserContext } from "../contexts/context";
 import { LoadingScreen } from "../screens";
 
@@ -28,7 +30,7 @@ const MyDarkTheme = {
 export const NavigationRouter = () => {
   const scheme = useColorScheme();
 
-  const { user, username, isLoading } = useContext(UserContext);
+  const { user, isLoading } = useContext(UserContext);
 
   if (isLoading) {
     return <LoadingScreen />;
@@ -36,13 +38,7 @@ export const NavigationRouter = () => {
 
   return (
     <NavigationContainer theme={scheme === "dark" ? MyDarkTheme : MyTheme}>
-      {user && username ? (
-        <AppStack />
-      ) : user && !username ? (
-        <UsernameStack />
-      ) : (
-        <AuthStack />
-      )}
+      {user ? <AppStack /> : <AuthStack />}
     </NavigationContainer>
   );
 };

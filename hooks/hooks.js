@@ -7,37 +7,43 @@ export function useUserData() {
   const [user, setUser] = useState(null);
   const [username, setUsername] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isUsernameLoading, setIsUsernameLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribeAuthStateChanged = onAuthStateChanged(auth, (user) => {
       if (user) {
         console.log("user is signed in");
         setUser(user);
+        setIsLoading(false);
       } else {
         console.log("user is signed out");
         setUser(null);
+        setIsLoading(false);
       }
     });
 
-    // turn off realtime subscription
     let unsubscribe;
 
     if (user) {
       const ref = doc(db, "users", user.uid);
       unsubscribe = onSnapshot(ref, (doc) => {
-        setUsername(doc.data()?.username);
-        setIsLoading(false);
+        if (doc.exists()) {
+          console.log("user has a username");
+          setUsername(doc.data().username);
+          setIsUsernameLoading(false);
+        } else {
+          console.log("user does not have a username");
+          setUsername(null);
+          setIsUsernameLoading(false);
+        }
       });
-    } else {
-      setUsername(null);
     }
 
-    // unsubscribe auth listener and firestore listener on unmount
     return () => {
       unsubscribeAuthStateChanged();
       unsubscribe && unsubscribe();
     };
   }, [user]);
 
-  return { user, username, isLoading };
+  return { user, username, isLoading, isUsernameLoading };
 }

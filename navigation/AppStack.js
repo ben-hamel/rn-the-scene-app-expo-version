@@ -1,11 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useTheme, useNavigation } from "@react-navigation/native";
 import { Button } from "react-native";
-
-// import { useNavigation } from "@react-navigation/native";
+import { UserContext } from "../contexts/context";
 
 import {
   HomeScreen,
@@ -16,11 +15,15 @@ import {
   EditProfileScreen,
   EditSkillsScreen,
   AddContentScreen,
+  LoadingScreen,
+  UsernameScreen,
 } from "../screens";
 
 const HomeStack = createStackNavigator();
 const ProfileStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+const UsernameStack = createStackNavigator();
+const LoadStack = createStackNavigator();
 
 function HomeStackScreen() {
   return (
@@ -44,6 +47,30 @@ function HomeStackScreen() {
     </HomeStack.Navigator>
   );
 }
+
+const UsernameStackScreen = () => {
+  return (
+    <UsernameStack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <UsernameStack.Screen name="UsernameScreen" component={UsernameScreen} />
+    </UsernameStack.Navigator>
+  );
+};
+
+const LoadStackScreen = () => {
+  return (
+    <LoadStack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <LoadStack.Screen name="LoadingScreen" component={LoadingScreen} />
+    </LoadStack.Navigator>
+  );
+};
 
 const ProfileStackScreen = () => {
   const navigation = useNavigation();
@@ -90,34 +117,43 @@ const ProfileStackScreen = () => {
 
 export const AppStack = () => {
   const { colors } = useTheme();
-  return (
-    <Tab.Navigator
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
-          let iconName;
+  const { user, username, isUsernameLoading } = useContext(UserContext);
 
-          if (route.name === "Home") {
-            iconName = focused ? "home" : "home-outline";
-          } else if (route.name === "AddContent") {
-            iconName = focused ? "add-circle" : "add-circle-outline";
-          } else if (route.name === "TestScreen") {
-            iconName = focused ? "ios-list" : "ios-list-outline";
-          } else if (route.name === "Profile") {
-            iconName = focused ? "person" : "person-outline";
-          }
+  if (isUsernameLoading) {
+    return <LoadStackScreen />;
+  }
 
-          // You can return any component that you like here!
-          return <Ionicons name={iconName} size={size} color={color} />;
-        },
-        tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: "gray",
-        headerShown: false,
-      })}
-    >
-      <Tab.Screen name="Home" component={HomeStackScreen} />
-      <Tab.Screen name="AddContent" component={AddContentScreen} />
-      <Tab.Screen name="TestScreen" component={TestScreen} />
-      <Tab.Screen name="Profile" component={ProfileStackScreen} />
-    </Tab.Navigator>
-  );
+  if (!username && user) {
+    return <UsernameStackScreen />;
+  }
+
+  const iconNames = {
+    Home: { focused: "home", unfocused: "home-outline" },
+    AddContent: { focused: "add-circle", unfocused: "add-circle-outline" },
+    TestScreen: { focused: "ios-list", unfocused: "ios-list-outline" },
+    Profile: { focused: "person", unfocused: "person-outline" },
+  };
+
+  if (username !== null) {
+    return (
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            const iconName =
+              iconNames[route.name][focused ? "focused" : "unfocused"];
+
+            return <Ionicons name={iconName} size={size} color={color} />;
+          },
+          tabBarActiveTintColor: colors.primary,
+          tabBarInactiveTintColor: "gray",
+          headerShown: false,
+        })}
+      >
+        <Tab.Screen name="Home" component={HomeStackScreen} />
+        <Tab.Screen name="AddContent" component={AddContentScreen} />
+        <Tab.Screen name="TestScreen" component={TestScreen} />
+        <Tab.Screen name="Profile" component={ProfileStackScreen} />
+      </Tab.Navigator>
+    );
+  }
 };
