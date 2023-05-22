@@ -149,8 +149,6 @@ const VideoItem = ({ videos }) => {
             </View>
           );
         })}
-
-        <Button title="log" onPress={() => console.log()} />
       </View>
     </View>
   );
