@@ -28,10 +28,11 @@ export default function EditProfileScreen({ navigation }) {
    * @name handleProfileImage
    */
   const handleProfileImage = async () => {
-    // if image isnt cancelled then upload image and get download url
     const image = await pickImage();
+
     if (image) {
-      const uploadUrl = await uploadImageAndGetDownloadURL(image);
+      const imageUri = image.assets[0].uri;
+      const uploadUrl = await uploadImageAndGetDownloadURL(imageUri);
       updateProfilePhoto(user.uid, uploadUrl);
       setUserData({ ...userData, profileImage: uploadUrl });
     } else {

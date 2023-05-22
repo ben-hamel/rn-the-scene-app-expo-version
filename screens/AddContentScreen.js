@@ -7,17 +7,21 @@ import { UserContext } from "../contexts/context";
 import {
   uploadImageAndGetDownloadURL,
   uploadUserImage,
+  uploadVideoToUserCollection,
+  uploadVideo,
 } from "../lib/firebase.js";
 
 const AddContentScren = () => {
   const { colors } = useTheme();
+
   return (
     <SafeAreaView style={styles.container}>
       <View>
         <Text style={[{ color: colors.text, borderColor: colors.text }]}>
-          AddContentScren
+          AddContentScreen
         </Text>
         <AddPhoto />
+        <AddVideo />
       </View>
     </SafeAreaView>
   );
@@ -31,7 +35,6 @@ const styles = StyleSheet.create({
   },
 });
 
-//create componet that will be used to add pciture content to the app using expo picker
 const AddPhoto = () => {
   const [image, setImage] = useState(null);
   const { user } = useContext(UserContext);
@@ -39,20 +42,18 @@ const AddPhoto = () => {
   const userId = user.uid;
 
   const handlePickImage = async () => {
-    const result = await pickImage(); // call expo image picker
-    if (!result.cancelled) {
-      // check if user has selected an image
-      setImage(result); // update state with image URI
+    const result = await pickImage();
 
-      //upload image to firebase storage
-      const uploadImage = async (userId, result) => {
-        const urlOfImage = await uploadImageAndGetDownloadURL(result);
+    if (result) {
+      const fileUri = result.assets[0].uri;
+
+      const uploadImage = async (userId, fileUri) => {
+        const urlOfImage = await uploadImageAndGetDownloadURL(fileUri);
         await uploadUserImage(userId, urlOfImage);
       };
 
-      // store user image in firebase storage
-
-      uploadImage(userId, result);
+      uploadImage(userId, fileUri);
+      setImage(fileUri);
     }
   };
 
@@ -69,4 +70,26 @@ const AddPhoto = () => {
   );
 };
 
-//create component that will be used to add video content to the app using expo picker
+const AddVideo = () => {
+  const { user } = useContext(UserContext);
+  const userId = user.uid;
+
+  const handleVideo = async () => {
+    const result = await pickImage();
+    console.log(
+      "🚀 ~ file: AddContentScreen.js:79 ~ handleVideo ~ result:",
+      result
+    );
+
+    //if ( result )  then upload video
+    if (result) {
+      const videoURL = await uploadVideo(result);
+
+      uploadVideoToUserCollection(userId, videoURL);
+    } else {
+      console.log("video cancelled");
+    }
+  };
+
+  return <Button title="Upload a video" onPress={() => handleVideo()} />;
+};

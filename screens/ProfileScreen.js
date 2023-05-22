@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, Image } from "react-native";
-import { useState, useEffect, useContext } from "react";
+import { StyleSheet, Text, View, Image, Button } from "react-native";
+import { useState, useEffect, useContext, useRef } from "react";
 import { useTheme } from "@react-navigation/native";
 // import YoutubePlayer from "react-native-youtube-iframe";
 import { Video } from "expo-av";
@@ -7,17 +7,24 @@ import { Video } from "expo-av";
 import ProfileHero from "@components/ProfileHero/ProfileHero";
 import TsButton from "@components/TsButton/TsButton.jsx";
 //Misc
-import { getUserWithUsername } from "../lib/firebase";
+import {
+  getUserWithUsername,
+  getUserVideos,
+  getUserImages,
+} from "../lib/firebase";
 import { UserContext } from "../contexts/context";
 
 const ProfileScreen = ({ navigation }) => {
   /** Contexts */
   const { colors } = useTheme();
-  const { username } = useContext(UserContext);
+  const { username, user } = useContext(UserContext);
   /** State */
   const [userData, setUserData] = useState();
-  const [activeVideo, setActiveVideo] = useState(null);
-  const { profileImage, bio, images, videos } = userData || {};
+
+  const [userVideos, setUserVideos] = useState();
+  const [userImages, setUserImages] = useState();
+
+  const { profileImage, bio } = userData || {};
 
   useEffect(() => {
     async function getUserData() {
@@ -26,7 +33,20 @@ const ProfileScreen = ({ navigation }) => {
       setUserData(userDocData);
     }
 
+    //get user videos
+    const fetchUserVideos = async () => {
+      const userVideos = await getUserVideos(user.uid);
+      setUserVideos(userVideos);
+    };
+
+    const fetchUserImages = async () => {
+      const userImages = await getUserImages(user.uid);
+      setUserImages(userImages);
+    };
+
     getUserData();
+    fetchUserImages();
+    fetchUserVideos();
   }, []);
 
   return (
@@ -41,66 +61,10 @@ const ProfileScreen = ({ navigation }) => {
         <Text style={[styles.aboutText, { color: colors.text }]}>
           {bio ? bio : "No Bio"}
         </Text>
-        {/* IMAGES */}
-        {images && (
-          <Text style={[styles.header, { color: colors.text }]}>Images</Text>
-        )}
-        {images && (
-          <View>
-            {images.map((image, i) => {
-              return (
-                <View key={image.id}>
-                  <Image
-                    key={image.id}
-                    source={{ uri: image.url }}
-                    style={styles.img}
-                  />
-                </View>
-              );
-            })}
-          </View>
-        )}
 
-        {/* <YoutubePlayer
-          height={400 / (16 / 9)}
-          width={"100%"}
-          play={false}
-          videoId={"vAoB4VbhRzM"}
-          style={styles.video}
-        /> */}
+        {userImages && <PhotoItem images={userImages} />}
 
-        {/* VIDEOS */}
-        {videos && (
-          <Text style={[styles.header, { color: colors.text }]}> Videos</Text>
-        )}
-        {videos && (
-          <View style={styles.dynamicContent}>
-            {videos.map((video, index) => {
-              return (
-                <View key={video.id}>
-                  <Video
-                    key={video.id}
-                    source={{ uri: video.url }}
-                    resizeMode="cover"
-                    shouldPlay={activeVideo === video.id}
-                    style={styles.video}
-                  />
-                  <TsButton
-                    key={`button${video.id}`}
-                    title={activeVideo === video.id ? "stop" : "play"}
-                    onPress={() => {
-                      if (activeVideo === video.id) {
-                        setActiveVideo(null);
-                      } else {
-                        setActiveVideo(video.id);
-                      }
-                    }}
-                  />
-                </View>
-              );
-            })}
-          </View>
-        )}
+        {userVideos && <VideoItem videos={userVideos} />}
       </View>
     </ProfileHero>
   );
@@ -132,7 +96,7 @@ const styles = StyleSheet.create({
   video: {
     width: "100%",
     height: undefined,
-    aspectRatio: 16 / 9,
+    aspectRatio: 4 / 3,
     marginBottom: 20,
     marginTop: 10,
   },
@@ -141,3 +105,73 @@ const styles = StyleSheet.create({
     height: undefined,
   },
 });
+
+const VideoItem = ({ videos }) => {
+  /** Contexts */
+  const { colors } = useTheme();
+
+  const videoRef = useRef({});
+
+  const handlePlaybackStatusUpdate = (videoId, status) => {
+    const videoRefById = videoRef.current[videoId];
+
+    if (status.didJustFinish) {
+      videoRefById.setPositionAsync(0);
+    }
+
+    if (status.isPlaying) {
+      setActiveVideo(videoId);
+    }
+  };
+
+  const [activeVideo, setActiveVideo] = useState(null);
+
+  return (
+    <View>
+      <Text style={[styles.header, { color: colors.text }]}> Videos</Text>
+
+      <View style={styles.dynamicContent}>
+        {videos.map((video, index) => {
+          return (
+            <View key={video.id}>
+              <Video
+                key={video.id}
+                ref={(element) => (videoRef.current[video.id] = element)}
+                source={{ uri: video.mediaUrl }}
+                resizeMode="cover"
+                shouldPlay={activeVideo === video.id}
+                style={styles.video}
+                onPlaybackStatusUpdate={(status) =>
+                  handlePlaybackStatusUpdate(video.id, status)
+                }
+                useNativeControls
+              />
+            </View>
+          );
+        })}
+      </View>
+    </View>
+  );
+};
+
+const PhotoItem = ({ images }) => {
+  /** Contexts */
+  const { colors } = useTheme();
+
+  return (
+    <View>
+      <Text style={[styles.header, { color: colors.text }]}>Images</Text>
+      {images.map((image) => {
+        return (
+          <View key={image.id}>
+            <Image
+              key={image.id}
+              source={{ uri: image.imageUrl }}
+              style={styles.img}
+            />
+          </View>
+        );
+      })}
+    </View>
+  );
+};
