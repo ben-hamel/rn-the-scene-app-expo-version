@@ -14,8 +14,8 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { setDoc, doc } from "firebase/firestore";
 import Logo from "../components/Logo/Logo";
 import { Images } from "../config/images";
-// import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "@react-navigation/native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export const SignUpScreen = ({ navigation }) => {
   const [email, setEmail] = useState();
@@ -54,75 +54,80 @@ export const SignUpScreen = ({ navigation }) => {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View style={styles.container}>
-        <View style={styles.logoContainer}>
+    <SafeAreaView style={styles.container}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <View>
+          {/* <View style={styles.logoContainer}>
           <Logo uri={Images.logo} />
           <Text style={styles.title}>The Scene</Text>
+        </View> */}
+          <Text style={[{ color: colors.text, marginBottom: 8 }]}>Email</Text>
+          <TextInput
+            placeholder="email"
+            value={email}
+            autoCapitalize="none"
+            onChangeText={(text) => setEmail(text)}
+            style={[
+              styles.input,
+              {
+                color: colors.text,
+                borderColor: colors.text,
+                marginBottom: 10,
+              },
+            ]}
+          />
+          <Text style={[{ color: colors.text, marginBottom: 8 }]}>
+            Password
+          </Text>
+          <TextInput
+            placeholder="password"
+            value={password}
+            autoCapitalize="none"
+            onChangeText={(text) => setPassword(text)}
+            style={[
+              styles.input,
+              {
+                color: colors.text,
+                borderColor: colors.text,
+                marginBottom: 30,
+              },
+            ]}
+          />
+          <Pressable
+            style={styles.button}
+            title="Register"
+            onPress={RegisterUser}
+          >
+            <Text style={styles.buttonText}>Register</Text>
+          </Pressable>
         </View>
-        <TextInput
-          placeholder="email"
-          value={email}
-          autoCapitalize="none"
-          onChangeText={(text) => setEmail(text)}
-          style={[
-            styles.input,
-            { color: colors.text, borderColor: colors.text },
-          ]}
-        />
-        <TextInput
-          placeholder="password"
-          value={password}
-          autoCapitalize="none"
-          onChangeText={(text) => setPassword(text)}
-          style={[
-            styles.input,
-            { color: colors.text, borderColor: colors.text },
-          ]}
-        />
-        <Pressable
-          style={styles.button}
-          title="Register"
-          onPress={RegisterUser}
-        >
-          <Text style={styles.buttonText}>Register</Text>
-        </Pressable>
-        <Button
-          title={"back to login screen"}
-          onPress={() => navigation.navigate("Login")}
-        />
-      </View>
-    </TouchableWithoutFeedback>
+      </TouchableWithoutFeedback>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    paddingHorizontal: 20,
   },
   logoContainer: { width: "100%", height: "30%", alignItems: "center" },
   title: {
     fontSize: 40,
     fontWeight: "700",
-    color: "black",
+    // color: "black",
   },
   button: {
-    width: "70%",
-    justifyContent: "center",
     alignItems: "center",
-    marginTop: 24,
-    marginBottom: 24,
     backgroundColor: "blue",
     padding: 10,
     borderRadius: 8,
   },
   buttonText: { color: "white", fontSize: 18 },
   input: {
-    width: "70%",
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
+    height: 40,
+    backgroundColor: "#414141",
+    borderRadius: 6,
+    paddingHorizontal: 10,
   },
 });

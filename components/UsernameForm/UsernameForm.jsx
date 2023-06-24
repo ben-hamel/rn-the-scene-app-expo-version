@@ -5,6 +5,7 @@ import { useTheme } from "@react-navigation/native";
 import debounce from "lodash.debounce";
 import { setDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "@lib/firebase.js";
+// import { SafeAreaView } from "react-native-safe-area-context";
 
 const UsernameForm = () => {
   const [formValue, setFormValue] = useState("");
@@ -85,38 +86,47 @@ const UsernameForm = () => {
   );
 
   return (
-    <View style={styles.container}>
-      <Text style={{ color: colors.text }}>Choose Username</Text>
-      <TextInput
-        style={[styles.input, { color: colors.text, borderColor: colors.text }]}
-        name="username"
-        placeholder="myname"
-        value={formValue}
-        onChangeText={onChange}
-      />
-      <UsernameMessage
-        username={formValue}
-        isValid={isValid}
-        loading={loading}
-      />
-      <Pressable
-        style={styles.button}
-        title="Accept"
-        onPress={onSubmit}
-        disabled={!isValid}
-      >
-        <Text style={styles.buttonText}>Accept</Text>
-      </Pressable>
-
-      <Text style={{ color: colors.text }}>Debug State</Text>
+    <View>
       <View>
-        <Text style={{ color: colors.text }}>Username: {formValue}</Text>
-        <Text style={{ color: colors.text }}>
-          Loading: {loading.toString()}
+        <Text style={[{ color: colors.text, marginBottom: 8 }]}>
+          Choose Username
         </Text>
-        <Text style={{ color: colors.text }}>
-          Username Valid: {isValid.toString()}
-        </Text>
+        <TextInput
+          style={[
+            styles.input,
+            {
+              color: colors.text,
+              borderColor: colors.text,
+            },
+          ]}
+          name="username"
+          value={formValue}
+          onChangeText={onChange}
+        />
+        <UsernameMessage
+          username={formValue}
+          isValid={isValid}
+          loading={loading}
+        />
+        <Pressable
+          style={styles.button}
+          title="Accept"
+          onPress={onSubmit}
+          disabled={!isValid}
+        >
+          <Text style={styles.buttonText}>Create Account</Text>
+        </Pressable>
+
+        <Text style={{ color: colors.text }}>Debug State</Text>
+        <View>
+          <Text style={{ color: colors.text }}>Username: {formValue}</Text>
+          <Text style={{ color: colors.text }}>
+            Loading: {loading.toString()}
+          </Text>
+          <Text style={{ color: colors.text }}>
+            Username Valid: {isValid.toString()}
+          </Text>
+        </View>
       </View>
     </View>
   );
@@ -126,10 +136,7 @@ export default UsernameForm;
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: "center",
-    // justifyContent: "center",
-    // flex: 1,
-    // width: "100%",s
+    flex: 1,
   },
   logoContainer: { width: "100%", height: "30%", alignItems: "center" },
   title: {
@@ -138,21 +145,18 @@ const styles = StyleSheet.create({
     color: "black",
   },
   button: {
-    width: "70%",
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 24,
-    marginBottom: 24,
     backgroundColor: "blue",
-    padding: 10,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
     borderRadius: 8,
+    alignSelf: "center",
   },
   buttonText: { color: "white", fontSize: 18 },
   input: {
-    width: "70%",
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
+    height: 40,
+    backgroundColor: "#414141",
+    borderRadius: 6,
+    paddingHorizontal: 10,
   },
 });
 

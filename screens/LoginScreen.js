@@ -1,19 +1,8 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  Keyboard,
-  Pressable,
-  Platform,
-} from "react-native";
+import { View, Text, TextInput, StyleSheet, Pressable } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { auth } from "../lib/firebase.js";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import Logo from "../components/Logo/Logo";
-import { Images } from "../config/images";
-// import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "@react-navigation/native";
 
 export const LoginScreen = ({ navigation }) => {
@@ -31,21 +20,10 @@ export const LoginScreen = ({ navigation }) => {
     });
   };
 
-  const dismissKeyboard = () => {
-    if (Platform.OS != "web") {
-      Keyboard.dismiss();
-    }
-  };
-
   return (
-    // <SafeAreaView>
-    <TouchableWithoutFeedback onPress={dismissKeyboard} accessible={false}>
-      <View style={styles.container}>
-        <View style={styles.logoContainer}>
-          <Logo uri={Images.logo} />
-          <Text style={[styles.title, { color: colors.text }]}>The Scene</Text>
-        </View>
-
+    <SafeAreaView style={styles.container}>
+      <View>
+        <Text style={[{ color: colors.text, marginBottom: 8 }]}>Email</Text>
         <TextInput
           placeholder="email"
           value={email}
@@ -53,9 +31,14 @@ export const LoginScreen = ({ navigation }) => {
           onChangeText={(text) => setEmail(text)}
           style={[
             styles.input,
-            { color: colors.text, borderColor: colors.text },
+            {
+              color: colors.text,
+              borderColor: colors.text,
+              marginBottom: 10,
+            },
           ]}
         />
+        <Text style={[{ color: colors.text, marginBottom: 8 }]}>Password</Text>
         <TextInput
           placeholder="password"
           value={password}
@@ -63,30 +46,25 @@ export const LoginScreen = ({ navigation }) => {
           onChangeText={(text) => setPassword(text)}
           style={[
             styles.input,
-            { color: colors.text, borderColor: colors.text },
+            {
+              color: colors.text,
+              borderColor: colors.text,
+              marginBottom: 30,
+            },
           ]}
         />
         <Pressable style={styles.button} title="Sign In" onPress={signInUser}>
           <Text style={styles.buttonText}>Sign In</Text>
         </Pressable>
-        <Pressable
-          style={styles.button}
-          title="Sign Up"
-          onPress={() => navigation.navigate("SignUp")}
-        >
-          <Text style={styles.buttonText}>Sign Up</Text>
-        </Pressable>
       </View>
-    </TouchableWithoutFeedback>
-    // </SafeAreaView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    paddingHorizontal: 20,
   },
   logoContainer: { width: "100%", height: "30%", alignItems: "center" },
   title: {
@@ -94,19 +72,17 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   button: {
-    width: "70%",
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 24,
     backgroundColor: "blue",
-    padding: 10,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
     borderRadius: 8,
+    alignSelf: "center",
   },
   buttonText: { color: "white", fontSize: 18 },
   input: {
-    width: "70%",
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
+    height: 40,
+    backgroundColor: "#414141",
+    borderRadius: 6,
+    paddingHorizontal: 10,
   },
 });

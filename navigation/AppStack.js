@@ -87,22 +87,20 @@ const ProfileStackScreen = () => {
         options={{
           headerShown: true,
           presentation: "modal",
-          headerRight: () => (
-            <Button
-              onPress={() => {
-                // navigate to profile screen
-                navigation.navigate("ProfileScreen");
-              }}
-              title="Save"
-            />
-          ),
+          // headerRight: () => (
+          //   <Button
+          //     onPress={() => {
+          //       navigation.navigate("ProfileScreen");
+          //     }}
+          //     title="Save"
+          //   />
+          // ),
           headerLeft: () => (
             <Button
               onPress={() => {
-                // go back to the previous screen
                 navigation.navigate("ProfileScreen");
               }}
-              title="Cancel"
+              title="Back"
             />
           ),
         }}
@@ -151,7 +149,7 @@ export const AppStack = () => {
       >
         <Tab.Screen name="Home" component={HomeStackScreen} />
         <Tab.Screen name="AddContent" component={AddContentScreen} />
-        <Tab.Screen name="TestScreen" component={TestScreen} />
+        {/* <Tab.Screen name="TestScreen" component={TestScreen} /> */}
         <Tab.Screen name="Profile" component={ProfileStackScreen} />
       </Tab.Navigator>
     );

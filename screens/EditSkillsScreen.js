@@ -66,8 +66,8 @@ const EditSkillsScreen = ({ navigation }) => {
    * renderItem for selecting skills/category
    */
   const renderItem = ({ item }) => {
-    const backgroundColor = skill?.includes(item.title) ? "#6e3b6e" : "#f9c2ff";
-    const color = skill?.includes(item.title) ? "white" : "black";
+    const backgroundColor = skill?.includes(item.title) ? "blue" : "#414141";
+    const color = skill?.includes(item.title) ? "white" : "white";
 
     return (
       <Item
@@ -125,6 +125,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  item: {
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
+    borderRadius: 8,
+  },
+  itemText: {
+    fontSize: 16,
+    lineHeight: 21,
+    fontWeight: "bold",
+    letterSpacing: 0.25,
+    color: "white",
+  },
 });
 
 /**
@@ -132,6 +145,6 @@ const styles = StyleSheet.create({
  */
 const Item = ({ item, onPress, backgroundColor, textColor }) => (
   <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
-    <Text style={[styles.title, textColor]}>{item.title}</Text>
+    <Text style={[styles.itemText, textColor]}>{item.title}</Text>
   </TouchableOpacity>
 );

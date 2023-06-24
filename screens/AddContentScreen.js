@@ -10,6 +10,7 @@ import {
   uploadVideoToUserCollection,
   uploadVideo,
 } from "../lib/firebase.js";
+import TsButton from "@components/TsButton/TsButton.jsx";
 
 const AddContentScren = () => {
   const { colors } = useTheme();
@@ -17,9 +18,6 @@ const AddContentScren = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View>
-        <Text style={[{ color: colors.text, borderColor: colors.text }]}>
-          AddContentScreen
-        </Text>
         <AddPhoto />
         <AddVideo />
       </View>
@@ -59,9 +57,9 @@ const AddPhoto = () => {
 
   return (
     <View>
-      <Button
+      <TsButton
         title="Pick an image from camera roll"
-        onPress={handlePickImage}
+        onPress={() => handlePickImage()}
       />
       {image && (
         <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
@@ -91,5 +89,5 @@ const AddVideo = () => {
     }
   };
 
-  return <Button title="Upload a video" onPress={() => handleVideo()} />;
+  return <TsButton title="Upload a video" onPress={() => handleVideo()} />;
 };
