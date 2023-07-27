@@ -32,75 +32,30 @@ export default function EditProfileScreen({ navigation }) {
    * @function
    * @name handleProfileImage
    */
-  // const handleProfileImage = async () => {
-  //   const image = await pickImage();
-
-  //   if (image) {
-  //     const imageUri = image.assets[0].uri;
-
-  //     const uploadUrl = await uploadImageAndGetDownloadURL(imageUri);
-
-  //     updateProfilePhoto(user.uid, uploadUrl);
-
-  //     setUserData({ ...userData, profileImage: uploadUrl });
-
-  //   } else {
-  //     console.log("image cancelled");
-  //   }
-  // };
-
-  // const handleProfileImage = async () => {
-  //   try {
-  //     setProfileImageIsLoading(true);
-  //     const image = await pickImage();
-
-  //     if (image) {
-  //       const imageUri = image.assets[0].uri;
-
-  //       const uploadUrl = await uploadImageAndGetDownloadURL(imageUri);
-
-  //       updateProfilePhoto(user.uid, uploadUrl);
-
-  //       setUserData({ ...userData, profileImage: uploadUrl });
-  //     } else {
-  //       console.log("Image selection cancelled.");
-  //     }
-  //   } catch (error) {
-  //     // Handle the error here
-  //     console.log("An error occurred:", error);
-  //     // You can also display an error message to the user or perform other error handling tasks
-  //   }
-  // };
 
   const handleProfileImage = async () => {
-    const image = await pickImage();
+    try {
+      setProfileImageIsLoading(true);
+      const image = await pickImage();
 
-    if (image) {
-      const imageUri = image.assets[0].uri;
-      console.log(
-        "🚀 ~ file: EditProfileScreen.js:84 ~ handleProfileImage ~ imageUri:",
-        imageUri
-      );
+      if (image) {
+        const imageUri = image.assets[0].uri;
 
-      const uploadUrl = await uploadImageAndGetDownloadURL(imageUri);
-      console.log(
-        "🚀 ~ file: EditProfileScreen.js:82 ~ handleProfileImage ~ uploadUrl:",
-        uploadUrl
-      );
+        const uploadUrl = await uploadImageAndGetDownloadURL(imageUri);
 
-      // updateProfilePhoto(user.uid, uploadUrl);
+        updateProfilePhoto(user.uid, uploadUrl);
 
-      // setUserData({ ...userData, profileImage: uploadUrl });
-      // setProfileImageIsLoading(false);
-    } else {
-      console.log("Image selection cancelled.");
-      // setProfileImageIsLoading(false);
+        setUserData({ ...userData, profileImage: uploadUrl });
+        setProfileImageIsLoading(false);
+      } else {
+        console.log("Image selection cancelled.");
+        setProfileImageIsLoading(false);
+      }
+    } catch (error) {
+      // Handle the error here
+      console.log("An error occurred:", error);
+      setProfileImageIsLoading(false);
     }
-
-    // Handle the error here
-    // console.log("An error occurred:", error);
-    // setProfileImageIsLoading(false);
-    // You can display an error message to the user or perform other error handling tasks
   };
 
   /**
