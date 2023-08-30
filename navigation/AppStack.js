@@ -5,7 +5,6 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { useTheme, useNavigation } from "@react-navigation/native";
 import { Button } from "react-native";
 import { UserContext } from "../contexts/context";
-
 import {
   HomeScreen,
   TestScreen,
@@ -17,6 +16,7 @@ import {
   AddContentScreen,
   LoadingScreen,
   UsernameScreen,
+  EditBioScreen,
 } from "../screens";
 
 const HomeStack = createStackNavigator();
@@ -86,7 +86,7 @@ const ProfileStackScreen = () => {
         component={EditProfileScreen}
         options={{
           headerShown: true,
-          presentation: "modal",
+          // presentation: "modal",
           // headerRight: () => (
           //   <Button
           //     onPress={() => {
@@ -95,19 +95,35 @@ const ProfileStackScreen = () => {
           //     title="Save"
           //   />
           // ),
-          headerLeft: () => (
-            <Button
-              onPress={() => {
-                navigation.navigate("ProfileScreen");
-              }}
-              title="Back"
-            />
-          ),
+          // headerLeft: () => (
+          //   <Button
+          //     onPress={() => {
+          //       navigation.navigate("ProfileScreen");
+          //     }}
+          //     title="Back"
+          //   />
+          // ),
         }}
       />
       <ProfileStack.Screen
         name="EditSkillsScreen"
         component={EditSkillsScreen}
+      />
+      <ProfileStack.Screen
+        name="EditBioScreen"
+        component={EditBioScreen}
+        options={() => ({
+          headerShown: true,
+          headerRight: () => <Button title="Done" />,
+          // headerLeft: () => (
+          //   <Button
+          //     onPress={() => {
+          //       navigation.navigate("EditProfileScreen");
+          //     }}
+          //     title="Cancel"
+          //   />
+          // ),
+        })}
       />
     </ProfileStack.Navigator>
   );

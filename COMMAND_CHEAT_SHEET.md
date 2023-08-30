@@ -2,6 +2,8 @@
 
 iOS Simulator Dark mode: Command + Shift + A
 
+Expo Menu: command + option + z
+
 Run Project: npx expo
 
 Run Firebase emulator: firebase emulators:start

@@ -82,7 +82,6 @@ export default function EditProfileScreen({ navigation }) {
           style={styles.itemPhoto}
           resizeMode="cover"
         />
-        {/* <TsButton title="update profile pic" onPress={handleProfileImage} /> */}
         {profileImageIsLoading ? (
           <Text style={[{ color: colors.text, fontSize: 16, margin: 10 }]}>
             Loading...
@@ -90,6 +89,10 @@ export default function EditProfileScreen({ navigation }) {
         ) : (
           <TsButton title="update profile pic" onPress={handleProfileImage} />
         )}
+        <TsButton
+          title="Edit Bio"
+          onPress={() => navigation.navigate("EditBioScreen")}
+        />
         <TsButton
           title="Edit Skills"
           onPress={() => navigation.navigate("EditSkillsScreen")}
