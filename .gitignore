@@ -15,8 +15,7 @@ web-build/
 .env
 
 # firebase emulators
-firebase-debug.log
 firebase-debug.log.json
-firestore-debug.log
-
+firebase-debug.log
+firebase-debug.*.log
 
