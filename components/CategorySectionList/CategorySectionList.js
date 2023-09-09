@@ -3,26 +3,23 @@ import {
   Text,
   SectionList,
   FlatList,
-  Button,
   StyleSheet,
-  StatusBar,
   TouchableOpacity,
   Image,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import { arrayRemove, collection, getDocs } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../lib/firebase";
 
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useTheme } from "@react-navigation/native";
 
-import { useTheme } from "@react-navigation/native";
-
-const Item = ({ title }) => (
-  <View style={styles.item}>
-    <Text style={styles.title}>{title}</Text>
-  </View>
-);
+//TODO Delete after refactoring
+// const Item = ({ title }) => (
+//   <View style={styles.item}>
+//     <Text style={styles.title}>{title}</Text>
+//   </View>
+// );
 
 const CategorySectionList = () => {
   const navigation = useNavigation();
@@ -82,11 +79,11 @@ const CategorySectionList = () => {
   /**
    * List Item Component for the SectionList renderitem
    */
+  //TODO move outside component
   const ListItem = ({ item }) => {
     return (
       <TouchableOpacity
         onPress={() => navigation.navigate("CategoryDetailScreen", item.title)}
-        // onPress={() => navigation.navigate("ProfileScreen")}
       >
         <View style={styles.item}>
           <Image
@@ -96,9 +93,7 @@ const CategorySectionList = () => {
             style={styles.itemPhoto}
             resizeMode="cover"
           />
-          {/* <>{console.log(item)}</> */}
           <Text style={styles.itemText}>{item.title}</Text>
-          {/* <Text style={(styles.itemText, { color: "red" })}>{item.id}</Text> */}
         </View>
       </TouchableOpacity>
     );
@@ -106,7 +101,6 @@ const CategorySectionList = () => {
 
   return (
     <View>
-      {/* <Text>Cat Section List</Text> */}
       <SectionList
         renderSectionHeader={({ section, index }) => (
           <>
@@ -116,7 +110,6 @@ const CategorySectionList = () => {
             <FlatList
               horizontal
               data={section.data}
-              // renderItem={renderItem}
               renderItem={({ item }) => <ListItem item={item} />}
               showsHorizontalScrollIndicator={false}
               keyExtractor={(item, index) => item + index}
