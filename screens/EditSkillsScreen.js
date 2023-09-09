@@ -26,6 +26,17 @@ const EditSkillsScreen = ({ navigation }) => {
   const { skill = [] } = userData;
 
   /**
+   * This function is used to save the user's skills
+   */
+  useEffect(() => {
+    // Use `setOptions` to update the button that we previously specified
+    // Now the button includes an `onPress` handler to update the count
+    navigation.setOptions({
+      headerRight: () => <Button onPress={updateSkills} title="Done" />,
+    });
+  }, [navigation, skill]);
+
+  /**
    * This function is used to get the user's data from firestore
    */
   useEffect(() => {
@@ -100,6 +111,8 @@ const EditSkillsScreen = ({ navigation }) => {
     await updateDoc(docRef, {
       skill: skill,
     });
+
+    navigation.navigate("EditProfileScreen");
   };
 
   return (
@@ -112,8 +125,6 @@ const EditSkillsScreen = ({ navigation }) => {
           keyExtractor={(item) => item.title}
           renderItem={renderItem}
         />
-        <Button title="Save" onPress={updateSkills} />
-        <Button title="Back" onPress={() => navigation.goBack()} />
       </View>
     </SafeAreaView>
   );

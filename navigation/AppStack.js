@@ -2,12 +2,11 @@ import React, { useContext } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { useTheme, useNavigation } from "@react-navigation/native";
-import { Button } from "react-native";
+import { useTheme } from "@react-navigation/native";
+import { Button, Text } from "react-native";
 import { UserContext } from "../contexts/context";
 import {
   HomeScreen,
-  TestScreen,
   ProfileScreen,
   CategoryDetailScreen,
   UserDetailScreen,
@@ -21,9 +20,9 @@ import {
 
 const HomeStack = createStackNavigator();
 const ProfileStack = createStackNavigator();
-const Tab = createBottomTabNavigator();
 const UsernameStack = createStackNavigator();
 const LoadStack = createStackNavigator();
+const Tab = createBottomTabNavigator();
 
 function HomeStackScreen() {
   return (
@@ -33,16 +32,22 @@ function HomeStackScreen() {
       }}
     >
       <HomeStack.Screen name="home" component={HomeScreen} />
-      {/* <HomeStack.Screen name="TestScreen" component={TestScreen} /> */}
-      <HomeStack.Screen name="ProfileScreen" component={ProfileScreen} />
       <HomeStack.Screen
         name="CategoryDetailScreen"
         component={CategoryDetailScreen}
+        options={{
+          headerShown: true,
+          //remote title
+          headerTitle: "",
+        }}
       />
-      <HomeStack.Screen name="UserDetailScreen" component={UserDetailScreen} />
       <HomeStack.Screen
-        name="EditProfileScreen"
-        component={EditProfileScreen}
+        name="UserDetailScreen"
+        component={UserDetailScreen}
+        options={{
+          headerShown: true,
+          headerTitle: "",
+        }}
       />
     </HomeStack.Navigator>
   );
@@ -73,7 +78,6 @@ const LoadStackScreen = () => {
 };
 
 const ProfileStackScreen = () => {
-  const navigation = useNavigation();
   return (
     <ProfileStack.Navigator
       screenOptions={{
@@ -86,43 +90,25 @@ const ProfileStackScreen = () => {
         component={EditProfileScreen}
         options={{
           headerShown: true,
-          // presentation: "modal",
-          // headerRight: () => (
-          //   <Button
-          //     onPress={() => {
-          //       navigation.navigate("ProfileScreen");
-          //     }}
-          //     title="Save"
-          //   />
-          // ),
-          // headerLeft: () => (
-          //   <Button
-          //     onPress={() => {
-          //       navigation.navigate("ProfileScreen");
-          //     }}
-          //     title="Back"
-          //   />
-          // ),
+          headerTitle: "",
         }}
       />
       <ProfileStack.Screen
         name="EditSkillsScreen"
         component={EditSkillsScreen}
+        options={() => ({
+          headerShown: true,
+          headerTitle: "",
+          headerRight: () => <Button title="Done" />,
+        })}
       />
       <ProfileStack.Screen
         name="EditBioScreen"
         component={EditBioScreen}
         options={() => ({
           headerShown: true,
+          headerTitle: "",
           headerRight: () => <Button title="Done" />,
-          // headerLeft: () => (
-          //   <Button
-          //     onPress={() => {
-          //       navigation.navigate("EditProfileScreen");
-          //     }}
-          //     title="Cancel"
-          //   />
-          // ),
         })}
       />
     </ProfileStack.Navigator>
