@@ -93,7 +93,9 @@ const CategorySectionList = () => {
             style={styles.itemPhoto}
             resizeMode="cover"
           />
-          <Text style={styles.itemText}>{item.title}</Text>
+          <Text style={[styles.itemText, { textTransform: "capitalize" }]}>
+            {item.title}
+          </Text>
         </View>
       </TouchableOpacity>
     );
@@ -104,7 +106,13 @@ const CategorySectionList = () => {
       <SectionList
         renderSectionHeader={({ section, index }) => (
           <>
-            <Text style={[styles.sectionHeader, { color: colors.text }]}>
+            <Text
+              style={[
+                styles.sectionHeader,
+                { color: colors.text },
+                { textTransform: "capitalize" },
+              ]}
+            >
               {section.title}
             </Text>
             <FlatList
