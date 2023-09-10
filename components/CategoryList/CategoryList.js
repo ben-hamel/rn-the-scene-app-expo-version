@@ -7,18 +7,20 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import React, { useEffect } from "react";
+import React from "react";
 
 export default function CategoryList({ title, categories }) {
   const navigation = useNavigation();
 
   return (
     <View>
-      <Text style={styles.sectionHeader}>{title}</Text>
+      <Text style={styles.sectionHeader}>
+        {/* {title} */}
+        audio
+      </Text>
       <FlatList
         horizontal
         data={categories.data}
-        // keyExtractor={(item) => item.title}
         renderItem={({ item }) => (
           <TouchableOpacity
             onPress={() => navigation.navigate(categories.screen, item)}
@@ -59,6 +61,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginLeft: 10,
     marginBottom: 5,
+    textTransform: "capitalize",
   },
   item: {
     margin: 10,
