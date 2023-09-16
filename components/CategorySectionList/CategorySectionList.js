@@ -7,64 +7,14 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import React, { useState, useEffect } from "react";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../../lib/firebase";
+import React from "react";
 
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, useTheme } from "@react-navigation/native";
 
-//TODO Delete after refactoring
-// const Item = ({ title }) => (
-//   <View style={styles.item}>
-//     <Text style={styles.title}>{title}</Text>
-//   </View>
-// );
-
-const CategorySectionList = () => {
-  const navigation = useNavigation();
-  const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
-
+const CategorySectionList = ({ categories, loading }) => {
   const { colors } = useTheme();
-
   const styles = styling(colors);
-  useEffect(() => {
-    const getData = async () => {
-      /**
-       * Grab all documents from the categories collection
-       */
-      const querySnapshot = await getDocs(collection(db, "categories"));
-
-      /**
-       * create an array of objects from the querySnapshot
-       */
-      let arr_Data = [];
-      querySnapshot.forEach((doc) => {
-        /**
-         * store document in new variable
-         */
-        const document_Category = doc.data();
-        /**
-         * change categories array to data array so its compatible with the SectionList.
-         */
-        document_Category.data = document_Category.categories;
-        delete document_Category.categories;
-
-        arr_Data.push(document_Category);
-        console.log("Title", document_Category.data);
-      });
-
-      /**
-       * set the categories state to the array of objects
-       */
-      setCategories(arr_Data);
-      setLoading(false);
-      console.log("categories retrieved");
-    };
-
-    getData();
-  }, []);
 
   if (loading) {
     return (
@@ -76,35 +26,10 @@ const CategorySectionList = () => {
     );
   }
 
-  /**
-   * List Item Component for the SectionList renderitem
-   */
-  //TODO move outside component
-  const ListItem = ({ item }) => {
-    return (
-      <TouchableOpacity
-        onPress={() => navigation.navigate("CategoryDetailScreen", item.title)}
-      >
-        <View style={styles.item}>
-          <Image
-            source={{
-              uri: item.uri,
-            }}
-            style={styles.itemPhoto}
-            resizeMode="cover"
-          />
-          <Text style={[styles.itemText, { textTransform: "capitalize" }]}>
-            {item.title}
-          </Text>
-        </View>
-      </TouchableOpacity>
-    );
-  };
-
   return (
     <View>
       <SectionList
-        renderSectionHeader={({ section, index }) => (
+        renderSectionHeader={({ section }) => (
           <>
             <Text
               style={[
@@ -162,5 +87,30 @@ const styling = (theme) =>
       padding: 10,
     },
   });
+
+const ListItem = ({ item }) => {
+  const navigation = useNavigation();
+  const { colors } = useTheme();
+  const styles = styling(colors);
+
+  return (
+    <TouchableOpacity
+      onPress={() => navigation.navigate("CategoryDetailScreen", item.title)}
+    >
+      <View style={styles.item}>
+        <Image
+          source={{
+            uri: item.uri,
+          }}
+          style={styles.itemPhoto}
+          resizeMode="cover"
+        />
+        <Text style={[styles.itemText, { textTransform: "capitalize" }]}>
+          {item.title}
+        </Text>
+      </View>
+    </TouchableOpacity>
+  );
+};
 
 export default CategorySectionList;

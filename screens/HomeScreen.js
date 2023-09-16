@@ -1,17 +1,15 @@
 import React from "react";
 import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-
 import CategorySectionList from "../components/CategorySectionList/CategorySectionList.js";
+import useFetchCategories from "../hooks/useFetchCategories.js";
 
-export function HomeScreen({ navigation }) {
-  const tabBarHeight = useBottomTabBarHeight();
-  console.log("🚀 ~ file: HomeScreen.js:11 ~ tabBarHeight:", tabBarHeight);
+export function HomeScreen() {
+  const { categories, loading } = useFetchCategories();
 
   return (
     <SafeAreaView style={styles.lightContainer}>
-      <CategorySectionList />
+      <CategorySectionList categories={categories} loading={loading} />
     </SafeAreaView>
   );
 }
