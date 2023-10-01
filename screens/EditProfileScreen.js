@@ -52,7 +52,6 @@ export default function EditProfileScreen({ navigation }) {
         setProfileImageIsLoading(false);
       }
     } catch (error) {
-      // Handle the error here
       console.log("An error occurred:", error);
       setProfileImageIsLoading(false);
     }
