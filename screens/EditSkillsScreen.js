@@ -22,7 +22,8 @@ const EditSkillsScreen = ({ navigation }) => {
 
   const { username, user } = useContext(UserContext);
 
-  const { skill = [] } = userData;
+  const { skill } = userData || {};
+
   const { allSubcategories } = useFetchCategories();
 
   /**
