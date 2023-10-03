@@ -16,7 +16,6 @@ const useFetchCategories = () => {
         });
         setCategories(categoriesData);
         setLoading(false);
-        console.log("categories retrieved");
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
@@ -25,7 +24,23 @@ const useFetchCategories = () => {
     fetchData();
   }, []);
 
-  return { categories, loading };
+  // Function to extract subcategories from the fetched categories
+  const extractSubcategories = () => {
+    const subcategories = [];
+
+    categories.forEach((category) => {
+      category.data.forEach((subcategory) => {
+        subcategories.push(subcategory);
+      });
+    });
+
+    return subcategories;
+  };
+
+  // Get a list of every subcategory
+  const allSubcategories = extractSubcategories();
+
+  return { categories, loading, allSubcategories };
 };
 
 export default useFetchCategories;
