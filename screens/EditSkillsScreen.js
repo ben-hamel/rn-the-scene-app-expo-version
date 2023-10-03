@@ -8,29 +8,27 @@ import {
 } from "react-native";
 import { useState, useEffect, useContext } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { collection, doc, getDocs, query, updateDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 
 import { getUserWithUsername } from "../lib/firebase";
-
 import { UserContext } from "../contexts/context";
 
 import { db } from "../lib/firebase.js";
+import useFetchCategories from "../hooks/useFetchCategories";
 
 const EditSkillsScreen = ({ navigation }) => {
   /** Category State */
-  const [category, setCategory] = useState([]);
   const [userData, setUserData] = useState({});
 
   const { username, user } = useContext(UserContext);
 
   const { skill = [] } = userData;
+  const { allSubcategories } = useFetchCategories();
 
   /**
    * This function is used to save the user's skills
    */
   useEffect(() => {
-    // Use `setOptions` to update the button that we previously specified
-    // Now the button includes an `onPress` handler to update the count
     navigation.setOptions({
       headerRight: () => <Button onPress={updateSkills} title="Done" />,
     });
@@ -41,36 +39,16 @@ const EditSkillsScreen = ({ navigation }) => {
    */
   useEffect(() => {
     async function getUserData() {
-      const userDoc = await getUserWithUsername(username);
-      const userDocData = await userDoc.data();
-      await setUserData(userDocData);
+      try {
+        const userDoc = await getUserWithUsername(username);
+        const userDocData = await userDoc.data();
+        await setUserData(userDocData);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
     }
 
     getUserData();
-  }, []);
-
-  /**
-   *  this pulls all the category options from the categories collection in firebase
-   */
-  useEffect(() => {
-    const getData = async () => {
-      let arr_Data = [];
-
-      const q = query(collection(db, "categories"));
-
-      const querySnapshot = await getDocs(q);
-
-      querySnapshot.forEach((doc) => {
-        const data = doc.data().categories;
-        data.forEach((element) => {
-          arr_Data.push(element);
-        });
-      });
-
-      setCategory(arr_Data);
-    };
-
-    getData();
   }, []);
 
   /**
@@ -78,7 +56,6 @@ const EditSkillsScreen = ({ navigation }) => {
    */
   const renderItem = ({ item }) => {
     const backgroundColor = skill?.includes(item.title) ? "blue" : "#414141";
-    const color = skill?.includes(item.title) ? "white" : "white";
 
     return (
       <Item
@@ -96,7 +73,6 @@ const EditSkillsScreen = ({ navigation }) => {
           }
         }}
         backgroundColor={{ backgroundColor }}
-        textColor={{ color }}
       />
     );
   };
@@ -120,7 +96,7 @@ const EditSkillsScreen = ({ navigation }) => {
       <View>
         <Text>EditSkills</Text>
         <FlatList
-          data={category}
+          data={allSubcategories}
           extraData={skill}
           keyExtractor={(item) => item.title}
           renderItem={renderItem}
