@@ -13,7 +13,7 @@ import { doc, updateDoc } from "firebase/firestore";
 import { getUserWithUsername } from "../lib/firebase";
 import { UserContext } from "../contexts/context";
 
-import { db } from "../lib/firebase.js";
+import { db } from "../firebase/firebase";
 import useFetchCategories from "../hooks/useFetchCategories";
 
 const EditSkillsScreen = ({ navigation }) => {

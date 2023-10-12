@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { db } from "@lib/firebase.js";
+import { db } from "@firebase/firebase.js";
 import { collection, query, where, getDocs } from "firebase/firestore";
 
 export const useFetchUsersBySkill = (skill) => {

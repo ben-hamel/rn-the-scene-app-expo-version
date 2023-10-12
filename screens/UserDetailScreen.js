@@ -6,7 +6,7 @@ import {
   getUserWithUsername,
   getUserImages,
   getUserVideos,
-} from "@lib/firebase";
+} from "@lib/firebase.js";
 import ProfileHero from "@components/ProfileHero/ProfileHero";
 import TsButton from "@components/TsButton/TsButton.jsx";
 
