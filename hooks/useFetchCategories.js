@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "@lib/firebase";
+import { db } from "@firebase/firebase.js";
 
 const useFetchCategories = () => {
   const [categories, setCategories] = useState([]);

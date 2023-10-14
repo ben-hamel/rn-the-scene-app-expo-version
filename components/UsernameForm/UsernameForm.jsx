@@ -4,7 +4,7 @@ import { UserContext } from "@contexts/context";
 import { useTheme } from "@react-navigation/native";
 import debounce from "lodash.debounce";
 import { setDoc, doc, getDoc, updateDoc } from "firebase/firestore";
-import { db } from "@lib/firebase.js";
+import { db } from "@firebase/firebase";
 // import { SafeAreaView } from "react-native-safe-area-context";
 
 const UsernameForm = () => {

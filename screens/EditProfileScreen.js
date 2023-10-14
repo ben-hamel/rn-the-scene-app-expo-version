@@ -1,37 +1,28 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Button, Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { UserContext } from "../contexts/context";
+import { signOutUser } from "../lib/firebase.js";
 import {
   uploadImageAndGetDownloadURL,
+  getUserWithUsername,
   updateProfilePhoto,
-  signOutUser,
-} from "../lib/firebase.js";
+} from "@firebase/firestore";
 import { pickImage } from "../utils/imagePicker.js";
-import { getUserWithUsername } from "../lib/firebase";
 import TsButton from "@components/TsButton/TsButton.jsx";
 import { useTheme } from "@react-navigation/native";
 
 export default function EditProfileScreen({ navigation }) {
+  /** Contexts */
   const { colors } = useTheme();
   /** Pull in username from context */
   const { username, user } = useContext(UserContext);
+  /** State */
   const [userData, setUserData] = useState({});
-
-  const { profileImage } = userData || {};
-
-  // profileImageIsLoading
   const [profileImageIsLoading, setProfileImageIsLoading] = useState(false);
 
-  /**
-   * This function allows the user to select an image from their device's library using the ImagePicker library.
-   * If an image is selected, the function will proceed to upload the image using the uploadImage function,
-   * and the download URL of the uploaded image will be set as the value of the 'image' state.
-   * @returns {Promise<void>}
-   * @async
-   * @function
-   * @name handleProfileImage
-   */
+  /** destructure userData */
+  const { profileImage } = userData || {};
 
   const handleProfileImage = async () => {
     try {
@@ -40,12 +31,8 @@ export default function EditProfileScreen({ navigation }) {
 
       if (image) {
         const imageUri = image.assets[0].uri;
-
         const uploadUrl = await uploadImageAndGetDownloadURL(imageUri);
-
         updateProfilePhoto(user.uid, uploadUrl);
-
-        setUserData({ ...userData, profileImage: uploadUrl });
         setProfileImageIsLoading(false);
       } else {
         console.log("Image selection cancelled.");
@@ -57,17 +44,12 @@ export default function EditProfileScreen({ navigation }) {
     }
   };
 
-  /**
-   * This function is used to get the user's data from firestore
-   */
   useEffect(() => {
-    async function getUserData() {
-      const userDoc = await getUserWithUsername(username);
-      const userDocData = userDoc.data();
-      setUserData(userDocData);
-    }
+    const fetchUserData = async () => {
+      await getUserWithUsername(username, setUserData);
+    };
 
-    getUserData();
+    fetchUserData();
   }, []);
 
   return (

@@ -14,6 +14,7 @@ module.exports = function (api) {
             "@utils": "./utils",
             "@hooks": "./hooks",
             "@contexts": "./contexts",
+            "@firebase": "./firebase",
           },
           // extensions: [".js", ".jsx", ".ts", ".tsx"],
         },

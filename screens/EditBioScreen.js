@@ -2,9 +2,9 @@ import { StyleSheet, Text, View, TextInput, Button } from "react-native";
 import React, { useState, useContext, useEffect } from "react";
 import { useTheme } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { db } from "../lib/firebase.js";
+import { db } from "../firebase/firebase";
 import { UserContext } from "../contexts/context";
-import { collection, doc, getDocs, query, updateDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 
 const EditBioScreen = ({ navigation }) => {
   const { colors } = useTheme();
