@@ -19,8 +19,6 @@ const firebaseConfig = {
   appId: Constants.expoConfig.extra.appId,
 };
 
-// export const app = initializeApp(firebaseConfig);
-// export const auth = getAuth(app);
 let app, auth;
 
 if (!getApps().length) {
