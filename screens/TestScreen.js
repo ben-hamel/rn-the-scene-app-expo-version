@@ -2,21 +2,18 @@ import React, { useState, useEffect, useContext, useRef } from "react";
 import { View, Button, StyleSheet, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getUserWithUsername } from "@firebase/firestore";
-import { UserContext } from "../contexts/context";
 import { Video, ResizeMode } from "expo-av";
+import { useAuth } from "@firebase/auth";
+import TsButton from "@components/TsButton/TsButton.jsx";
 
 const TestScreen = () => {
   const [userData, setUserData] = useState();
-  const { username } = useContext(UserContext);
+  const { username, signOut } = useAuth();
 
   useEffect(() => {
-    async function getUserData() {
-      const userDoc = await getUserWithUsername(username);
-      const userDocData = userDoc.data();
-      setUserData(userDocData);
-    }
+    const unsubscribe = getUserWithUsername(username, setUserData);
 
-    getUserData();
+    return () => unsubscribe();
   }, []);
 
   const video = React.useRef(null);
@@ -26,6 +23,7 @@ const TestScreen = () => {
     <SafeAreaView style={styles.container}>
       <View>
         <Text>Test Page</Text>
+        <TsButton onPress={signOut} title="Sign Out" />
         <Button title="Go back" onPress={() => navigation.goBack()} />
         <Text>@{userData?.username}</Text>
         <Video

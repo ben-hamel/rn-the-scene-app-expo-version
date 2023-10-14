@@ -6,21 +6,19 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { doc, updateDoc } from "firebase/firestore";
-
 import { getUserWithUsername } from "@firebase/firestore";
-import { UserContext } from "../contexts/context";
-
 import { db } from "../firebase/firebase";
 import useFetchCategories from "../hooks/useFetchCategories";
+import { useAuth } from "@firebase/auth";
 
 const EditSkillsScreen = ({ navigation }) => {
   /** Category State */
   const [userData, setUserData] = useState({});
 
-  const { username, user } = useContext(UserContext);
+  const { authUser: user, username } = useAuth();
 
   const { skill } = userData || {};
 
@@ -39,17 +37,9 @@ const EditSkillsScreen = ({ navigation }) => {
    * This function is used to get the user's data from firestore
    */
   useEffect(() => {
-    async function getUserData() {
-      try {
-        const userDoc = await getUserWithUsername(username);
-        const userDocData = await userDoc.data();
-        await setUserData(userDocData);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    }
+    const unsubscribe = getUserWithUsername(username, setUserData);
 
-    getUserData();
+    return () => unsubscribe();
   }, []);
 
   /**
@@ -62,14 +52,12 @@ const EditSkillsScreen = ({ navigation }) => {
       <Item
         item={item}
         onPress={() => {
-          // if the skill is already in the user's skills, remove it
           if (skill.includes(item.title)) {
             setUserData({
               ...userData,
               skill: skill.filter((skillItem) => skillItem !== item.title),
             });
           } else {
-            // if the skill is not in the user's skills, add it
             setUserData({ ...userData, skill: [...skill, item.title] });
           }
         }}
@@ -84,7 +72,6 @@ const EditSkillsScreen = ({ navigation }) => {
   const updateSkills = async () => {
     const docRef = doc(db, "users", user.uid);
 
-    // update the skill field with the new skill
     await updateDoc(docRef, {
       skill: skill,
     });

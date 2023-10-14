@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Image } from "react-native";
-import { useState, useEffect, useContext, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useTheme } from "@react-navigation/native";
 import { Video } from "expo-av";
 //Componets
@@ -8,12 +8,13 @@ import TsButton from "@components/TsButton/TsButton.jsx";
 //Misc
 import { getUserVideos } from "../lib/firebase";
 import { getUserWithUsername, getUserImages } from "@firebase/firestore";
-import { UserContext } from "../contexts/context";
+import { useAuth } from "@firebase/auth";
 
 const ProfileScreen = ({ navigation }) => {
   /** Contexts */
   const { colors } = useTheme();
-  const { username, user } = useContext(UserContext);
+  const { username } = useAuth();
+
   /** State */
   const [userData, setUserData] = useState();
 
@@ -22,54 +23,43 @@ const ProfileScreen = ({ navigation }) => {
 
   const { profileImage, bio } = userData || {};
 
+  useEffect(() => {
+    const unsubscribe = getUserWithUsername(username, setUserData);
+
+    return () => unsubscribe();
+  }, []);
+
   //TODO refactor to with onsnapshot
   useEffect(() => {
-    //get user videos
-    const fetchUserVideos = async () => {
-      const userVideos = await getUserVideos(user.uid);
-      setUserVideos(userVideos);
-    };
+    async function getUserData() {
+      if (userData) {
+        try {
+          const userImages = await getUserImages(userData.uid);
+          setUserImages(userImages);
 
-    const fetchUserImages = async () => {
-      const userImages = await getUserImages(user.uid);
-      setUserImages(userImages);
-    };
+          const userVideos = await getUserVideos(userData.uid);
+          setUserVideos(userVideos);
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      }
+    }
 
-    fetchUserImages();
-    fetchUserVideos();
-  }, []);
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      await getUserWithUsername(username, setUserData);
-    };
-
-    fetchUserData();
-  }, []);
+    getUserData();
+  }, [userData]);
 
   return (
     <ProfileHero img={profileImage} username={username}>
       <View style={styles.container}>
-        {/* button to log userdata */}
-        <TsButton
-          title="Log User Data"
-          onPress={() => console.log(userData.username)}
-        />
-
-        {/* get user data button */}
-
         <TsButton
           title="Edit Profile"
           onPress={() => navigation.navigate("EditProfileScreen")}
         />
-        {/* ABOUT/BIO */}
         <Text style={[styles.header, { color: colors.text }]}>About</Text>
         <Text style={[styles.aboutText, { color: colors.text }]}>
           {bio || "No Bio"}
         </Text>
-
         {userImages && <PhotoItem images={userImages} />}
-
         {userVideos && <VideoItem videos={userVideos} />}
       </View>
     </ProfileHero>
