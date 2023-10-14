@@ -10,7 +10,7 @@ import { useState, useEffect, useContext } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { doc, updateDoc } from "firebase/firestore";
 
-import { getUserWithUsername } from "../lib/firebase";
+import { getUserWithUsername } from "@firebase/firestore";
 import { UserContext } from "../contexts/context";
 
 import { db } from "../firebase/firebase";

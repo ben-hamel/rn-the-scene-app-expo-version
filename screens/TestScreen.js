@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { View, Button, StyleSheet, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { getUserWithUsername } from "../lib/firebase";
+import { getUserWithUsername } from "@firebase/firestore";
 import { UserContext } from "../contexts/context";
 import { Video, ResizeMode } from "expo-av";
 

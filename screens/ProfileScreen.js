@@ -1,17 +1,13 @@
-import { StyleSheet, Text, View, Image, Button } from "react-native";
+import { StyleSheet, Text, View, Image } from "react-native";
 import { useState, useEffect, useContext, useRef } from "react";
 import { useTheme } from "@react-navigation/native";
-// import YoutubePlayer from "react-native-youtube-iframe";
 import { Video } from "expo-av";
 //Componets
 import ProfileHero from "@components/ProfileHero/ProfileHero";
 import TsButton from "@components/TsButton/TsButton.jsx";
 //Misc
-import {
-  getUserWithUsername,
-  getUserVideos,
-  getUserImages,
-} from "../lib/firebase";
+import { getUserVideos } from "../lib/firebase";
+import { getUserWithUsername, getUserImages } from "@firebase/firestore";
 import { UserContext } from "../contexts/context";
 
 const ProfileScreen = ({ navigation }) => {
@@ -26,13 +22,8 @@ const ProfileScreen = ({ navigation }) => {
 
   const { profileImage, bio } = userData || {};
 
+  //TODO refactor to with onsnapshot
   useEffect(() => {
-    async function getUserData() {
-      const userDoc = await getUserWithUsername(username);
-      const userDocData = userDoc.data();
-      setUserData(userDocData);
-    }
-
     //get user videos
     const fetchUserVideos = async () => {
       const userVideos = await getUserVideos(user.uid);
@@ -44,14 +35,29 @@ const ProfileScreen = ({ navigation }) => {
       setUserImages(userImages);
     };
 
-    getUserData();
     fetchUserImages();
     fetchUserVideos();
+  }, []);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      await getUserWithUsername(username, setUserData);
+    };
+
+    fetchUserData();
   }, []);
 
   return (
     <ProfileHero img={profileImage} username={username}>
       <View style={styles.container}>
+        {/* button to log userdata */}
+        <TsButton
+          title="Log User Data"
+          onPress={() => console.log(userData.username)}
+        />
+
+        {/* get user data button */}
+
         <TsButton
           title="Edit Profile"
           onPress={() => navigation.navigate("EditProfileScreen")}
@@ -59,7 +65,7 @@ const ProfileScreen = ({ navigation }) => {
         {/* ABOUT/BIO */}
         <Text style={[styles.header, { color: colors.text }]}>About</Text>
         <Text style={[styles.aboutText, { color: colors.text }]}>
-          {bio ? bio : "No Bio"}
+          {bio || "No Bio"}
         </Text>
 
         {userImages && <PhotoItem images={userImages} />}

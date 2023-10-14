@@ -1,20 +1,16 @@
-import { StyleSheet, Text, View, Button, Image } from "react-native";
+import { StyleSheet, View, Image } from "react-native";
 import React, { useState, useContext } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useTheme } from "@react-navigation/native";
 import { pickImage } from "@utils/imagePicker";
 import { UserContext } from "../contexts/context";
+import { uploadVideoToUserCollection, uploadVideo } from "../lib/firebase.js";
 import {
   uploadImageAndGetDownloadURL,
   uploadUserImage,
-  uploadVideoToUserCollection,
-  uploadVideo,
-} from "../lib/firebase.js";
+} from "@firebase/firestore";
 import TsButton from "@components/TsButton/TsButton.jsx";
 
 const AddContentScren = () => {
-  const { colors } = useTheme();
-
   return (
     <SafeAreaView style={styles.container}>
       <View>
@@ -47,7 +43,7 @@ const AddPhoto = () => {
 
       const uploadImage = async (userId, fileUri) => {
         const urlOfImage = await uploadImageAndGetDownloadURL(fileUri);
-        await uploadUserImage(userId, urlOfImage);
+        uploadUserImage(userId, urlOfImage);
       };
 
       uploadImage(userId, fileUri);

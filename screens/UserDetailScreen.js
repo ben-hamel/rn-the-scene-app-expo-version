@@ -2,11 +2,8 @@ import { useEffect, useState, useRef } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { Video } from "expo-av";
 import { useTheme } from "@react-navigation/native";
-import {
-  getUserWithUsername,
-  getUserImages,
-  getUserVideos,
-} from "@lib/firebase.js";
+import { getUserVideos } from "@lib/firebase.js";
+import { getUserWithUsername, getUserImages } from "@firebase/firestore";
 import ProfileHero from "@components/ProfileHero/ProfileHero";
 import TsButton from "@components/TsButton/TsButton.jsx";
 
@@ -47,7 +44,7 @@ const UserDetailScreen = ({ navigation, route }) => {
       <View style={styles.container}>
         <Text style={[styles.header, { color: colors.text }]}>About</Text>
         <Text style={[styles.aboutText, { color: colors.text }]}>
-          {bio ? bio : "No Bio"}
+          {bio || "No Bio"}
         </Text>
         {userImages && <PhotoItem images={userImages} />}
         {userVideos && <VideoItem videos={userVideos} />}
