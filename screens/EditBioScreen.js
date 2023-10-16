@@ -1,34 +1,30 @@
 import { StyleSheet, Text, View, TextInput, Button } from "react-native";
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useTheme } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { db } from "../firebase/firebase";
-import { UserContext } from "../contexts/context";
 import { doc, updateDoc } from "firebase/firestore";
+import { useAuth } from "@firebase/auth";
 
 const EditBioScreen = ({ navigation }) => {
   const { colors } = useTheme();
   const [bio, setBio] = useState("");
   const maxChars = 160;
-  const { username, user } = useContext(UserContext);
+  const { authUser: user } = useAuth();
 
   const handleChangeText = (text) => {
     setBio(text);
   };
 
   useEffect(() => {
-    // Use `setOptions` to update the button that we previously specified
-    // Now the button includes an `onPress` handler to update the count
     navigation.setOptions({
       headerRight: () => <Button onPress={updateBio} title="Done" />,
     });
   }, [navigation, bio]);
 
   const updateBio = () => {
-    //navitage to profile screen
     const docRef = doc(db, "users", user.uid);
 
-    // update the skill field with the new skill
     updateDoc(docRef, {
       bio: bio,
     });

@@ -16,7 +16,7 @@ import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
 
 const USER_COLLECTION = "users";
-const POSTS_COLLECTION = "posts";
+// const POSTS_COLLECTION = "posts";
 const IMAGE_COLLECTION = "images";
 
 import sizeIsLessThanMB from "../utils/sizeIsLessThanMB";
@@ -25,7 +25,6 @@ import compressImage from "@utils/compressImage";
 
 const MAX_FILE_SIZE_MB = 1;
 
-/* Take the image, and upload to images folder in firestore, and return the url for the image*/
 export const uploadImageAndGetDownloadURL = async (uri) => {
   try {
     let imageBlob;
@@ -50,14 +49,14 @@ export const uploadImageAndGetDownloadURL = async (uri) => {
 
     const storageRef = ref(storage, `images/${uuidv4()}`);
 
-    await uploadBytesResumable(storageRef, blob);
+    await uploadBytesResumable(storageRef, imageBlob);
 
     const downloadUrl = await getDownloadURL(storageRef);
 
     return downloadUrl;
   } catch (error) {
     console.log("An error occurred during image upload:", error);
-    throw error; // Optional: rethrow the error to propagate it to the caller
+    throw error;
   }
 };
 
@@ -96,10 +95,10 @@ export function getUserWithUsername(username, setUserData) {
     let userData = {};
     snapshot.forEach((documentSnapshot) => {
       const user = documentSnapshot.data();
-      userData = { ...user }; // Set userData as an object
+      userData = { ...user };
     });
 
-    setUserData(userData); // Set the user data directly as an object
+    setUserData(userData);
   });
 
   return unsubscribe;

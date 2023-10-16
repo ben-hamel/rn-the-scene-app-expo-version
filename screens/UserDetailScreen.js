@@ -13,25 +13,29 @@ const UserDetailScreen = ({ navigation, route }) => {
   /** Contexts */
   const { colors } = useTheme();
 
-  const [userData, setUserData] = useState();
-  const [userImages, setUserImages] = useState();
-  const [userVideos, setUserVideos] = useState();
+  const [userData, setUserData] = useState(null);
+  const [userImages, setUserImages] = useState([]);
+  const [userVideos, setUserVideos] = useState([]);
+
+  useEffect(() => {
+    const unsubscribe = getUserWithUsername(username, setUserData);
+
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     async function getUserData() {
-      const userDoc = await getUserWithUsername(username);
-      const userDocData = userDoc.data();
-      setUserData(userDocData);
+      if (userData) {
+        try {
+          const userImages = await getUserImages(userData.uid);
+          setUserImages(userImages);
 
-      const userImages = await getUserImages(userDoc.id);
-      setUserImages(userImages);
-
-      const fetchUserVideos = async () => {
-        const userVideos = await getUserVideos(userDoc.id);
-        setUserVideos(userVideos);
-      };
-
-      fetchUserVideos();
+          const userVideos = await getUserVideos(userData.uid);
+          setUserVideos(userVideos);
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      }
     }
 
     getUserData();
@@ -46,8 +50,12 @@ const UserDetailScreen = ({ navigation, route }) => {
         <Text style={[styles.aboutText, { color: colors.text }]}>
           {bio || "No Bio"}
         </Text>
-        {userImages && <PhotoItem images={userImages} />}
-        {userVideos && <VideoItem videos={userVideos} />}
+        {userImages && userImages.length > 0 && (
+          <PhotoItem images={userImages} />
+        )}
+        {userVideos && userVideos.length > 0 && (
+          <VideoItem videos={userVideos} />
+        )}
         <TsButton title="Go back" onPress={() => navigation.goBack()} />
       </View>
     </ProfileHero>

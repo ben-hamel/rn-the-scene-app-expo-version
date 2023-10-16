@@ -1,10 +1,10 @@
-import React, { useContext } from "react";
+import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useTheme } from "@react-navigation/native";
-import { Button, Text } from "react-native";
-import { UserContext } from "../contexts/context";
+import { Button } from "react-native";
+import { useAuth } from "@firebase/auth";
 import {
   HomeScreen,
   ProfileScreen,
@@ -16,6 +16,7 @@ import {
   LoadingScreen,
   UsernameScreen,
   EditBioScreen,
+  TestScreen,
 } from "../screens";
 
 const HomeStack = createStackNavigator();
@@ -117,9 +118,10 @@ const ProfileStackScreen = () => {
 
 export const AppStack = () => {
   const { colors } = useTheme();
-  const { user, username, isUsernameLoading } = useContext(UserContext);
+  const { authUser: user, isLoading } = useAuth();
+  const username = "borrowedblack";
 
-  if (isUsernameLoading) {
+  if (isLoading) {
     return <LoadStackScreen />;
   }
 
@@ -151,7 +153,7 @@ export const AppStack = () => {
       >
         <Tab.Screen name="Home" component={HomeStackScreen} />
         <Tab.Screen name="AddContent" component={AddContentScreen} />
-        {/* <Tab.Screen name="TestScreen" component={TestScreen} /> */}
+        <Tab.Screen name="TestScreen" component={TestScreen} />
         <Tab.Screen name="Profile" component={ProfileStackScreen} />
       </Tab.Navigator>
     );

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import {
   NavigationContainer,
   DefaultTheme,
@@ -7,8 +7,8 @@ import {
 import { AuthStack } from "./AuthStack.js";
 import { AppStack } from "./AppStack";
 import { useColorScheme } from "react-native";
-import { UserContext } from "../contexts/context";
 import { LoadingScreen } from "../screens";
+import { useAuth } from "@firebase/auth";
 
 const MyTheme = {
   ...DefaultTheme,
@@ -30,7 +30,7 @@ const MyDarkTheme = {
 export const NavigationRouter = () => {
   const scheme = useColorScheme();
 
-  const { user, isLoading } = useContext(UserContext);
+  const { authUser: user, isLoading } = useAuth();
 
   if (isLoading) {
     return <LoadingScreen />;

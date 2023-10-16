@@ -1,8 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { UserContext } from "../contexts/context";
-import { signOutUser } from "../lib/firebase.js";
 import {
   uploadImageAndGetDownloadURL,
   getUserWithUsername,
@@ -11,17 +9,18 @@ import {
 import { pickImage } from "../utils/imagePicker.js";
 import TsButton from "@components/TsButton/TsButton.jsx";
 import { useTheme } from "@react-navigation/native";
+import { useAuth } from "@firebase/auth";
 
 export default function EditProfileScreen({ navigation }) {
   /** Contexts */
   const { colors } = useTheme();
-  /** Pull in username from context */
-  const { username, user } = useContext(UserContext);
+  const { username, signOut } = useAuth();
+
   /** State */
   const [userData, setUserData] = useState({});
   const [profileImageIsLoading, setProfileImageIsLoading] = useState(false);
 
-  /** destructure userData */
+  // /** destructure userData */
   const { profileImage } = userData || {};
 
   const handleProfileImage = async () => {
@@ -32,7 +31,7 @@ export default function EditProfileScreen({ navigation }) {
       if (image) {
         const imageUri = image.assets[0].uri;
         const uploadUrl = await uploadImageAndGetDownloadURL(imageUri);
-        updateProfilePhoto(user.uid, uploadUrl);
+        updateProfilePhoto(userData.uid, uploadUrl);
         setProfileImageIsLoading(false);
       } else {
         console.log("Image selection cancelled.");
@@ -45,11 +44,9 @@ export default function EditProfileScreen({ navigation }) {
   };
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      await getUserWithUsername(username, setUserData);
-    };
+    const unsubscribe = getUserWithUsername(username, setUserData);
 
-    fetchUserData();
+    return () => unsubscribe();
   }, []);
 
   return (
@@ -79,7 +76,7 @@ export default function EditProfileScreen({ navigation }) {
           onPress={() => navigation.navigate("EditSkillsScreen")}
         />
       </View>
-      <TsButton onPress={signOutUser} title="Sign Out" />
+      <TsButton onPress={signOut} title="Sign Out" />
     </SafeAreaView>
   );
 }

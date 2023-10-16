@@ -1,14 +1,14 @@
 import { StyleSheet, View, Image } from "react-native";
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { pickImage } from "@utils/imagePicker";
-import { UserContext } from "../contexts/context";
 import { uploadVideoToUserCollection, uploadVideo } from "../lib/firebase.js";
 import {
   uploadImageAndGetDownloadURL,
   uploadUserImage,
 } from "@firebase/firestore";
 import TsButton from "@components/TsButton/TsButton.jsx";
+import { useAuth } from "@firebase/auth";
 
 const AddContentScren = () => {
   return (
@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
 
 const AddPhoto = () => {
   const [image, setImage] = useState(null);
-  const { user } = useContext(UserContext);
+  const { authUser: user } = useAuth();
 
   const userId = user.uid;
 
@@ -65,7 +65,8 @@ const AddPhoto = () => {
 };
 
 const AddVideo = () => {
-  const { user } = useContext(UserContext);
+  const { authUser: user } = useAuth();
+
   const userId = user.uid;
 
   const handleVideo = async () => {
