@@ -1,14 +1,14 @@
 import { Pressable, Text, StyleSheet } from "react-native";
 import React from "react";
 
-export default function TsButton(props) {
+export const TsButton = (props) => {
   const { onPress, title } = props;
   return (
     <Pressable style={styles.button} onPress={onPress}>
       <Text style={styles.buttonText}> {title} </Text>
     </Pressable>
   );
-}
+};
 
 const styles = StyleSheet.create({
   button: {
