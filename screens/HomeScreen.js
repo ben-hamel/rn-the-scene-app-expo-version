@@ -8,7 +8,7 @@ export function HomeScreen() {
   const { categories, loading } = useFetchCategories();
 
   return (
-    <SafeAreaView style={styles.lightContainer}>
+    <SafeAreaView style={styles.container}>
       <CategorySectionList categories={categories} loading={loading} />
     </SafeAreaView>
   );
