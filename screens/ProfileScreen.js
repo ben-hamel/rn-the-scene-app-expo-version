@@ -6,8 +6,11 @@ import { Video } from "expo-av";
 import ProfileHero from "../components/ProfileHero/ProfileHero";
 import TsButton from "../components/TsButton";
 //Misc
-import { getUserVideos } from "../lib/firebase";
-import { getUserWithUsername, getUserImages } from "../firebase/firestore";
+import {
+  getUserWithUsername,
+  getUserImages,
+  getUserVideos,
+} from "../firebase/firestore";
 import { useAuth } from "../firebase/auth";
 
 const ProfileScreen = ({ navigation }) => {

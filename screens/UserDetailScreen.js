@@ -2,8 +2,11 @@ import { useEffect, useState, useRef } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { Video } from "expo-av";
 import { useTheme } from "@react-navigation/native";
-import { getUserVideos } from "../lib/firebase.js";
-import { getUserWithUsername, getUserImages } from "../firebase/firestore";
+import {
+  getUserWithUsername,
+  getUserImages,
+  getUserVideos,
+} from "../firebase/firestore";
 import ProfileHero from "../components/ProfileHero/ProfileHero";
 import TsButton from "../components/TsButton";
 

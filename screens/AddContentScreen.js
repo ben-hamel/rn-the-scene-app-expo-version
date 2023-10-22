@@ -2,8 +2,9 @@ import { StyleSheet, View, Image } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { pickImage } from "../utils/imagePicker.js";
-import { uploadVideoToUserCollection, uploadVideo } from "../lib/firebase.js";
 import {
+  uploadVideoToUserCollection,
+  uploadVideo,
   uploadImageAndGetDownloadURL,
   uploadUserImage,
 } from "../firebase/firestore";

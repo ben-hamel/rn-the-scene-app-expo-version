@@ -19,7 +19,7 @@ const CategorySectionList = ({ categories, loading }) => {
   if (loading) {
     return (
       <SafeAreaView>
-        <View>
+        <View style={styles.container}>
           <Text style={{ color: colors.text }}>Loading</Text>
         </View>
       </SafeAreaView>
@@ -27,7 +27,7 @@ const CategorySectionList = ({ categories, loading }) => {
   }
 
   return (
-    <View>
+    <View style={styles.container}>
       <SectionList
         renderSectionHeader={({ section }) => (
           <>
@@ -63,7 +63,6 @@ const styling = (theme) =>
   StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: "#121212",
     },
     sectionHeader: {
       fontWeight: "800",
