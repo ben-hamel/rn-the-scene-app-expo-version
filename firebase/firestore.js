@@ -15,7 +15,6 @@ import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
 
 const USER_COLLECTION = "users";
-// const POSTS_COLLECTION = "posts";
 const IMAGE_COLLECTION = "images";
 
 import sizeIsLessThanMB from "../utils/sizeIsLessThanMB";
