@@ -2,10 +2,10 @@ import { useEffect, useState, useRef } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { Video } from "expo-av";
 import { useTheme } from "@react-navigation/native";
-import { getUserVideos } from "@lib/firebase.js";
-import { getUserWithUsername, getUserImages } from "@firebase/firestore";
-import ProfileHero from "@components/ProfileHero/ProfileHero";
-import TsButton from "@components/TsButton/TsButton.jsx";
+import { getUserVideos } from "../lib/firebase.js";
+import { getUserWithUsername, getUserImages } from "../firebase/firestore";
+import ProfileHero from "../components/ProfileHero/ProfileHero";
+import TsButton from "../components/TsButton";
 
 const UserDetailScreen = ({ navigation, route }) => {
   const username = route.params;

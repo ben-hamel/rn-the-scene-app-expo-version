@@ -5,11 +5,11 @@ import {
   uploadImageAndGetDownloadURL,
   getUserWithUsername,
   updateProfilePhoto,
-} from "@firebase/firestore";
+} from "../firebase/firestore";
 import { pickImage } from "../utils/imagePicker.js";
-import TsButton from "@components/TsButton/TsButton.jsx";
+import TsButton from "../components/TsButton";
 import { useTheme } from "@react-navigation/native";
-import { useAuth } from "@firebase/auth";
+import { useAuth } from "../firebase/auth";
 
 export default function EditProfileScreen({ navigation }) {
   /** Contexts */

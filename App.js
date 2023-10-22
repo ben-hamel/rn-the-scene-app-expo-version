@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { NavigationRouter } from "./navigation/NavigationRouter";
-import { AuthUserProvider } from "@firebase/auth";
+import { AuthUserProvider } from "./firebase/auth.js";
 
 const Stack = createNativeStackNavigator();
 

@@ -4,7 +4,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useTheme } from "@react-navigation/native";
 import { Button } from "react-native";
-import { useAuth } from "@firebase/auth";
+import { useAuth } from "../firebase/auth";
 import {
   HomeScreen,
   ProfileScreen,

@@ -10,7 +10,6 @@ import {
   serverTimestamp,
   onSnapshot,
 } from "firebase/firestore";
-
 import { db, storage } from "./firebase";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
@@ -21,7 +20,7 @@ const IMAGE_COLLECTION = "images";
 
 import sizeIsLessThanMB from "../utils/sizeIsLessThanMB";
 import getImageBlob from "../utils/getImageBlob";
-import compressImage from "@utils/compressImage";
+import compressImage from "../utils/compressImage";
 
 const MAX_FILE_SIZE_MB = 1;
 

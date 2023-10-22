@@ -1,14 +1,14 @@
 import { StyleSheet, View, Image } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { pickImage } from "@utils/imagePicker";
+import { pickImage } from "../utils/imagePicker.js";
 import { uploadVideoToUserCollection, uploadVideo } from "../lib/firebase.js";
 import {
   uploadImageAndGetDownloadURL,
   uploadUserImage,
-} from "@firebase/firestore";
-import TsButton from "@components/TsButton/TsButton.jsx";
-import { useAuth } from "@firebase/auth";
+} from "../firebase/firestore";
+import TsButton from "../components/TsButton";
+import { useAuth } from "../firebase/auth";
 
 const AddContentScren = () => {
   return (
