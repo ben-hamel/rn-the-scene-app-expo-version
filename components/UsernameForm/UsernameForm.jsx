@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View, TextInput, Pressable } from "react-native";
 import React, { useState, useContext, useEffect, useCallback } from "react";
-import { UserContext } from "@contexts/context";
+import { UserContext } from "../../contexts/context";
 import { useTheme } from "@react-navigation/native";
 import debounce from "lodash.debounce";
 import { setDoc, doc, getDoc, updateDoc } from "firebase/firestore";
-import { db } from "@firebase/firebase";
+import { db } from "../../firebase/firebase";
 // import { SafeAreaView } from "react-native-safe-area-context";
 
 const UsernameForm = () => {
@@ -13,6 +13,7 @@ const UsernameForm = () => {
   const [loading, setLoading] = useState(false);
 
   const { user, username } = useContext(UserContext);
+
   const { colors } = useTheme();
 
   const onSubmit = async () => {

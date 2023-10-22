@@ -4,10 +4,10 @@ import {
   Keyboard,
   View,
 } from "react-native";
-import UsernameForm from "@components/UsernameForm/UsernameForm.jsx";
+import UsernameForm from "../components/UsernameForm/UsernameForm.jsx";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { signOutUser } from "../lib/firebase.js";
-import TsButton from "@components/TsButton/TsButton.jsx";
+import TsButton from "../components/TsButton";
 
 const UsernameScreen = ({ navigation }) => {
   return (

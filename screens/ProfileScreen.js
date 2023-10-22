@@ -2,13 +2,13 @@ import { StyleSheet, Text, View, Image } from "react-native";
 import { useState, useEffect, useRef } from "react";
 import { useTheme } from "@react-navigation/native";
 import { Video } from "expo-av";
-//Componets
-import ProfileHero from "@components/ProfileHero/ProfileHero";
-import TsButton from "@components/TsButton/TsButton.jsx";
+//Componetss
+import ProfileHero from "../components/ProfileHero/ProfileHero";
+import TsButton from "../components/TsButton";
 //Misc
 import { getUserVideos } from "../lib/firebase";
-import { getUserWithUsername, getUserImages } from "@firebase/firestore";
-import { useAuth } from "@firebase/auth";
+import { getUserWithUsername, getUserImages } from "../firebase/firestore";
+import { useAuth } from "../firebase/auth";
 
 const ProfileScreen = ({ navigation }) => {
   /** Contexts */

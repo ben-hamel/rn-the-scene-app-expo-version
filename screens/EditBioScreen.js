@@ -4,7 +4,7 @@ import { useTheme } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { db } from "../firebase/firebase";
 import { doc, updateDoc } from "firebase/firestore";
-import { useAuth } from "@firebase/auth";
+import { useAuth } from "../firebase/auth";
 
 const EditBioScreen = ({ navigation }) => {
   const { colors } = useTheme();

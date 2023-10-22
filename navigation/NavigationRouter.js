@@ -8,7 +8,7 @@ import { AuthStack } from "./AuthStack.js";
 import { AppStack } from "./AppStack";
 import { useColorScheme } from "react-native";
 import { LoadingScreen } from "../screens";
-import { useAuth } from "@firebase/auth";
+import { useAuth } from "../firebase/auth.js";
 
 const MyTheme = {
   ...DefaultTheme,

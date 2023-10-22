@@ -1,13 +1,13 @@
-import { initializeApp, getApps, getApp } from "firebase/app";
-import { getAuth, connectAuthEmulator } from "firebase/auth";
+import { initializeApp } from "firebase/app";
+import {
+  connectAuthEmulator,
+  initializeAuth,
+  getReactNativePersistence,
+} from "firebase/auth";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import { getStorage, connectStorageEmulator } from "firebase/storage";
 import Constants from "expo-constants";
-import {
-  initializeAuth,
-  getReactNativePersistence,
-} from "firebase/auth/react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
 
 // Configure Firebase.
 const firebaseConfig = {
@@ -19,22 +19,10 @@ const firebaseConfig = {
   appId: Constants.expoConfig.extra.appId,
 };
 
-let app, auth;
-
-if (!getApps().length) {
-  try {
-    app = initializeApp(firebaseConfig);
-    auth = initializeAuth(app, {
-      persistence: getReactNativePersistence(AsyncStorage),
-    });
-  } catch (error) {
-    console.log("Error initializing app: " + error);
-  }
-} else {
-  app = getApp();
-  auth = getAuth(app);
-}
-
+const app = initializeApp(firebaseConfig);
+const auth = initializeAuth(app, {
+  persistence: getReactNativePersistence(ReactNativeAsyncStorage),
+});
 const db = getFirestore(app);
 const storage = getStorage(app);
 
