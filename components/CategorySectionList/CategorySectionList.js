@@ -103,6 +103,10 @@ const ListItem = ({ item }) => {
           }}
           style={styles.itemPhoto}
           resizeMode="cover"
+          borderRadius={10}
+          accessibilityRole="image"
+          testID={`item-image-${item.title}`}
+          alt={item.title}
         />
         <Text style={[styles.itemText, { textTransform: "capitalize" }]}>
           {item.title}
