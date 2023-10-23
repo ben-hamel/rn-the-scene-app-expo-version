@@ -1,0 +1,573 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CategorySectionList matches snapshot 1`] = `
+<View
+  style={
+    {
+      "flex": 1,
+    }
+  }
+>
+  <RCTScrollView
+    data={
+      [
+        {
+          "data": [
+            {
+              "title": "Item 1",
+              "uri": "https://example.com/item1.jpg",
+            },
+            {
+              "title": "Item 2",
+              "uri": "https://example.com/item2.jpg",
+            },
+          ],
+          "title": "Category 1",
+        },
+        {
+          "data": [
+            {
+              "title": "Item 3",
+              "uri": "https://example.com/item3.jpg",
+            },
+            {
+              "title": "Item 4",
+              "uri": "https://example.com/item4.jpg",
+            },
+          ],
+          "title": "Category 2",
+        },
+      ]
+    }
+    getItem={[Function]}
+    getItemCount={[Function]}
+    keyExtractor={[Function]}
+    onContentSizeChange={[Function]}
+    onLayout={[Function]}
+    onMomentumScrollBegin={[Function]}
+    onMomentumScrollEnd={[Function]}
+    onScroll={[Function]}
+    onScrollBeginDrag={[Function]}
+    onScrollEndDrag={[Function]}
+    renderItem={[Function]}
+    scrollEventThrottle={50}
+    stickyHeaderIndices={
+      [
+        0,
+        4,
+      ]
+    }
+  >
+    <View>
+      <View
+        onFocusCapture={[Function]}
+        onLayout={[Function]}
+        style={null}
+      >
+        <Text
+          style={
+            [
+              {
+                "fontSize": 18,
+                "fontWeight": "800",
+                "marginBottom": 5,
+                "marginLeft": 10,
+                "marginTop": 20,
+              },
+              {
+                "color": "rgb(28, 28, 30)",
+              },
+              {
+                "textTransform": "capitalize",
+              },
+            ]
+          }
+        >
+          Category 1
+        </Text>
+        <RCTScrollView
+          data={
+            [
+              {
+                "title": "Item 1",
+                "uri": "https://example.com/item1.jpg",
+              },
+              {
+                "title": "Item 2",
+                "uri": "https://example.com/item2.jpg",
+              },
+            ]
+          }
+          getItem={[Function]}
+          getItemCount={[Function]}
+          horizontal={true}
+          keyExtractor={[Function]}
+          onContentSizeChange={[Function]}
+          onLayout={[Function]}
+          onMomentumScrollBegin={[Function]}
+          onMomentumScrollEnd={[Function]}
+          onScroll={[Function]}
+          onScrollBeginDrag={[Function]}
+          onScrollEndDrag={[Function]}
+          removeClippedSubviews={false}
+          renderItem={[Function]}
+          scrollEventThrottle={50}
+          showsHorizontalScrollIndicator={false}
+          stickyHeaderIndices={[]}
+          viewabilityConfigCallbackPairs={[]}
+        >
+          <View>
+            <View
+              onFocusCapture={[Function]}
+              onLayout={[Function]}
+              style={
+                [
+                  {
+                    "flexDirection": "row",
+                  },
+                  null,
+                ]
+              }
+            >
+              <View
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onClick={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  {
+                    "opacity": 1,
+                  }
+                }
+              >
+                <View
+                  style={
+                    {
+                      "margin": 10,
+                    }
+                  }
+                >
+                  <Image
+                    accessibilityRole="image"
+                    alt="Item 1"
+                    borderRadius={10}
+                    resizeMode="cover"
+                    source={
+                      {
+                        "uri": "https://example.com/item1.jpg",
+                      }
+                    }
+                    style={
+                      {
+                        "height": 200,
+                        "width": 200,
+                      }
+                    }
+                    testID="item-image-Item 1"
+                  />
+                  <Text
+                    style={
+                      [
+                        {
+                          "color": "rgb(28, 28, 30)",
+                          "marginTop": 5,
+                        },
+                        {
+                          "textTransform": "capitalize",
+                        },
+                      ]
+                    }
+                  >
+                    Item 1
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <View
+              onFocusCapture={[Function]}
+              onLayout={[Function]}
+              style={
+                [
+                  {
+                    "flexDirection": "row",
+                  },
+                  null,
+                ]
+              }
+            >
+              <View
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onClick={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  {
+                    "opacity": 1,
+                  }
+                }
+              >
+                <View
+                  style={
+                    {
+                      "margin": 10,
+                    }
+                  }
+                >
+                  <Image
+                    accessibilityRole="image"
+                    alt="Item 2"
+                    borderRadius={10}
+                    resizeMode="cover"
+                    source={
+                      {
+                        "uri": "https://example.com/item2.jpg",
+                      }
+                    }
+                    style={
+                      {
+                        "height": 200,
+                        "width": 200,
+                      }
+                    }
+                    testID="item-image-Item 2"
+                  />
+                  <Text
+                    style={
+                      [
+                        {
+                          "color": "rgb(28, 28, 30)",
+                          "marginTop": 5,
+                        },
+                        {
+                          "textTransform": "capitalize",
+                        },
+                      ]
+                    }
+                  >
+                    Item 2
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </View>
+        </RCTScrollView>
+      </View>
+      <View
+        onFocusCapture={[Function]}
+        onLayout={[Function]}
+        style={null}
+      />
+      <View
+        onFocusCapture={[Function]}
+        onLayout={[Function]}
+        style={null}
+      />
+      <View
+        onFocusCapture={[Function]}
+        onLayout={[Function]}
+        style={null}
+      />
+      <View
+        onFocusCapture={[Function]}
+        onLayout={[Function]}
+        style={null}
+      >
+        <Text
+          style={
+            [
+              {
+                "fontSize": 18,
+                "fontWeight": "800",
+                "marginBottom": 5,
+                "marginLeft": 10,
+                "marginTop": 20,
+              },
+              {
+                "color": "rgb(28, 28, 30)",
+              },
+              {
+                "textTransform": "capitalize",
+              },
+            ]
+          }
+        >
+          Category 2
+        </Text>
+        <RCTScrollView
+          data={
+            [
+              {
+                "title": "Item 3",
+                "uri": "https://example.com/item3.jpg",
+              },
+              {
+                "title": "Item 4",
+                "uri": "https://example.com/item4.jpg",
+              },
+            ]
+          }
+          getItem={[Function]}
+          getItemCount={[Function]}
+          horizontal={true}
+          keyExtractor={[Function]}
+          onContentSizeChange={[Function]}
+          onLayout={[Function]}
+          onMomentumScrollBegin={[Function]}
+          onMomentumScrollEnd={[Function]}
+          onScroll={[Function]}
+          onScrollBeginDrag={[Function]}
+          onScrollEndDrag={[Function]}
+          removeClippedSubviews={false}
+          renderItem={[Function]}
+          scrollEventThrottle={50}
+          showsHorizontalScrollIndicator={false}
+          stickyHeaderIndices={[]}
+          viewabilityConfigCallbackPairs={[]}
+        >
+          <View>
+            <View
+              onFocusCapture={[Function]}
+              onLayout={[Function]}
+              style={
+                [
+                  {
+                    "flexDirection": "row",
+                  },
+                  null,
+                ]
+              }
+            >
+              <View
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onClick={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  {
+                    "opacity": 1,
+                  }
+                }
+              >
+                <View
+                  style={
+                    {
+                      "margin": 10,
+                    }
+                  }
+                >
+                  <Image
+                    accessibilityRole="image"
+                    alt="Item 3"
+                    borderRadius={10}
+                    resizeMode="cover"
+                    source={
+                      {
+                        "uri": "https://example.com/item3.jpg",
+                      }
+                    }
+                    style={
+                      {
+                        "height": 200,
+                        "width": 200,
+                      }
+                    }
+                    testID="item-image-Item 3"
+                  />
+                  <Text
+                    style={
+                      [
+                        {
+                          "color": "rgb(28, 28, 30)",
+                          "marginTop": 5,
+                        },
+                        {
+                          "textTransform": "capitalize",
+                        },
+                      ]
+                    }
+                  >
+                    Item 3
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <View
+              onFocusCapture={[Function]}
+              onLayout={[Function]}
+              style={
+                [
+                  {
+                    "flexDirection": "row",
+                  },
+                  null,
+                ]
+              }
+            >
+              <View
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onClick={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  {
+                    "opacity": 1,
+                  }
+                }
+              >
+                <View
+                  style={
+                    {
+                      "margin": 10,
+                    }
+                  }
+                >
+                  <Image
+                    accessibilityRole="image"
+                    alt="Item 4"
+                    borderRadius={10}
+                    resizeMode="cover"
+                    source={
+                      {
+                        "uri": "https://example.com/item4.jpg",
+                      }
+                    }
+                    style={
+                      {
+                        "height": 200,
+                        "width": 200,
+                      }
+                    }
+                    testID="item-image-Item 4"
+                  />
+                  <Text
+                    style={
+                      [
+                        {
+                          "color": "rgb(28, 28, 30)",
+                          "marginTop": 5,
+                        },
+                        {
+                          "textTransform": "capitalize",
+                        },
+                      ]
+                    }
+                  >
+                    Item 4
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </View>
+        </RCTScrollView>
+      </View>
+      <View
+        onFocusCapture={[Function]}
+        onLayout={[Function]}
+        style={null}
+      />
+      <View
+        onFocusCapture={[Function]}
+        onLayout={[Function]}
+        style={null}
+      />
+      <View
+        onFocusCapture={[Function]}
+        onLayout={[Function]}
+        style={null}
+      />
+    </View>
+  </RCTScrollView>
+</View>
+`;

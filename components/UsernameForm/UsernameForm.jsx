@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, TextInput, Pressable } from "react-native";
 import React, { useState, useContext, useEffect, useCallback } from "react";
-import { UserContext } from "../../contexts/context";
+// import { UserContext } from "../../contexts/context";
 import { useTheme } from "@react-navigation/native";
 import debounce from "lodash.debounce";
 import { setDoc, doc, getDoc, updateDoc } from "firebase/firestore";
@@ -12,7 +12,7 @@ const UsernameForm = () => {
   const [isValid, setIsValid] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const { user, username } = useContext(UserContext);
+  // const { user, username } = useContext(UserContext);
 
   const { colors } = useTheme();
 
