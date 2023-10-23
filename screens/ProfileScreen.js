@@ -16,7 +16,7 @@ import { useAuth } from "../firebase/auth";
 const ProfileScreen = ({ navigation }) => {
   /** Contexts */
   const { colors } = useTheme();
-  const { username } = useAuth();
+  const { username, authUser } = useAuth();
 
   /** State */
   const [userData, setUserData] = useState();
@@ -35,19 +35,19 @@ const ProfileScreen = ({ navigation }) => {
   //TODO refactor to with onsnapshot
   useEffect(() => {
     async function getUserData() {
+      console.log("Getting user data", userData);
       if (userData) {
         try {
-          const userImages = await getUserImages(userData.uid);
+          const userImages = await getUserImages(authUser.uid);
           setUserImages(userImages);
 
-          const userVideos = await getUserVideos(userData.uid);
+          const userVideos = await getUserVideos(authUser.uid);
           setUserVideos(userVideos);
         } catch (error) {
           console.error("Error fetching user data:", error);
         }
       }
     }
-
     getUserData();
   }, [userData]);
 
