@@ -6,7 +6,7 @@ import {
 } from "react-native";
 import UsernameForm from "../components/UsernameForm/UsernameForm.jsx";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { signOutUser } from "../lib/firebase.js";
+// import { signOutUser } from "../lib/firebase.js";
 import TsButton from "../components/TsButton";
 
 const UsernameScreen = ({ navigation }) => {
@@ -15,7 +15,7 @@ const UsernameScreen = ({ navigation }) => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={styles.formContainer}>
           <UsernameForm />
-          <TsButton onPress={signOutUser} title="Sign Out" />
+          {/* <TsButton onPress={signOutUser} title="Sign Out" /> */}
         </View>
       </TouchableWithoutFeedback>
     </SafeAreaView>

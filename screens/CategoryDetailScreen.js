@@ -7,9 +7,13 @@ import useFetchUsersBySkill from "../hooks/useFetchUsersBySkill";
 export default function CategoryDetailScreen({ route, navigation }) {
   const users = useFetchUsersBySkill(route.params);
 
+  const onItemPress = (item) => {
+    navigation.navigate("UserDetailScreen", item.username);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <SkillFeed users={users} />
+      <SkillFeed users={users} onItemPress={onItemPress} />
       <Button title="Go back" onPress={() => navigation.goBack()} />
     </SafeAreaView>
   );
