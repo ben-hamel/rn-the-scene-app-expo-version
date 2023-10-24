@@ -7,16 +7,11 @@ import {
   Pressable,
 } from "react-native";
 import React from "react";
-import { useNavigation } from "@react-navigation/native";
 
-const SkillFeed = ({ users }) => {
-  const navigation = useNavigation();
-
-  const PressableListItem = ({ item }) => {
+const SkillFeed = ({ users, onItemPress }) => {
+  const PressableListItem = ({ item, onItemPress }) => {
     return (
-      <Pressable
-        onPress={() => navigation.navigate("UserDetailScreen", item.username)}
-      >
+      <Pressable onPress={() => onItemPress(item)}>
         <View style={styles.listItem}>
           <Image
             source={{
@@ -37,7 +32,9 @@ const SkillFeed = ({ users }) => {
     <View>
       <FlatList
         data={users}
-        renderItem={({ item }) => <PressableListItem item={item} />}
+        renderItem={({ item }) => (
+          <PressableListItem item={item} onItemPress={onItemPress} />
+        )}
         showsHorizontalScrollIndicator={false}
       />
     </View>

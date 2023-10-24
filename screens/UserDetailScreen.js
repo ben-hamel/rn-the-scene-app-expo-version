@@ -7,7 +7,7 @@ import {
   getUserImages,
   getUserVideos,
 } from "../firebase/firestore";
-import ProfileHero from "../components/ProfileHero/ProfileHero";
+import ProfileHero from "../components/ProfileHero";
 import TsButton from "../components/TsButton";
 
 const UserDetailScreen = ({ navigation, route }) => {
@@ -48,6 +48,7 @@ const UserDetailScreen = ({ navigation, route }) => {
 
   return (
     <ProfileHero img={profileImage} username={username}>
+      <Text>User Detail Screen</Text>
       <View style={styles.container}>
         <Text style={[styles.header, { color: colors.text }]}>About</Text>
         <Text style={[styles.aboutText, { color: colors.text }]}>

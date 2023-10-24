@@ -30,7 +30,7 @@ const MyDarkTheme = {
 export const NavigationRouter = () => {
   const scheme = useColorScheme();
 
-  const { authUser: user, isLoading } = useAuth();
+  const { authUser, isLoading } = useAuth();
 
   if (isLoading) {
     return <LoadingScreen />;
@@ -38,7 +38,11 @@ export const NavigationRouter = () => {
 
   return (
     <NavigationContainer theme={scheme === "dark" ? MyDarkTheme : MyTheme}>
-      {user ? <AppStack /> : <AuthStack />}
+      {authUser ? (
+        <AppStack testId="app-stack" />
+      ) : (
+        <AuthStack testId="auth-stack" />
+      )}
     </NavigationContainer>
   );
 };

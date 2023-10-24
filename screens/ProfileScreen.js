@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { useTheme } from "@react-navigation/native";
 import { Video } from "expo-av";
 //Componetss
-import ProfileHero from "../components/ProfileHero/ProfileHero";
+import ProfileHero from "../components/ProfileHero";
 import TsButton from "../components/TsButton";
 //Misc
 import {
