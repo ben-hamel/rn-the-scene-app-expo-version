@@ -144,6 +144,7 @@ const VideoItem = ({ videos }) => {
                   handlePlaybackStatusUpdate(video.id, status)
                 }
                 useNativeControls
+                testID={video.id}
               />
             </View>
           );
@@ -167,6 +168,8 @@ const PhotoItem = ({ images }) => {
               key={image.id}
               source={{ uri: image.imageUrl }}
               style={styles.img}
+              alt={image.id}
+              testID={image.id}
             />
           </View>
         );

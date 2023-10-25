@@ -2,6 +2,7 @@ import React from "react";
 import { render } from "@testing-library/react-native";
 import CategorySectionList from "./CategorySectionList";
 
+//TODO: Save this mock as a separate file
 jest.mock("@react-navigation/native", () => ({
   ...jest.requireActual("@react-navigation/native"),
   useNavigation: () => ({
