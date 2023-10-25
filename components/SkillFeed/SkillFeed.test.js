@@ -1,12 +1,6 @@
 import React from "react";
-import {
-  render,
-  fireEvent,
-  screen,
-  userEvent,
-  waitFor,
-} from "@testing-library/react-native";
-import { NavigationContainer, useNavigation } from "@react-navigation/native";
+import { render, fireEvent, screen } from "@testing-library/react-native";
+import { NavigationContainer } from "@react-navigation/native";
 import SkillFeed from "./SkillFeed"; // Adjust the import path accordingly
 
 //TODO: Save this mock as a separate file

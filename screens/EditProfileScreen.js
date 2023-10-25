@@ -20,7 +20,7 @@ export default function EditProfileScreen({ navigation }) {
   const [userData, setUserData] = useState({});
   const [profileImageIsLoading, setProfileImageIsLoading] = useState(false);
 
-  // /** destructure userData */
+  /** destructure userData */
   const { profileImage } = userData || {};
 
   const handleProfileImage = async () => {
