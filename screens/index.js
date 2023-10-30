@@ -12,6 +12,8 @@ import AddContentScreen from "./AddContentScreen";
 import LoadingScreen from "./LoadingScreen";
 import WelcomeScreen from "./WelcomeScreen";
 import EditBioScreen from "./EditBioScreen";
+import EmailScreen from "./AuthScreens/EmailScreen";
+import PasswordScreen from "./AuthScreens/PasswordScreen";
 
 export {
   LoginScreen,
@@ -28,4 +30,6 @@ export {
   LoadingScreen,
   WelcomeScreen,
   EditBioScreen,
+  EmailScreen,
+  PasswordScreen,
 };
