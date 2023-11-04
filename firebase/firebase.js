@@ -8,6 +8,7 @@ import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import { getStorage, connectStorageEmulator } from "firebase/storage";
 import Constants from "expo-constants";
 import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
+import { getFunctions } from "firebase/functions";
 
 // Configure Firebase.
 const firebaseConfig = {
@@ -25,6 +26,7 @@ const auth = initializeAuth(app, {
 });
 const db = getFirestore(app);
 const storage = getStorage(app);
+const functions = getFunctions(app);
 
 const enableEmulators = true;
 
@@ -35,4 +37,4 @@ if (process.env.NODE_ENV === "development" && enableEmulators) {
   console.log("Emulators enabled");
 }
 
-export { auth, db, storage };
+export { auth, db, storage, functions };
