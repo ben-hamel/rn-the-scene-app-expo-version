@@ -44,7 +44,7 @@ const AddPhoto = () => {
 
       const uploadImage = async (userId, fileUri) => {
         const urlOfImage = await uploadImageAndGetDownloadURL(fileUri);
-        uploadUserImage(userId, urlOfImage);
+        await uploadUserImage(userId, urlOfImage);
       };
 
       uploadImage(userId, fileUri);

@@ -15,6 +15,9 @@ const PasswordScreen = ({ navigation, route }) => {
   const { colors } = useTheme();
   const [password, setPassword] = useState();
 
+  //log params
+  console.log("route.params", route.params);
+
   return (
     <SafeAreaView style={styles.container}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -41,6 +44,13 @@ const PasswordScreen = ({ navigation, route }) => {
               navigation.navigate("Username", { ...route.params, password })
             }
             title="Next"
+          />
+          <Text style={[{ color: colors.text, marginBottom: 8 }]}>
+            Email: {route.params.email}
+          </Text>
+          <TsButton
+            title="Log Params"
+            onPress={() => console.log(route.params)}
           />
         </View>
       </TouchableWithoutFeedback>
