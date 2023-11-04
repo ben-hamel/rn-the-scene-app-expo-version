@@ -12,6 +12,7 @@ import {
 } from "firebase/firestore";
 import { db, storage } from "./firebase";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
 
 const USER_COLLECTION = "users";
@@ -35,10 +36,6 @@ export const uploadImageAndGetDownloadURL = async (uri) => {
         imageResult.uri,
         MAX_FILE_SIZE_MB
       );
-      console.log(
-        "🚀 ~ file: firebase.js:101 ~ uploadImageAndGetDownloadURL ~ smallerThanMaxSize:",
-        smallerThanMaxSize
-      );
       if (!smallerThanMaxSize) {
         throw new Error("image-too-large");
       }
@@ -46,7 +43,6 @@ export const uploadImageAndGetDownloadURL = async (uri) => {
     }
 
     const storageRef = ref(storage, `images/${uuidv4()}`);
-
     await uploadBytesResumable(storageRef, imageBlob);
 
     const downloadUrl = await getDownloadURL(storageRef);
@@ -58,15 +54,15 @@ export const uploadImageAndGetDownloadURL = async (uri) => {
   }
 };
 
-export const uploadUserImage = (user, photoUrl) => {
-  const docCol = collection(db, USER_COLLECTION, user, IMAGE_COLLECTION);
+export const uploadUserImage = async (user, photoUrl) => {
+  const docCol = await collection(db, USER_COLLECTION, user, IMAGE_COLLECTION);
 
-  const doc = addDoc(docCol, {
+  const docRef = await addDoc(docCol, {
     imageUrl: photoUrl,
     createdAt: serverTimestamp(),
   });
 
-  console.log("Document written with ID: ", doc.id);
+  console.log("Document written with ID: ", docRef.id);
 };
 
 export const updateProfilePhoto = (DocId, image) => {
