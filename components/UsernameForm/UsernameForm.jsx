@@ -71,15 +71,40 @@ const UsernameForm = () => {
     checkUsername(formValue);
   }, [formValue]);
 
+  // const checkUsername = useCallback(
+  //   debounce(async (username) => {
+  //     if (username.length >= 3) {
+  //       // log username
+  //       console.log(username);
+  //       const ref = doc(db, `usernames/${username}`);
+  //       const docSnap = await getDoc(ref);
+  //       console.log("Firestore read executed!");
+  //       setIsValid(!docSnap.exists());
+  //       setLoading(false);
+  //     }
+  //   }, 500),
+  //   []
+  // );
+
   const checkUsername = useCallback(
     debounce(async (username) => {
       if (username.length >= 3) {
         // log username
         console.log(username);
-        const ref = doc(db, `usernames/${username}`);
-        const docSnap = await getDoc(ref);
-        console.log("Firestore read executed!");
-        setIsValid(!docSnap.exists());
+
+        const response = await fetch(
+          `http://127.0.0.1:5001/the-scene-social-app/us-central1/isUsernameUsed?username=${username}`
+        );
+
+        if (!response.ok) {
+          throw new Error(
+            `Error checking username availability: ${response.statusText}`
+          );
+        }
+
+        const isUsernameUsed = await response.json();
+
+        setIsValid(!isUsernameUsed);
         setLoading(false);
       }
     }, 500),

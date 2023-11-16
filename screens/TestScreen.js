@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { View, Button, StyleSheet, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { getUserWithUsername } from "../firebase/firestore";
+import { getUserWithEmail } from "../firebase/firestore";
 import { Video, ResizeMode } from "expo-av";
 import { useAuth } from "../firebase/auth";
 import TsButton from "../components/TsButton";
 
 const TestScreen = ({ navigation }) => {
   const [userData, setUserData] = useState();
-  const { username, signOut } = useAuth();
+  const { authUser, signOut } = useAuth();
 
   useEffect(() => {
-    const unsubscribe = getUserWithUsername(username, setUserData);
+    const unsubscribe = getUserWithEmail(authUser.email, setUserData);
 
     return () => unsubscribe();
   }, []);

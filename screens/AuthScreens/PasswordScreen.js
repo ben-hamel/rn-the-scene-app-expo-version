@@ -3,54 +3,59 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   View,
-  Text,
-  TextInput,
 } from "react-native";
 import { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "@react-navigation/native";
 import TsButton from "../../components/TsButton";
+import BaseInput from "../../components/BaseInput/BaseInput";
+import { useForm } from "react-hook-form";
 
 const PasswordScreen = ({ navigation, route }) => {
   const { colors } = useTheme();
   const [password, setPassword] = useState();
 
   //log params
-  console.log("route.params", route.params);
+  // console.log("route.params", route.params);
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isValid, submitCount },
+    clearErrors,
+    setError,
+  } = useForm({});
+
+  const onSubmit = (data) => {
+    console.log("🚀 ~ file: PasswordScreen.js:34 ~ onSubmit ~ data:", data);
+
+    const password = data.password;
+
+    navigation.navigate("Username", { ...route.params, password });
+  };
 
   return (
     <SafeAreaView style={styles.container}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={styles.formContainer}>
-          <Text style={[{ color: colors.text, marginBottom: 8 }]}>
-            Password
-          </Text>
-          <TextInput
-            placeholder="password"
-            value={password}
-            autoCapitalize="none"
-            onChangeText={(text) => setPassword(text)}
-            style={[
-              styles.input,
-              {
-                color: colors.text,
-                borderColor: colors.text,
-                marginBottom: 30,
-              },
-            ]}
+          <BaseInput
+            name="password"
+            control={control}
+            errors={errors}
+            handleSubmit={handleSubmit}
+            label="Create a password"
+            rules={{
+              required: "Password is required",
+              minLength: 8,
+            }}
+            isValid={isValid}
+            submitCount={submitCount}
           />
+
           <TsButton
-            onPress={() =>
-              navigation.navigate("Username", { ...route.params, password })
-            }
+            onPress={handleSubmit(onSubmit)}
             title="Next"
-          />
-          <Text style={[{ color: colors.text, marginBottom: 8 }]}>
-            Email: {route.params.email}
-          </Text>
-          <TsButton
-            title="Log Params"
-            onPress={() => console.log(route.params)}
+            disabled={!isValid}
           />
         </View>
       </TouchableWithoutFeedback>
