@@ -7,7 +7,7 @@ import ProfileHero from "../components/ProfileHero";
 import TsButton from "../components/TsButton";
 //Misc
 import {
-  getUserWithUsername,
+  getUserWithEmail,
   getUserImages,
   getUserVideos,
 } from "../firebase/firestore";
@@ -27,7 +27,7 @@ const ProfileScreen = ({ navigation }) => {
   const { profileImage, bio } = userData || {};
 
   useEffect(() => {
-    const unsubscribe = getUserWithUsername(username, setUserData);
+    const unsubscribe = getUserWithEmail(authUser.email, setUserData);
 
     return () => unsubscribe();
   }, []);

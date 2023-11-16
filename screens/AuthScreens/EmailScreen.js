@@ -4,53 +4,97 @@ import {
   Keyboard,
   View,
   Text,
-  TextInput,
 } from "react-native";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "@react-navigation/native";
+import { useForm } from "react-hook-form";
+
 import TsButton from "../../components/TsButton";
-import { useForm, Controller } from "react-hook-form";
-import debounce from "lodash.debounce";
-import { getUserWithEmail } from "../../firebase/firestore";
+import BaseInput from "../../components/BaseInput/BaseInput";
 
 const EmailScreen = ({ navigation }) => {
   const { colors } = useTheme();
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     control,
     handleSubmit,
-    formState: { errors },
-    setError,
+    formState: {
+      errors,
+      isValid,
+      submitCount,
+      isSubmitSuccessful,
+      isSubmitted,
+      isSubmitting,
+      isValidating,
+    },
     clearErrors,
-  } = useForm({});
+    setError,
+    watch,
+  } = useForm({ mode: "onSubmit" });
+
+  const watchEmail = watch("email");
+  const EMAIL_REGEX = /^[\w.+\-]+@[a-zA-Z\d.\-]+\.[a-zA-Z]{2,}$/;
+  const logStuff = () => {
+    console.log(
+      "🚀 ~ file: EmailScreen.js:113 ~ logStuff ~ logStuff:",
+      logStuff
+    );
+    console.log("submitCount", submitCount);
+    console.log("isSubmitting", isSubmitting);
+    console.log("isSubmitSuccessful", isSubmitSuccessful);
+    console.log("isSubmitted", isSubmitted);
+    console.log("isValidating", isValidating);
+    console.log("isValid", isValid);
+  };
+
+  //TODO : Save this code somewhere
+  // useEffect(() => {
+  //   const validateEmail = async () => {
+  //     if (isValid && submitCount > 0 && EMAIL_REGEX.test(watchEmail)) {
+  //       const isEmailUsed = await checkEmailAvailability(watchEmail);
+
+  //       if (isEmailUsed) {
+  //         setError("email", {
+  //           type: "isEmailUsed",
+  //           message: "Email is already in use.",
+  //         });
+  //       }
+  //     }
+  //   };
+
+  //   validateEmail();
+  // }, [watchEmail]);
 
   const onSubmit = async (data) => {
-    const isEmailUsed = await checkEmailAvailability(data.email);
+    if (isValid && submitCount > 0) {
+      console.log("navigate withpout checking");
+      navigation.navigate("Password");
+      return;
+    }
 
+    /** ORIGINAL */
+    console.log("checking email from submit");
+    const isEmailUsed = await checkEmailAvailability(data.email);
     if (isEmailUsed) {
       setError("email", {
-        type: "manual",
+        type: "isEmailUsed",
         message: "Email is already in use.",
       });
     } else {
+      clearErrors("email");
       navigation.navigate("Password", { email: data.email });
     }
   };
 
-  /** Watch Effect */
-  // useEffect(() => {
-  //   console.log("mount");
-
-  //   const subscription = watch((value, { name, type }) => {
-  //     console.log(value, name, type);
-  //   });
-
-  //   return () => subscription.unsubscribe();
-  // }, [watch]);
-
+  // const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   const checkEmailAvailability = async (email) => {
     try {
+      setIsLoading(true);
+      if (!email) {
+        return false;
+      }
       const response = await fetch(
         `http://127.0.0.1:5001/the-scene-social-app/us-central1/isEmailUsed?email=${email}`
       );
@@ -66,72 +110,68 @@ const EmailScreen = ({ navigation }) => {
       return isEmailUsed;
     } catch (error) {
       console.error("Error checking email availability:", error.message);
+
       return false;
+    } finally {
+      setIsLoading(false);
     }
   };
-
-  const debouncedIsEmailUsed = useCallback(
-    debounce(async (emailFromUser) => {
-      console.log("Checking email", emailFromUser);
-
-      try {
-        const doesEmailExist = await checkEmailAvailability(emailFromUser);
-        return doesEmailExist;
-      } catch (error) {
-        console.error("Error checking email:", error);
-      }
-    }, 500),
-    []
-  );
 
   return (
     <SafeAreaView style={styles.container}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={styles.formContainer}>
-          <Text style={[{ color: colors.text, marginBottom: 8 }]}>Email</Text>
-          <Controller
+          <BaseInput
+            name="email"
+            placeholder="Enter your email"
             control={control}
+            errors={errors}
+            handleSubmit={handleSubmit}
+            label="Email"
             rules={{
+              required: "Email is required.",
+              pattern: {
+                value: EMAIL_REGEX,
+                message: "Please enter a valid email.",
+              },
               validate: {
-                validateEmail: async (email) => {
-                  const emailRegex = /^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/;
-                  if (!emailRegex.test(email)) {
-                    return "Please enter a valid email.";
+                isEmailUsed: async (email) => {
+                  // Check if the form has been submitted and validation is ongoing
+                  if (!isSubmitted) {
+                    return true;
                   }
 
-                  const isEmailUsed = await debouncedIsEmailUsed(email);
+                  console.log("isEmailused coming up");
+                  const isEmailUsed = await checkEmailAvailability(email);
+
                   if (isEmailUsed) {
+                    console.log("Validation failed: email is already in use");
                     return "Email is already in use.";
                   }
+
+                  //TODO : Log issue to React Native Form
+                  // if (isValidating) {
+                  //   console.log("isEmailused coming up");
+                  //   const isEmailUsed = await checkEmailAvailability(email);
+
+                  //   if (isEmailUsed) {
+                  //     console.log("Validation failed: email is already in use");
+                  //     return "Email is already in use.";
+                  //   }
+                  // }
                 },
               },
             }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                placeholder="email"
-                autoCapitalize="none"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                autoCorrect={false}
-                style={[
-                  styles.input,
-                  {
-                    color: colors.text,
-                    borderColor: colors.text,
-                    marginBottom: 10,
-                  },
-                ]}
-              />
-            )}
-            name="email"
-            disabled={false}
+            isValid={isValid}
+            isValidating={isValidating}
+            isSubmitted={isSubmitted}
+            isLoading={isLoading}
           />
-          {errors.email && (
-            <Text style={{ color: colors.text }}>{errors.email.message}</Text>
-          )}
-          <TsButton title="Next" onPress={handleSubmit(onSubmit)} />
-          <TsButton title="Clear" onPress={() => clearErrors()} />
+          <TsButton
+            title="Next"
+            onPress={handleSubmit(onSubmit)}
+            disabled={!isValid || isLoading}
+          />
         </View>
       </TouchableWithoutFeedback>
     </SafeAreaView>

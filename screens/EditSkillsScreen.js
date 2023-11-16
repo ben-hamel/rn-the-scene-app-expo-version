@@ -9,7 +9,7 @@ import {
 import { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { doc, updateDoc } from "firebase/firestore";
-import { getUserWithUsername } from "../firebase/firestore";
+import { getUserWithEmail } from "../firebase/firestore";
 import { db } from "../firebase/firebase";
 import useFetchCategories from "../hooks/useFetchCategories";
 import { useAuth } from "../firebase/auth";
@@ -18,7 +18,7 @@ const EditSkillsScreen = ({ navigation }) => {
   /** Category State */
   const [userData, setUserData] = useState({});
 
-  const { authUser: user, username } = useAuth();
+  const { authUser } = useAuth();
 
   const { skill } = userData || {};
 
@@ -37,7 +37,7 @@ const EditSkillsScreen = ({ navigation }) => {
    * This function is used to get the user's data from firestore
    */
   useEffect(() => {
-    const unsubscribe = getUserWithUsername(username, setUserData);
+    const unsubscribe = getUserWithEmail(authUser.email, setUserData);
 
     return () => unsubscribe();
   }, []);
@@ -45,20 +45,28 @@ const EditSkillsScreen = ({ navigation }) => {
   /**
    * renderItem for selecting skills/category
    */
+
   const renderItem = ({ item }) => {
-    const backgroundColor = skill?.includes(item.title) ? "blue" : "#414141";
+    const hasSelectedSkills = Array.isArray(skill) && skill.length > 0;
+
+    const backgroundColor =
+      hasSelectedSkills && skill.includes(item.title) ? "blue" : "#414141";
 
     return (
       <Item
         item={item}
         onPress={() => {
-          if (skill.includes(item.title)) {
+          if (hasSelectedSkills) {
+            // User has selected skills, so toggle the selected state
             setUserData({
               ...userData,
-              skill: skill.filter((skillItem) => skillItem !== item.title),
+              skill: skill.includes(item.title)
+                ? skill.filter((skillItem) => skillItem !== item.title)
+                : [...skill, item.title],
             });
           } else {
-            setUserData({ ...userData, skill: [...skill, item.title] });
+            // User doesn't have any selected skills, so set the selected skill
+            setUserData({ ...userData, skill: [item.title] });
           }
         }}
         backgroundColor={{ backgroundColor }}
@@ -70,7 +78,7 @@ const EditSkillsScreen = ({ navigation }) => {
    * This function is used to update the user's skills
    */
   const updateSkills = async () => {
-    const docRef = doc(db, "users", user.uid);
+    const docRef = doc(db, "users", authUser.uid);
 
     await updateDoc(docRef, {
       skill: skill,

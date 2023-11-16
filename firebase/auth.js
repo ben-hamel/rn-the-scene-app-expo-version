@@ -1,16 +1,20 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { onAuthStateChanged, signOut as authSignOut } from "firebase/auth";
+import {
+  onAuthStateChanged,
+  signOut as authSignOut,
+  createUserWithEmailAndPassword,
+} from "firebase/auth";
 import { auth, db } from "./firebase";
-import { doc, getDoc } from "firebase/firestore";
+// import { doc, getDoc } from "firebase/firestore";
+import { storeSignupData } from "./firestore";
 
 export default function useFirebaseAuth() {
   const [authUser, setAuthUser] = useState(null);
-  const [username, setUsername] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSigningUp, setIsSigningUp] = useState(false);
 
   const clear = () => {
     setAuthUser(null);
-    setUsername(null);
     setIsLoading(false);
   };
 
@@ -20,15 +24,6 @@ export default function useFirebaseAuth() {
       if (!user) {
         clear();
         return;
-      }
-
-      const userRef = doc(db, "users", user.uid);
-      const userDoc = await getDoc(userRef);
-
-      if (userDoc.exists()) {
-        setUsername(userDoc.data().username);
-      } else {
-        setUsername(null);
       }
 
       setAuthUser({
@@ -53,15 +48,15 @@ export default function useFirebaseAuth() {
 
   return {
     authUser,
-    username,
     isLoading,
     signOut,
+    isSigningUp,
+    setIsSigningUp,
   };
 }
 
 const AuthUserContext = createContext({
   authUser: null,
-  username: null,
   isLoading: true,
   signOut: async () => {},
 });
@@ -74,3 +69,44 @@ export function AuthUserProvider({ children }) {
 }
 
 export const useAuth = () => useContext(AuthUserContext);
+
+/** SIGNUP USER */
+//TODO look into ADMIN SDK so we can signup users on the backend
+export const signup = async (email, password, username) => {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
+    if (userCredential) {
+      const user = userCredential.user;
+      const userID = user.uid;
+
+      await storeSignupData(userID, username, email);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+//sign in user
+const signInUser = async (email, password) => {
+  try {
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
+    if (userCredential) {
+      return userCredential.user;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};

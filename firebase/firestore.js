@@ -9,19 +9,18 @@ import {
   limit,
   serverTimestamp,
   onSnapshot,
+  setDoc,
 } from "firebase/firestore";
 import { db, storage } from "./firebase";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
-
-const USER_COLLECTION = "users";
-const IMAGE_COLLECTION = "images";
-
 import sizeIsLessThanMB from "../utils/sizeIsLessThanMB";
 import getImageBlob from "../utils/getImageBlob";
 import compressImage from "../utils/compressImage";
 
+const USER_COLLECTION = "users";
+const IMAGE_COLLECTION = "images";
 const MAX_FILE_SIZE_MB = 1;
 
 export const uploadImageAndGetDownloadURL = async (uri) => {
@@ -90,6 +89,26 @@ export function getUserWithUsername(username, setUserData) {
     snapshot.forEach((documentSnapshot) => {
       const user = documentSnapshot.data();
       userData = { ...user };
+    });
+
+    setUserData(userData);
+  });
+
+  return unsubscribe;
+}
+
+export function getUserWithEmail(email, setUserData) {
+  const usersRef = collection(db, USER_COLLECTION);
+  const userQuery = query(usersRef, where("email", "==", email), limit(1));
+
+  const unsubscribe = onSnapshot(userQuery, (snapshot) => {
+    let userData = {};
+    snapshot.forEach((documentSnapshot) => {
+      const user = documentSnapshot.data();
+      userData = { ...user };
+      // If there's only one document expected, you can break out of the loop
+      // to improve performance.
+      return;
     });
 
     setUserData(userData);
@@ -170,4 +189,52 @@ export const uploadVideoToUserCollection = async (user, mediaUrl) => {
   });
 
   console.log("Document written with ID: ", doc.id);
+};
+
+//store username in database
+export const storeUsername = async (user, username) => {
+  try {
+    const docRef = doc(db, "users", user);
+    await updateDoc(docRef, {
+      username: username,
+    });
+    console.log("Username updated successfully");
+  } catch (error) {
+    console.log("Error updating username:", error);
+  }
+};
+
+const getRandomPic = async () => {
+  const picApiResponse = await fetch("https://randomuser.me/api/");
+  const data = await picApiResponse.json(); //https://developer.mozilla.org/en-US/docs/Web/API/Response/json
+  return data.results[0].picture.large;
+};
+
+export const storeSignupData = async (userID, username, email) => {
+  try {
+    const docRef = doc(db, "users", userID);
+
+    await setDoc(docRef, {
+      uid: userID,
+      email: email,
+      username: username,
+      profileImage: await getRandomPic(),
+    });
+
+    console.log("Document written with ID: ", docRef.id);
+  } catch (error) {
+    console.error("Error adding document: ", error);
+  }
+
+  try {
+    const docRef = doc(db, "usernames", username);
+
+    await setDoc(docRef, {
+      uid: userID,
+    });
+
+    console.log("Document written with ID: ", docRef.id);
+  } catch (error) {
+    console.error("Error adding document: ", error);
+  }
 };

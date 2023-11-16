@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import {
   uploadImageAndGetDownloadURL,
   getUserWithUsername,
+  getUserWithEmail,
   updateProfilePhoto,
 } from "../firebase/firestore";
 import { pickImage } from "../utils/imagePicker.js";
@@ -14,7 +15,7 @@ import { useAuth } from "../firebase/auth";
 export default function EditProfileScreen({ navigation }) {
   /** Contexts */
   const { colors } = useTheme();
-  const { username, signOut } = useAuth();
+  const { signOut, authUser } = useAuth();
 
   /** State */
   const [userData, setUserData] = useState({});
@@ -44,7 +45,7 @@ export default function EditProfileScreen({ navigation }) {
   };
 
   useEffect(() => {
-    const unsubscribe = getUserWithUsername(username, setUserData);
+    const unsubscribe = getUserWithEmail(authUser.email, setUserData);
 
     return () => unsubscribe();
   }, []);

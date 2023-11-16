@@ -40,3 +40,26 @@ exports.isEmailUsed = onRequest(async (request, response) => {
     response.status(500).send("Internal Server Error");
   }
 });
+
+exports.isUsernameUsed = onRequest(async (request, response) => {
+  const username = request.query.username;
+  try {
+    //get user by username
+    const usersSnapshot = await getFirestore()
+      .collection("users")
+      .where("username", "==", username)
+      .get();
+
+    //if username exists return true
+    if (!usersSnapshot.empty) {
+      response.status(200).send(true);
+    }
+
+    if (usersSnapshot.empty) {
+      response.status(200).send(false);
+    }
+  } catch (error) {
+    console.error("Error getting users collection:", error);
+    response.status(500).send("Internal Server Error");
+  }
+});
