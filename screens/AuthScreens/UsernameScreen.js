@@ -6,10 +6,10 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useForm } from "react-hook-form";
-import { signup } from "../firebase/auth";
+import { signup } from "../../firebase/auth";
 import React, { useState } from "react";
-import TsButton from "../components/TsButton";
-import BaseInput from "../components/BaseInput/BaseInput";
+import TsButton from "../../components/TsButton";
+import BaseInput from "../../components/BaseInput/BaseInput";
 
 const UsernameScreen = ({ route }) => {
   const [isLoading, setIsLoading] = useState(false);

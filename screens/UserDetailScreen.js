@@ -8,7 +8,6 @@ import {
   getUserVideos,
 } from "../firebase/firestore";
 import ProfileHero from "../components/ProfileHero";
-import TsButton from "../components/TsButton";
 
 const UserDetailScreen = ({ navigation, route }) => {
   const username = route.params;
@@ -42,7 +41,7 @@ const UserDetailScreen = ({ navigation, route }) => {
     }
 
     getUserData();
-  }, []);
+  }, [userData]);
 
   const { bio, profileImage } = userData || {};
 
@@ -60,7 +59,6 @@ const UserDetailScreen = ({ navigation, route }) => {
         {userVideos && userVideos.length > 0 && (
           <VideoItem videos={userVideos} />
         )}
-        <TsButton title="Go back" onPress={() => navigation.goBack()} />
       </View>
     </ProfileHero>
   );
