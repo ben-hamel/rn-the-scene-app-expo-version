@@ -38,14 +38,17 @@ const ProfileScreen = ({ navigation }) => {
     };
   }, [authUser.email, authUser.uid]);
 
-  const handleEditProfilePress = () => {
-    navigation.navigate("EditProfileScreen");
-  };
+  // const handleEditProfilePress = () => {
+  //   navigation.navigate("EditProfileScreen");
+  // };
 
   return (
     <ProfileHero img={profileImage} username={username}>
       <View style={styles.container}>
-        <TsButton title="Edit Profile" onPress={handleEditProfilePress} />
+        <TsButton
+          title="Edit Profile"
+          onPress={() => navigation.navigate("EditProfileScreen")}
+        />
         <Text style={[styles.header, { color: colors.text }]}>About</Text>
         <Text style={[styles.aboutText, { color: colors.text }]}>{bio}</Text>
         {userImages && <PhotoGallery images={userImages} />}

@@ -13,6 +13,7 @@ export const PhotoGallery = ({ images }) => {
           key={image.id}
           source={{ uri: image.imageUrl }}
           style={styles.img}
+          testID={`image-${image.id}`}
         />
       ))}
     </View>

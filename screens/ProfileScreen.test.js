@@ -7,6 +7,35 @@ import {
   screen,
 } from "@testing-library/react-native";
 import ProfileScreen from "./ProfileScreen";
+// import { getUserWithEmail } from "../firebase/firestore";
+
+const userData = {
+  profileImage: "mockImageUrl",
+  bio: "Test bio",
+  username: "testUser",
+};
+
+const imageData = [
+  {
+    id: "1",
+    uri: "https://example.com/image1.jpg",
+  },
+  {
+    id: "2",
+    uri: "https://example.com/image2.jpg",
+  },
+];
+
+const videoData = [
+  {
+    id: "1",
+    mediaUrl: "https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
+  },
+  {
+    id: "2",
+    mediaUrl: "https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
+  },
+];
 
 const mockNavigation = {
   navigate: jest.fn(),
@@ -20,40 +49,58 @@ jest.mock("../firebase/auth", () => ({
   })),
 }));
 
-const imageData = [
-  {
-    id: "image1",
-    uri: "https://example.com/image1.jpg",
-  },
-  {
-    id: "image2",
-    uri: "https://example.com/image2.jpg",
-  },
-];
-
-const videoData = [
-  {
-    id: "video1",
-    mediaUrl: "https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
-  },
-  {
-    id: "video2",
-    mediaUrl: "https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
-  },
-];
-
 jest.mock("../firebase/firestore", () => ({
-  getUserWithUsername: jest.fn((username, callback) => {
+  getUserWithEmail: jest.fn((username, callback) => {
     // Mock implementation, you can customize based on your needs
     callback({
       profileImage: "mockImageUrl",
       bio: "Test bio",
+      username: "testUser",
     });
     return () => {}; // Mock unsubscribe function
   }),
-  getUserImages: jest.fn(() => Promise.resolve(imageData)),
-  getUserVideos: jest.fn(() => Promise.resolve(videoData)),
+  // getUserImages: jest.fn(() => Promise.resolve(imageData)),
+  getUserImages: jest.fn((username, callback) => {
+    // Mock implementation, you can customize based on your needs
+    callback(imageData);
+    return () => {}; // Mock unsubscribe function
+  }),
+  // getUserVideos: jest.fn(() => Promise.resolve(videoData)),
+  getUserVideos: jest.fn((username, callback) => {
+    // Mock implementation, you can customize based on your needs
+    callback(videoData);
+    return () => {}; // Mock unsubscribe function
+  }),
 }));
+
+// In your test file where you mock the firestore module
+// jest.mock("../firebase/firestore", () => ({
+//   // getUserWithUsername: jest.fn((username, callback) => {
+//   //   // Mock implementation, you can customize based on your needs
+//   //   callback({
+//   //     profileImage: "mockImageUrl",
+//   //     bio: "Test bio",
+//   //     username: "testUser",
+//   //   });
+//   //   return () => {}; // Mock unsubscribe function
+//   // }),
+//   getUserWithEmail: jest.fn((email, setUserData) => {
+//     // Mock implementation
+//     // const unsubscribe = jest.fn(() => Promise.resolve(userData));
+
+//     // return unsubscribe;
+
+//     callback({
+//       profileImage: "mockImageUrl",
+//       bio: "Test bio",
+//       username: "testUser",
+//     });
+//     return () => {}; // Mock unsubscribe function
+//   }),
+//   // Other mocked functions
+//   getUserImages: jest.fn(() => Promise.resolve(imageData)),
+//   getUserVideos: jest.fn(() => Promise.resolve(videoData)),
+// }));
 
 describe("ProfileScreen", () => {
   it("renders correctly", async () => {
@@ -66,13 +113,13 @@ describe("ProfileScreen", () => {
 
     await waitFor(() => {
       imageData.forEach((image) => {
-        const imageElement = getByTestId(image.id);
+        const imageElement = getByTestId(`image-${image.id}`);
         expect(imageElement).toBeTruthy();
         expect(imageElement.props.source.uri).toBe(image.url);
       });
 
       videoData.forEach((video) => {
-        const videoElement = getByTestId(video.id);
+        const videoElement = getByTestId(`video-${video.id}`);
         expect(videoElement).toBeTruthy();
         expect(videoElement.props.uri).toBe(video.url);
       });
@@ -95,8 +142,8 @@ describe("ProfileScreen", () => {
     );
 
     await waitFor(() => {
-      const videoElementOne = getByTestId("video1");
-      const videoElementTwo = getByTestId("video2");
+      const videoElementOne = getByTestId("video-1");
+      const videoElementTwo = getByTestId("video-2");
 
       expect(videoElementOne).toBeTruthy();
       expect(videoElementTwo).toBeTruthy();
