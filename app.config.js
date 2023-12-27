@@ -7,6 +7,7 @@ export default {
     version: "1.0.0",
     orientation: "portrait",
     icon: "./assets/icon.png",
+    userInterfaceStyle: "automatic", // needed this to make react navigation color theme work on android
     splash: {
       image: "./assets/splash.png",
       resizeMode: "contain",
