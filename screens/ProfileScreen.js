@@ -1,10 +1,11 @@
-import { StyleSheet, Text, View, Image } from "react-native";
-import { useState, useEffect, useRef } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { useState, useEffect } from "react";
 import { useTheme } from "@react-navigation/native";
-import { Video } from "expo-av";
-//Componetss
+//Componets
 import ProfileHero from "../components/ProfileHero";
 import TsButton from "../components/TsButton";
+import VideoGallery from "../components/VideoGallery";
+import PhotoGallery from "../components/PhotoGallery";
 //Misc
 import {
   getUserWithEmail,
@@ -20,49 +21,35 @@ const ProfileScreen = ({ navigation }) => {
 
   /** State */
   const [userData, setUserData] = useState();
-
   const [userVideos, setUserVideos] = useState();
   const [userImages, setUserImages] = useState();
 
-  const { profileImage, bio, username } = userData || {};
+  const { profileImage, bio = "No Bio", username } = userData || {};
 
   useEffect(() => {
-    const unsubscribe = getUserWithEmail(authUser.email, setUserData);
+    const unsubscribeUser = getUserWithEmail(authUser.email, setUserData);
+    const unsubscribeImages = getUserImages(authUser.uid, setUserImages);
+    const unsubscribeVideos = getUserVideos(authUser.uid, setUserVideos);
 
-    return () => unsubscribe();
-  }, []);
+    return () => {
+      unsubscribeUser();
+      unsubscribeImages();
+      unsubscribeVideos();
+    };
+  }, [authUser.email, authUser.uid]);
 
-  //TODO refactor to with onsnapshot
-  useEffect(() => {
-    async function getUserData() {
-      if (userData) {
-        try {
-          const userImages = await getUserImages(authUser.uid);
-          setUserImages(userImages);
-
-          const userVideos = await getUserVideos(authUser.uid);
-          setUserVideos(userVideos);
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-        }
-      }
-    }
-    getUserData();
-  }, [userData]);
+  const handleEditProfilePress = () => {
+    navigation.navigate("EditProfileScreen");
+  };
 
   return (
     <ProfileHero img={profileImage} username={username}>
       <View style={styles.container}>
-        <TsButton
-          title="Edit Profile"
-          onPress={() => navigation.navigate("EditProfileScreen")}
-        />
+        <TsButton title="Edit Profile" onPress={handleEditProfilePress} />
         <Text style={[styles.header, { color: colors.text }]}>About</Text>
-        <Text style={[styles.aboutText, { color: colors.text }]}>
-          {bio || "No Bio"}
-        </Text>
-        {userImages && <PhotoItem images={userImages} />}
-        {userVideos && <VideoItem videos={userVideos} />}
+        <Text style={[styles.aboutText, { color: colors.text }]}>{bio}</Text>
+        {userImages && <PhotoGallery images={userImages} />}
+        {userVideos && <VideoGallery videos={userVideos} />}
       </View>
     </ProfileHero>
   );
@@ -84,95 +71,4 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 10,
   },
-  img: {
-    width: "100%",
-    height: undefined,
-    aspectRatio: 16 / 9,
-    marginBottom: 10,
-    resizeMode: "cover",
-  },
-  video: {
-    width: "100%",
-    height: undefined,
-    aspectRatio: 4 / 3,
-    marginBottom: 20,
-    marginTop: 10,
-  },
-  test: {
-    width: "100%",
-    height: undefined,
-  },
 });
-
-const VideoItem = ({ videos }) => {
-  /** Contexts */
-  const { colors } = useTheme();
-
-  const videoRef = useRef({});
-
-  const handlePlaybackStatusUpdate = (videoId, status) => {
-    const videoRefById = videoRef.current[videoId];
-
-    if (status.didJustFinish) {
-      videoRefById.setPositionAsync(0);
-    }
-
-    if (status.isPlaying) {
-      setActiveVideo(videoId);
-    }
-  };
-
-  const [activeVideo, setActiveVideo] = useState(null);
-
-  return (
-    <View>
-      <Text style={[styles.header, { color: colors.text }]}> Videos</Text>
-
-      <View style={styles.dynamicContent}>
-        {videos.map((video, index) => {
-          return (
-            <View key={video.id}>
-              <Video
-                key={video.id}
-                ref={(element) => (videoRef.current[video.id] = element)}
-                source={{ uri: video.mediaUrl }}
-                resizeMode="cover"
-                shouldPlay={activeVideo === video.id}
-                style={styles.video}
-                onPlaybackStatusUpdate={(status) =>
-                  handlePlaybackStatusUpdate(video.id, status)
-                }
-                useNativeControls
-                testID={video.id}
-              />
-            </View>
-          );
-        })}
-      </View>
-    </View>
-  );
-};
-
-const PhotoItem = ({ images }) => {
-  /** Contexts */
-  const { colors } = useTheme();
-
-  return (
-    <View>
-      <Text style={[styles.header, { color: colors.text }]}>Images</Text>
-      {images.map((image) => {
-        return (
-          <View key={image.id}>
-            <Image
-              key={image.id}
-              source={{ uri: image.imageUrl }}
-              style={styles.img}
-              alt={image.id}
-              testID={image.id}
-            />
-          </View>
-        );
-      })}
-    </View>
-  );
-};

@@ -114,20 +114,40 @@ export function getUserWithEmail(email, setUserData) {
   return unsubscribe;
 }
 
-export const getUserImages = async (id) => {
+// export const getUserImages = async (id) => {
+//   const docCol = collection(db, USER_COLLECTION, id, IMAGE_COLLECTION);
+//   const q = query(docCol, limit(10));
+//   const querySnapshot = await getDocs(q);
+//   const images = querySnapshot.docs.map((doc) => ({
+//     ...doc.data(),
+//     id: doc.id,
+//   }));
+
+//   if (images.length > 0) {
+//     return images;
+//   }
+
+//   return null;
+// };
+
+export const getUserImages = (id, setImages) => {
   const docCol = collection(db, USER_COLLECTION, id, IMAGE_COLLECTION);
   const q = query(docCol, limit(10));
-  const querySnapshot = await getDocs(q);
-  const images = querySnapshot.docs.map((doc) => ({
-    ...doc.data(),
-    id: doc.id,
-  }));
 
-  if (images.length > 0) {
-    return images;
-  }
+  const unsubscribe = onSnapshot(q, (querySnapshot) => {
+    const images = querySnapshot.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
 
-  return null;
+    if (images.length > 0) {
+      setImages(images);
+    } else {
+      setImages(null);
+    }
+  });
+
+  return unsubscribe;
 };
 
 //TODO add to a constants file
@@ -137,20 +157,40 @@ const CREATED_AT = "createdAt";
 const CAPTION = "caption";
 const LIKES = "likes";
 
-export const getUserVideos = async (id) => {
-  const docCol = collection(db, "users", id, "videos");
+// export const getUserVideos = async (id) => {
+//   const docCol = collection(db, "users", id, "videos");
+//   const q = query(docCol, limit(10));
+//   const querySnapshot = await getDocs(q);
+//   const videos = querySnapshot.docs.map((doc) => ({
+//     ...doc.data(),
+//     id: doc.id,
+//   }));
+
+//   if (videos.length > 0) {
+//     return videos;
+//   }
+
+//   return null;
+// };
+
+export const getUserVideos = (id, setVideos) => {
+  const docCol = collection(db, "users", id, "videos"); // Assuming VIDEO_COLLECTION is the name of your videos collection
   const q = query(docCol, limit(10));
-  const querySnapshot = await getDocs(q);
-  const videos = querySnapshot.docs.map((doc) => ({
-    ...doc.data(),
-    id: doc.id,
-  }));
 
-  if (videos.length > 0) {
-    return videos;
-  }
+  const unsubscribe = onSnapshot(q, (querySnapshot) => {
+    const videos = querySnapshot.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
 
-  return null;
+    if (videos.length > 0) {
+      setVideos(videos);
+    } else {
+      setVideos(null);
+    }
+  });
+
+  return unsubscribe;
 };
 
 export const uploadVideo = async (file) => {
