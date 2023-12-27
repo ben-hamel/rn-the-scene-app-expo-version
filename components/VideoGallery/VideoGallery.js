@@ -33,6 +33,7 @@ const VideoGallery = ({ videos }) => {
             <View key={video.id}>
               <Video
                 key={video.id}
+                testID={`video-${video.id}`}
                 ref={(element) => (videoRef.current[video.id] = element)}
                 source={{ uri: video.mediaUrl }}
                 resizeMode="cover"
