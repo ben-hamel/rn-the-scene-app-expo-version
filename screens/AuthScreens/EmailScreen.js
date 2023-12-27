@@ -95,6 +95,18 @@ const EmailScreen = ({ navigation }) => {
       if (!email) {
         return false;
       }
+
+      //check email for + sign
+      const isEmailWithPlusSign = email.includes("+");
+
+      if (isEmailWithPlusSign) {
+        email = email.replace("+", "%2B");
+        console.log(
+          "🚀 ~ file: EmailScreen.js:104 ~ checkEmailAvailability ~ email:",
+          email
+        );
+      }
+
       const response = await fetch(
         `http://127.0.0.1:5001/the-scene-social-app/us-central1/isEmailUsed?email=${email}`
       );
