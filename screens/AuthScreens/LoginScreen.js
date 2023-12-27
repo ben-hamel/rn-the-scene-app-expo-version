@@ -1,23 +1,16 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, StyleSheet, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { auth } from "../firebase/firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInUser } from "../../firebase/auth";
 import { useTheme } from "@react-navigation/native";
 
-export const LoginScreen = ({ navigation }) => {
+export const LoginScreen = () => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const { colors } = useTheme();
 
-  const signInUser = () => {
-    signInWithEmailAndPassword(auth, email, password).catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.log("Signed In Error");
-      console.log("error code" + errorCode);
-      console.log("error message" + errorMessage);
-    });
+  const handleSignUp = async () => {
+    await signInUser(email, password);
   };
 
   return (
@@ -53,7 +46,7 @@ export const LoginScreen = ({ navigation }) => {
             },
           ]}
         />
-        <Pressable style={styles.button} title="Sign In" onPress={signInUser}>
+        <Pressable style={styles.button} title="Sign In" onPress={handleSignUp}>
           <Text style={styles.buttonText}>Sign In</Text>
         </Pressable>
       </View>

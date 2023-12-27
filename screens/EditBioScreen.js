@@ -5,16 +5,14 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { db } from "../firebase/firebase";
 import { doc, updateDoc } from "firebase/firestore";
 import { useAuth } from "../firebase/auth";
+import { getUserWithEmail } from "../firebase/firestore";
+
+const maxChars = 160;
 
 const EditBioScreen = ({ navigation }) => {
   const { colors } = useTheme();
   const [bio, setBio] = useState("");
-  const maxChars = 160;
-  const { authUser: user } = useAuth();
-
-  const handleChangeText = (text) => {
-    setBio(text);
-  };
+  const { authUser } = useAuth();
 
   useEffect(() => {
     navigation.setOptions({
@@ -22,8 +20,20 @@ const EditBioScreen = ({ navigation }) => {
     });
   }, [navigation, bio]);
 
+  useEffect(() => {
+    const unsubscribe = getUserWithEmail(authUser.email, (user) => {
+      setBio(user.bio || ""); // Set bio to user's bio or an empty string if undefined
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const handleChangeText = (text) => {
+    setBio(text);
+  };
+
   const updateBio = () => {
-    const docRef = doc(db, "users", user.uid);
+    const docRef = doc(db, "users", authUser.uid);
 
     updateDoc(docRef, {
       bio: bio,
@@ -56,7 +66,6 @@ const EditBioScreen = ({ navigation }) => {
         <Text style={[{ color: colors.text, fontSize: 16 }]}>
           {maxChars - bio.length} characters remaining
         </Text>
-        <Text style={[{ color: colors.text, fontSize: 16 }]}>{bio}</Text>
       </View>
     </SafeAreaView>
   );

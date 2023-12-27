@@ -3,9 +3,10 @@ import {
   onAuthStateChanged,
   signOut as authSignOut,
   createUserWithEmailAndPassword,
+  getAdditionalUserInfo,
+  signInWithEmailAndPassword,
 } from "firebase/auth";
-import { auth, db } from "./firebase";
-// import { doc, getDoc } from "firebase/firestore";
+import { auth } from "./firebase";
 import { storeSignupData } from "./firestore";
 
 export default function useFirebaseAuth() {
@@ -80,6 +81,9 @@ export const signup = async (email, password, username) => {
       password
     );
 
+    const More = await getAdditionalUserInfo(userCredential);
+    console.log("🚀 ~ file: auth.js:85 ~ signup ~ More:", More);
+
     if (userCredential) {
       const user = userCredential.user;
       const userID = user.uid;
@@ -92,7 +96,7 @@ export const signup = async (email, password, username) => {
 };
 
 //sign in user
-const signInUser = async (email, password) => {
+export const signInUser = async (email, password) => {
   try {
     const userCredential = await signInWithEmailAndPassword(
       auth,

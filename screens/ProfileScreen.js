@@ -16,7 +16,7 @@ import { useAuth } from "../firebase/auth";
 const ProfileScreen = ({ navigation }) => {
   /** Contexts */
   const { colors } = useTheme();
-  const { username, authUser } = useAuth();
+  const { authUser } = useAuth();
 
   /** State */
   const [userData, setUserData] = useState();
@@ -24,7 +24,7 @@ const ProfileScreen = ({ navigation }) => {
   const [userVideos, setUserVideos] = useState();
   const [userImages, setUserImages] = useState();
 
-  const { profileImage, bio } = userData || {};
+  const { profileImage, bio, username } = userData || {};
 
   useEffect(() => {
     const unsubscribe = getUserWithEmail(authUser.email, setUserData);
@@ -35,7 +35,6 @@ const ProfileScreen = ({ navigation }) => {
   //TODO refactor to with onsnapshot
   useEffect(() => {
     async function getUserData() {
-      console.log("Getting user data", userData);
       if (userData) {
         try {
           const userImages = await getUserImages(authUser.uid);

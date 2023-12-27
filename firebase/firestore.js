@@ -106,9 +106,6 @@ export function getUserWithEmail(email, setUserData) {
     snapshot.forEach((documentSnapshot) => {
       const user = documentSnapshot.data();
       userData = { ...user };
-      // If there's only one document expected, you can break out of the loop
-      // to improve performance.
-      return;
     });
 
     setUserData(userData);
@@ -137,7 +134,6 @@ export const getUserImages = async (id) => {
 const MEDIA_URL = "mediaUrl";
 const MEDIA_TYPE = "mediaType";
 const CREATED_AT = "createdAt";
-const YOUTUBE = "youtube";
 const CAPTION = "caption";
 const LIKES = "likes";
 
