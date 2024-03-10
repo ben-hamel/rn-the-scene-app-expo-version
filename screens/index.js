@@ -14,6 +14,7 @@ import PasswordScreen from "./AuthScreens/PasswordScreen";
 import UsernameScreen from "./AuthScreens/UsernameScreen";
 import { LoginScreen } from "./AuthScreens//LoginScreen";
 import { SignUpScreen } from "./SignUpScreen";
+import AuthTestScreen from "./TestScreens/AuthTestScreen";
 
 export {
   LoginScreen,
@@ -32,4 +33,5 @@ export {
   EditBioScreen,
   EmailScreen,
   PasswordScreen,
+  AuthTestScreen,
 };

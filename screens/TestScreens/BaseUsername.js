@@ -11,14 +11,25 @@ import React, { useState } from "react";
 import TsButton from "../../components/TsButton";
 import BaseInput from "../../components/BaseInput/BaseInput";
 
-const UsernameScreen = ({ route }) => {
+const BaseUsername = ({ route }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const { email, password } = route.params;
+
+  //   const email = route.params.email;
+  //     const password = route.params.password;
+  const email = "benehamel+test@gmail.com";
+  const password = "password";
 
   const {
     control,
     handleSubmit,
-    formState: { errors, isValid, isSubmitted, isSubmitting, isValidating },
+    formState: {
+      errors,
+      isValid,
+      submitCount,
+      isSubmitted,
+      isSubmitting,
+      isValidating,
+    },
     setError,
   } = useForm({});
 
@@ -49,21 +60,21 @@ const UsernameScreen = ({ route }) => {
       return;
     }
 
-    try {
-      await signup(email, password, username);
-    } catch (error) {
-      console.error("Error during signup:", error);
-    }
+    console.log("userSaved");
+
+    // await signup(email, password);
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={styles.formContainer}>
+          {/* <UsernameForm /> */}
           <BaseInput
             name="username"
             control={control}
             errors={errors}
+            // handleSubmit={(handleSubmit, { shouldValidate: false })}
             handleSubmit={handleSubmit}
             label="Choose your username"
             rules={{
@@ -78,6 +89,10 @@ const UsernameScreen = ({ route }) => {
                     setIsLoading(true);
                     try {
                       const isUsernameUsed = await fetchUsername(username);
+                      console.log(
+                        "🚀 ~ fetchUsername: ~ isUsernameUsed:",
+                        isUsernameUsed
+                      );
 
                       if (isUsernameUsed) {
                         return "Username is already in use.";
@@ -106,7 +121,7 @@ const UsernameScreen = ({ route }) => {
   );
 };
 
-export default UsernameScreen;
+export default BaseUsername;
 
 const styles = StyleSheet.create({
   container: {
