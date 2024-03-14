@@ -71,21 +71,6 @@ const UsernameForm = () => {
     checkUsername(formValue);
   }, [formValue]);
 
-  // const checkUsername = useCallback(
-  //   debounce(async (username) => {
-  //     if (username.length >= 3) {
-  //       // log username
-  //       console.log(username);
-  //       const ref = doc(db, `usernames/${username}`);
-  //       const docSnap = await getDoc(ref);
-  //       console.log("Firestore read executed!");
-  //       setIsValid(!docSnap.exists());
-  //       setLoading(false);
-  //     }
-  //   }, 500),
-  //   []
-  // );
-
   const checkUsername = useCallback(
     debounce(async (username) => {
       if (username.length >= 3) {
