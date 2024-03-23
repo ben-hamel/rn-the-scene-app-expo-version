@@ -40,15 +40,3 @@ test("navigates to UserDetailScreen on item press", () => {
     "user1"
   );
 });
-
-// test('navigates back on "Go back" button press', () => {
-//   const route = { params: "some_skill" };
-
-//   const { getByText } = render(
-//     <CategoryDetailScreen route={route} navigation={mockNavigation} />
-//   );
-
-//   fireEvent.press(getByText("Back"));
-
-//   expect(mockNavigation.goBack).toHaveBeenCalled();
-// });

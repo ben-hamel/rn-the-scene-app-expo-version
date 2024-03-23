@@ -1,5 +1,4 @@
 import { HomeScreen } from "./AppScreens/HomeScreen";
-import TestScreen from "./AppScreens/TestScreen";
 import ProfileScreen from "./AppScreens/ProfileScreen";
 import CategoryDetailScreen from "./AppScreens/CategoryDetailScreen";
 import UserDetailScreen from "./AppScreens/UserDetailScreen";
@@ -13,14 +12,11 @@ import EmailScreen from "./AuthScreens/EmailScreen";
 import PasswordScreen from "./AuthScreens/PasswordScreen";
 import UsernameScreen from "./AuthScreens/UsernameScreen";
 import { LoginScreen } from "./AuthScreens/LoginScreen";
-import { SignUpScreen } from "./AppScreens/SignUpScreen";
 import AuthTestScreen from "./TestScreens/AuthTestScreen";
 
 export {
   LoginScreen,
   HomeScreen,
-  SignUpScreen,
-  TestScreen,
   ProfileScreen,
   CategoryDetailScreen,
   UserDetailScreen,

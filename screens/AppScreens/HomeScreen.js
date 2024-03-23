@@ -6,6 +6,7 @@ import useFetchCategories from "../../hooks/useFetchCategories.js";
 
 export function HomeScreen() {
   const { categories, loading } = useFetchCategories();
+  console.log("🚀 ~ HomeScreen ~ categories:", categories);
 
   return (
     <SafeAreaView style={styles.container}>
