@@ -20,6 +20,7 @@ initializeApp();
 
 exports.isEmailUsed = onRequest(async (request, response) => {
   const userEmail = request.query.email;
+  console.log("🚀 ~ exports.isEmailUsed=onRequest ~ userEmail:", userEmail);
   try {
     //get user by email
     const usersSnapshot = await getFirestore()

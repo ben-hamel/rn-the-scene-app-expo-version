@@ -10,6 +10,7 @@ import { signup } from "../../firebase/auth";
 import React, { useState } from "react";
 import TsButton from "../../components/TsButton";
 import BaseInput from "../../components/BaseInput/BaseInput";
+import { USERNAME_CHECK_URL } from "../../constants";
 
 const UsernameScreen = ({ route }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -23,36 +24,42 @@ const UsernameScreen = ({ route }) => {
   } = useForm({});
 
   const fetchUsername = async (username) => {
-    const response = await fetch(
-      `http://127.0.0.1:5001/the-scene-social-app/us-central1/isUsernameUsed?username=${username}`
-    );
+    try {
+      const response = await fetch(`${USERNAME_CHECK_URL}=${username}`);
 
-    if (!response.ok) {
-      throw new Error(
-        `Error checking username availability: ${response.statusText}`
-      );
+      if (!response.ok) {
+        throw new Error(
+          `Error checking username availability: ${response.statusText}`
+        );
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error("Error checking username availability:", error);
     }
-
-    return await response.json();
   };
 
   const onSubmit = async (data) => {
     const { username } = data;
 
-    const isUsernameUsed = await fetchUsername(username);
-
-    if (isUsernameUsed) {
-      setError("username", {
-        type: "isUsernameUsed",
-        message: "Username is already in use.",
-      });
-      return;
-    }
+    setIsLoading(true);
 
     try {
+      const isUsernameUsed = await fetchUsername(username);
+
+      if (isUsernameUsed) {
+        setError("username", {
+          type: "isUsernameUsed",
+          message: "Username is already in use.",
+        });
+        return;
+      }
+
       await signup(email, password, username);
     } catch (error) {
-      console.error("Error during signup:", error);
+      console.error("Error during username fetch or signup:", error);
+    } finally {
+      setIsLoading(false); // Ensure isLoading is set to false whether there's an error or not
     }
   };
 

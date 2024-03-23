@@ -5,10 +5,10 @@ import {
   getUserWithUsername,
   getUserImages,
   getUserVideos,
-} from "../firebase/firestore";
-import ProfileHero from "../components/ProfileHero";
-import VideoGallery from "../components/VideoGallery";
-import PhotoGallery from "../components/PhotoGallery";
+} from "../../firebase/firestore";
+import ProfileHero from "../../components/ProfileHero";
+import VideoGallery from "../../components/VideoGallery";
+import PhotoGallery from "../../components/PhotoGallery";
 
 const UserDetailScreen = ({ route }) => {
   const username = route.params;

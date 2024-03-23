@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View, Pressable } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Logo from "../components/Logo/Logo";
+import Logo from "../../components/Logo/Logo";
 
 const WelcomeScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.logoWrapper}>
         <Logo
-          uri={require("../assets/The-Scene-Logo-White.png")}
+          uri={require("../../assets/The-Scene-Logo-White.png")}
           style={styles.logo}
         />
       </View>

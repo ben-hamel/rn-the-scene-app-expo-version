@@ -2,10 +2,10 @@ import { StyleSheet, Text, View, TextInput, Button } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useTheme } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { db } from "../firebase/firebase";
+import { db } from "../../firebase/firebase";
 import { doc, updateDoc } from "firebase/firestore";
-import { useAuth } from "../firebase/auth";
-import { getUserWithEmail } from "../firebase/firestore";
+import { useAuth } from "../../firebase/auth";
+import { getUserWithEmail } from "../../firebase/firestore";
 
 const maxChars = 160;
 

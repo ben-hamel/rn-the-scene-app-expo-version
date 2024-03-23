@@ -3,7 +3,7 @@ import { render, fireEvent } from "@testing-library/react-native";
 import CategoryDetailScreen from "./CategoryDetailScreen";
 
 //TODO: Save this mock as a separate file
-jest.mock("../hooks/useFetchUsersBySkill", () => {
+jest.mock("../../hooks/useFetchUsersBySkill", () => {
   return jest.fn(() => [
     { username: "user1", profileImage: "image1.jpg" },
     { username: "user2", profileImage: "image2.jpg" },

@@ -9,10 +9,10 @@ import {
 import { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { doc, updateDoc } from "firebase/firestore";
-import { getUserWithEmail } from "../firebase/firestore";
-import { db } from "../firebase/firebase";
-import useFetchCategories from "../hooks/useFetchCategories";
-import { useAuth } from "../firebase/auth";
+import { getUserWithEmail } from "../../firebase/firestore";
+import { db } from "../../firebase/firebase";
+import useFetchCategories from "../../hooks/useFetchCategories";
+import { useAuth } from "../../firebase/auth";
 
 const EditSkillsScreen = ({ navigation }) => {
   /** Category State */

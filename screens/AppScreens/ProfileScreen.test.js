@@ -42,14 +42,14 @@ const mockNavigation = {
 };
 
 //TODO: Save this mock as a separate file
-jest.mock("../firebase/auth", () => ({
+jest.mock("../../firebase/auth", () => ({
   useAuth: jest.fn(() => ({
     username: "testUser",
     authUser: { uid: "testUid" },
   })),
 }));
 
-jest.mock("../firebase/firestore", () => ({
+jest.mock("../../firebase/firestore", () => ({
   getUserWithEmail: jest.fn((username, callback) => {
     // Mock implementation, you can customize based on your needs
     callback({

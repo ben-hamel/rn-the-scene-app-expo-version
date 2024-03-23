@@ -9,11 +9,11 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import { auth, db } from "../firebase/firebase";
+import { auth, db } from "../../firebase/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { setDoc, doc } from "firebase/firestore";
-import Logo from "../components/Logo/Logo";
-import { Images } from "../config/images";
+import Logo from "../../components/Logo/Logo";
+import { Images } from "../../config/images";
 import { useTheme } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 

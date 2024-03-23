@@ -2,17 +2,17 @@ import { StyleSheet, Text, View } from "react-native";
 import { useState, useEffect } from "react";
 import { useTheme } from "@react-navigation/native";
 //Componets
-import ProfileHero from "../components/ProfileHero";
-import TsButton from "../components/TsButton";
-import VideoGallery from "../components/VideoGallery";
-import PhotoGallery from "../components/PhotoGallery";
+import ProfileHero from "../../components/ProfileHero";
+import TsButton from "../../components/TsButton";
+import VideoGallery from "../../components/VideoGallery";
+import PhotoGallery from "../../components/PhotoGallery";
 //Misc
 import {
   getUserWithEmail,
   getUserImages,
   getUserVideos,
-} from "../firebase/firestore";
-import { useAuth } from "../firebase/auth";
+} from "../../firebase/firestore";
+import { useAuth } from "../../firebase/auth";
 
 const ProfileScreen = ({ navigation }) => {
   /** Contexts */
@@ -37,10 +37,6 @@ const ProfileScreen = ({ navigation }) => {
       unsubscribeVideos();
     };
   }, [authUser.email, authUser.uid]);
-
-  // const handleEditProfilePress = () => {
-  //   navigation.navigate("EditProfileScreen");
-  // };
 
   return (
     <ProfileHero img={profileImage} username={username}>

@@ -3,12 +3,12 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   View,
-  Text,
 } from "react-native";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "@react-navigation/native";
 import { useForm } from "react-hook-form";
+import { EMAIL_CHECK_URL, EMAIL_REGEX } from "../../constants";
 
 import TsButton from "../../components/TsButton";
 import BaseInput from "../../components/BaseInput/BaseInput";
@@ -20,83 +20,38 @@ const EmailScreen = ({ navigation }) => {
   const {
     control,
     handleSubmit,
-    formState: {
-      errors,
-      isValid,
-      submitCount,
-      isSubmitSuccessful,
-      isSubmitted,
-      isSubmitting,
-      isValidating,
-    },
-    clearErrors,
+    formState: { errors, isValid, isSubmitted, isValidating },
     setError,
-    watch,
   } = useForm({ mode: "onSubmit" });
 
-  const watchEmail = watch("email");
   const EMAIL_REGEX = /^[\w.+\-]+@[a-zA-Z\d.\-]+\.[a-zA-Z]{2,}$/;
-  const logStuff = () => {
-    console.log(
-      "🚀 ~ file: EmailScreen.js:113 ~ logStuff ~ logStuff:",
-      logStuff
-    );
-    console.log("submitCount", submitCount);
-    console.log("isSubmitting", isSubmitting);
-    console.log("isSubmitSuccessful", isSubmitSuccessful);
-    console.log("isSubmitted", isSubmitted);
-    console.log("isValidating", isValidating);
-    console.log("isValid", isValid);
-  };
-
-  //TODO : Save this code somewhere
-  // useEffect(() => {
-  //   const validateEmail = async () => {
-  //     if (isValid && submitCount > 0 && EMAIL_REGEX.test(watchEmail)) {
-  //       const isEmailUsed = await checkEmailAvailability(watchEmail);
-
-  //       if (isEmailUsed) {
-  //         setError("email", {
-  //           type: "isEmailUsed",
-  //           message: "Email is already in use.",
-  //         });
-  //       }
-  //     }
-  //   };
-
-  //   validateEmail();
-  // }, [watchEmail]);
 
   const onSubmit = async (data) => {
-    if (isValid && submitCount > 0) {
-      console.log("navigate withpout checking");
-      navigation.navigate("Password");
-      return;
-    }
+    const { email } = data;
 
-    /** ORIGINAL */
-    console.log("checking email from submit");
-    const isEmailUsed = await checkEmailAvailability(data.email);
-    if (isEmailUsed) {
-      setError("email", {
-        type: "isEmailUsed",
-        message: "Email is already in use.",
-      });
-    } else {
-      clearErrors("email");
+    setIsLoading(true); // Set loading state to true before the async call
+
+    try {
+      const isEmailUsed = await checkEmailAvailability(email);
+
+      if (isEmailUsed) {
+        setError("email", {
+          type: "isEmailUsed",
+          message: "Email is already in use.",
+        });
+        return;
+      }
+
       navigation.navigate("Password", { email: data.email });
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    } finally {
+      setIsLoading(false); // Set loading state back to false after the async call completes
     }
   };
 
-  // const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   const checkEmailAvailability = async (email) => {
     try {
-      setIsLoading(true);
-      if (!email) {
-        return false;
-      }
-
-      //check email for + sign
       const isEmailWithPlusSign = email.includes("+");
 
       if (isEmailWithPlusSign) {
@@ -107,9 +62,7 @@ const EmailScreen = ({ navigation }) => {
         );
       }
 
-      const response = await fetch(
-        `http://127.0.0.1:5001/the-scene-social-app/us-central1/isEmailUsed?email=${email}`
-      );
+      const response = await fetch(`${EMAIL_CHECK_URL}=${email}`);
 
       if (!response.ok) {
         throw new Error(
@@ -117,15 +70,9 @@ const EmailScreen = ({ navigation }) => {
         );
       }
 
-      const isEmailUsed = await response.json();
-
-      return isEmailUsed;
+      return await response.json();
     } catch (error) {
-      console.error("Error checking email availability:", error.message);
-
-      return false;
-    } finally {
-      setIsLoading(false);
+      console.error("Error checking email availability:", error);
     }
   };
 
@@ -148,29 +95,18 @@ const EmailScreen = ({ navigation }) => {
               },
               validate: {
                 isEmailUsed: async (email) => {
-                  // Check if the form has been submitted and validation is ongoing
-                  if (!isSubmitted) {
-                    return true;
+                  if (isSubmitted) {
+                    setIsLoading(true);
+                    try {
+                      const isEmailUsed = await checkEmailAvailability(email);
+
+                      if (isEmailUsed) {
+                        return "Email is already in use.";
+                      }
+                    } finally {
+                      setIsLoading(false);
+                    }
                   }
-
-                  console.log("isEmailused coming up");
-                  const isEmailUsed = await checkEmailAvailability(email);
-
-                  if (isEmailUsed) {
-                    console.log("Validation failed: email is already in use");
-                    return "Email is already in use.";
-                  }
-
-                  //TODO : Log issue to React Native Form
-                  // if (isValidating) {
-                  //   console.log("isEmailused coming up");
-                  //   const isEmailUsed = await checkEmailAvailability(email);
-
-                  //   if (isEmailUsed) {
-                  //     console.log("Validation failed: email is already in use");
-                  //     return "Email is already in use.";
-                  //   }
-                  // }
                 },
               },
             }}
@@ -184,6 +120,7 @@ const EmailScreen = ({ navigation }) => {
             onPress={handleSubmit(onSubmit)}
             disabled={!isValid || isLoading}
           />
+          {}
         </View>
       </TouchableWithoutFeedback>
     </SafeAreaView>

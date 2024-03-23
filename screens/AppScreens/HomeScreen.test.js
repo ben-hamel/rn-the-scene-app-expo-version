@@ -10,7 +10,7 @@ jest.mock("@react-navigation/native", () => ({
 }));
 
 // Mock the useFetchCategories hook
-jest.mock("../hooks/useFetchCategories", () => ({
+jest.mock("../../hooks/useFetchCategories", () => ({
   __esModule: true,
   default: jest.fn(() => ({
     categories: [
