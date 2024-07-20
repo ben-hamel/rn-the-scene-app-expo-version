@@ -1,6 +1,5 @@
 import { initializeApp } from "firebase/app";
 import {
-  getAuth,
   connectAuthEmulator,
   initializeAuth,
   getReactNativePersistence,
@@ -9,7 +8,7 @@ import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import { getStorage, connectStorageEmulator } from "firebase/storage";
 import Constants from "expo-constants";
 import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
-import { getFunctions } from "firebase/functions";
+import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
 
 // Configure Firebase.
 const firebaseConfig = {
@@ -23,25 +22,19 @@ const firebaseConfig = {
 
 /**
  * https://stackoverflow.com/questions/67781589/how-to-setup-a-firebase-demo-project
+ *
+ * cant get firestore to work though
  */
-const firebaseDemoConfig = {
-  apiKey: "any",
-  authDomain: "any",
-  projectId: "demo-project", // project name from .firebaserc
-  storageBucket: "any",
-  messagingSenderId: "any",
-  appId: "any",
-};
+// const firebaseDemoConfig = {
+//   apiKey: "any",
+//   authDomain: "any",
+//   projectId: "demo-project", // project name from .firebaserc
+//   storageBucket: "any",
+//   messagingSenderId: "any",
+//   appId: "any",
+// };
 
-const checkForEnvironment = () => {
-  if (process.env.NODE_ENV === "development") {
-    return firebaseDemoConfig;
-  } else {
-    return firebaseConfig;
-  }
-};
-
-const app = initializeApp(checkForEnvironment());
+const app = initializeApp(firebaseConfig);
 const auth = initializeAuth(app, {
   persistence: getReactNativePersistence(ReactNativeAsyncStorage),
 });
@@ -55,6 +48,7 @@ if (process.env.NODE_ENV === "development") {
   connectAuthEmulator(auth, "http://127.0.0.1:9099");
   connectFirestoreEmulator(db, "127.0.0.1", 8080);
   connectStorageEmulator(storage, "127.0.0.1", 9199);
+  connectFunctionsEmulator(functions, "127.0.0.1", 5001);
 }
 
 export { auth, db, storage, functions };
