@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
 import {
+  getAuth,
   connectAuthEmulator,
   initializeAuth,
   getReactNativePersistence,
@@ -20,7 +21,27 @@ const firebaseConfig = {
   appId: Constants.expoConfig.extra.appId,
 };
 
-const app = initializeApp(firebaseConfig);
+/**
+ * https://stackoverflow.com/questions/67781589/how-to-setup-a-firebase-demo-project
+ */
+const firebaseDemoConfig = {
+  apiKey: "any",
+  authDomain: "any",
+  projectId: "demo-project", // project name from .firebaserc
+  storageBucket: "any",
+  messagingSenderId: "any",
+  appId: "any",
+};
+
+const checkForEnvironment = () => {
+  if (process.env.NODE_ENV === "development") {
+    return firebaseDemoConfig;
+  } else {
+    return firebaseConfig;
+  }
+};
+
+const app = initializeApp(checkForEnvironment());
 const auth = initializeAuth(app, {
   persistence: getReactNativePersistence(ReactNativeAsyncStorage),
 });
@@ -28,13 +49,12 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 const functions = getFunctions(app);
 
-const enableEmulators = true;
+if (process.env.NODE_ENV === "development") {
+  console.log("Enabling emulators since in development mode");
 
-if (process.env.NODE_ENV === "development" && enableEmulators) {
+  connectAuthEmulator(auth, "http://127.0.0.1:9099");
   connectFirestoreEmulator(db, "127.0.0.1", 8080);
   connectStorageEmulator(storage, "127.0.0.1", 9199);
-  connectAuthEmulator(auth, "http://127.0.0.1:9099");
-  console.log("Emulators enabled");
 }
 
 export { auth, db, storage, functions };
