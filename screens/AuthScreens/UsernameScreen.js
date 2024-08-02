@@ -10,9 +10,13 @@ import { signup } from "../../firebase/auth";
 import React, { useState } from "react";
 import TsButton from "../../components/TsButton";
 import BaseInput from "../../components/BaseInput/BaseInput";
+import { getFunctions, httpsCallable } from "firebase/functions";
 
 const UsernameScreen = ({ route }) => {
   const [isLoading, setIsLoading] = useState(false);
+
+  const functions = getFunctions();
+  const checkForUsername = httpsCallable(functions, "isUsernameUsed");
 
   const {
     control,
@@ -25,45 +29,49 @@ const UsernameScreen = ({ route }) => {
       isSubmitting,
       isValidating,
     },
+    clearErrors,
     setError,
   } = useForm({});
 
   const fetchUsername = async (username) => {
-    const response = await fetch(
-      `http://127.0.0.1:5001/the-scene-social-app/us-central1/isUsernameUsed?username=${username}`
-    );
+    setIsLoading(true);
+    try {
+      if (!username) {
+        return null;
+      }
 
-    if (!response.ok) {
-      throw new Error(
-        `Error checking username availability: ${response.statusText}`
-      );
+      const result = await checkForUsername({ username });
+
+      return result.data.isUsernameUsed;
+    } catch (error) {
+      console.error("Error checking email availability:", error.message);
+      return false;
+    } finally {
+      setIsLoading(false);
     }
-
-    return await response.json();
   };
-
   const onSubmit = async (data) => {
     if (isValid && submitCount > 0) {
       await signup(route.params.email, route.params.password, data);
     }
 
-    const isUsernameUsed = await fetchUsername(data);
+    const isUsernameUsed = await fetchUsername(data.username);
 
     if (isUsernameUsed) {
       setError("username", {
         type: "isUsernameUsed",
         message: "Username is already in use.",
       });
+    } else {
+      clearErrors("username");
+      await signup(route.params.email, route.params.password, data.username);
     }
-
-    await signup(route.params.email, route.params.password, data.username);
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={styles.formContainer}>
-          {/* <UsernameForm /> */}
           <BaseInput
             name="username"
             control={control}
