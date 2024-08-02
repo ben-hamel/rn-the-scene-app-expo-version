@@ -15,20 +15,13 @@ const PasswordScreen = ({ navigation, route }) => {
   const { colors } = useTheme();
   const [password, setPassword] = useState();
 
-  //log params
-  // console.log("route.params", route.params);
-
   const {
     control,
     handleSubmit,
     formState: { errors, isValid, submitCount },
-    clearErrors,
-    setError,
   } = useForm({});
 
   const onSubmit = (data) => {
-    console.log("🚀 ~ file: PasswordScreen.js:34 ~ onSubmit ~ data:", data);
-
     const password = data.password;
 
     navigation.navigate("Username", { ...route.params, password });
@@ -51,7 +44,6 @@ const PasswordScreen = ({ navigation, route }) => {
             isValid={isValid}
             submitCount={submitCount}
           />
-
           <TsButton
             onPress={handleSubmit(onSubmit)}
             title="Next"

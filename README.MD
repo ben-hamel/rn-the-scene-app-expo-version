@@ -9,3 +9,7 @@ This app is designed to help you find local creatives and collaborators, this ap
 ## Screenshots
 
 ![App Screenshot](docs/assets/App_Example.gif)
+
+## Emulator
+
+firebase emulators:start --project demo-the-scene

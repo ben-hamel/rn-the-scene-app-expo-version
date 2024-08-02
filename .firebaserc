@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "the-scene-social-app"
-  }
+    "production": "the-scene-social-app"
+  },
+  "targets": {},
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
 }

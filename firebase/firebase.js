@@ -1,4 +1,4 @@
-import { initializeApp } from "firebase/app";
+import { initializeApp, getApp } from "firebase/app";
 import {
   connectAuthEmulator,
   initializeAuth,
@@ -8,9 +8,8 @@ import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import { getStorage, connectStorageEmulator } from "firebase/storage";
 import Constants from "expo-constants";
 import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
-import { getFunctions } from "firebase/functions";
+import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
 
-// Configure Firebase.
 const firebaseConfig = {
   apiKey: Constants.expoConfig.extra.apiKey,
   authDomain: Constants.expoConfig.extra.authDomain,
@@ -20,6 +19,15 @@ const firebaseConfig = {
   appId: Constants.expoConfig.extra.appId,
 };
 
+// const firebaseConfig = {
+//   apiKey: "any",
+//   authDomain: "any",
+//   projectId: "demo-the-scene",
+//   storageBucket: "any",
+//   messagingSenderId: "any",
+//   appId: "any",
+// };
+
 const app = initializeApp(firebaseConfig);
 const auth = initializeAuth(app, {
   persistence: getReactNativePersistence(ReactNativeAsyncStorage),
@@ -28,13 +36,12 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 const functions = getFunctions(app);
 
-const enableEmulators = true;
-
-if (process.env.NODE_ENV === "development" && enableEmulators) {
+if (process.env.NODE_ENV === "development") {
+  console.log("Enabling emulators since in development mode");
+  connectAuthEmulator(auth, "http://127.0.0.1:9099");
   connectFirestoreEmulator(db, "127.0.0.1", 8080);
   connectStorageEmulator(storage, "127.0.0.1", 9199);
-  connectAuthEmulator(auth, "http://127.0.0.1:9099");
-  console.log("Emulators enabled");
+  connectFunctionsEmulator(functions, "127.0.0.1", 5001);
 }
 
 export { auth, db, storage, functions };

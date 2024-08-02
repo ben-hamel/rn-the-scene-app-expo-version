@@ -9,6 +9,7 @@ import { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "@react-navigation/native";
 import { useForm } from "react-hook-form";
+import { getFunctions, httpsCallable } from "firebase/functions";
 
 import TsButton from "../../components/TsButton";
 import BaseInput from "../../components/BaseInput/BaseInput";
@@ -16,6 +17,9 @@ import BaseInput from "../../components/BaseInput/BaseInput";
 const EmailScreen = ({ navigation }) => {
   const { colors } = useTheme();
   const [isLoading, setIsLoading] = useState(false);
+
+  const functions = getFunctions();
+  const checkForEmail = httpsCallable(functions, "isEmailUsed");
 
   const {
     control,
@@ -34,20 +38,8 @@ const EmailScreen = ({ navigation }) => {
     watch,
   } = useForm({ mode: "onSubmit" });
 
-  const watchEmail = watch("email");
+  // const watchEmail = watch("email");
   const EMAIL_REGEX = /^[\w.+\-]+@[a-zA-Z\d.\-]+\.[a-zA-Z]{2,}$/;
-  const logStuff = () => {
-    console.log(
-      "🚀 ~ file: EmailScreen.js:113 ~ logStuff ~ logStuff:",
-      logStuff
-    );
-    console.log("submitCount", submitCount);
-    console.log("isSubmitting", isSubmitting);
-    console.log("isSubmitSuccessful", isSubmitSuccessful);
-    console.log("isSubmitted", isSubmitted);
-    console.log("isValidating", isValidating);
-    console.log("isValid", isValid);
-  };
 
   //TODO : Save this code somewhere
   // useEffect(() => {
@@ -89,40 +81,58 @@ const EmailScreen = ({ navigation }) => {
   };
 
   // const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  // const checkEmailAvailability = async (email) => {
+  //   try {
+  //     setIsLoading(true);
+  //     if (!email) {
+  //       return false;
+  //     }
+
+  //     //check email for + sign
+  //     const isEmailWithPlusSign = email.includes("+");
+
+  //     if (isEmailWithPlusSign) {
+  //       email = email.replace("+", "%2B");
+  //       console.log(
+  //         "🚀 ~ file: EmailScreen.js:104 ~ checkEmailAvailability ~ email:",
+  //         email
+  //       );
+  //     }
+
+  //     const response = await fetch(
+  //       `http://127.0.0.1:5001/the-scene-social-app/us-central1/isEmailUsed?email=${email}`
+  //     );
+
+  //     if (!response.ok) {
+  //       throw new Error(
+  //         `Error checking email availability: ${response.statusText}`
+  //       );
+  //     }
+
+  //     const isEmailUsed = await response.json();
+
+  //     return isEmailUsed;
+  //   } catch (error) {
+  //     console.error("Error checking email availability:", error.message);
+
+  //     return false;
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
   const checkEmailAvailability = async (email) => {
+    setIsLoading(true);
     try {
-      setIsLoading(true);
       if (!email) {
-        return false;
+        return null;
       }
 
-      //check email for + sign
-      const isEmailWithPlusSign = email.includes("+");
+      const result = await checkForEmail({ email });
 
-      if (isEmailWithPlusSign) {
-        email = email.replace("+", "%2B");
-        console.log(
-          "🚀 ~ file: EmailScreen.js:104 ~ checkEmailAvailability ~ email:",
-          email
-        );
-      }
-
-      const response = await fetch(
-        `http://127.0.0.1:5001/the-scene-social-app/us-central1/isEmailUsed?email=${email}`
-      );
-
-      if (!response.ok) {
-        throw new Error(
-          `Error checking email availability: ${response.statusText}`
-        );
-      }
-
-      const isEmailUsed = await response.json();
-
-      return isEmailUsed;
+      return result.data.emailUsed;
     } catch (error) {
       console.error("Error checking email availability:", error.message);
-
       return false;
     } finally {
       setIsLoading(false);
