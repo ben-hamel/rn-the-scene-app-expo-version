@@ -46,8 +46,8 @@ const UserDetailScreen = ({ route }) => {
       <View style={styles.container}>
         <Text style={[styles.header, { color: colors.text }]}>About</Text>
         <Text style={[styles.aboutText, { color: colors.text }]}>{bio}</Text>
-        {userImages.length > 0 && <PhotoGallery images={userImages} />}
-        {userVideos.length > 0 && <VideoGallery videos={userVideos} />}
+        {userImages?.length > 0 && <PhotoGallery images={userImages} />}
+        {userVideos?.length > 0 && <VideoGallery videos={userVideos} />}
       </View>
     </ProfileHero>
   );
