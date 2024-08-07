@@ -6,9 +6,11 @@ import {
 } from "@react-navigation/native";
 import { AuthStack } from "./AuthStack.js";
 import { AppStack } from "./AppStack";
+import { TestStack } from "./TestStack";
 import { useColorScheme } from "react-native";
 import { LoadingScreen } from "../screens";
 import { useAuth } from "../firebase/auth.js";
+import Constants from "expo-constants";
 
 const MyTheme = {
   ...DefaultTheme,
@@ -32,8 +34,20 @@ export const NavigationRouter = () => {
 
   const { authUser, isLoading } = useAuth();
 
+  const inTestMode =
+    Constants.expoConfig.extra.testMode === "true" &&
+    process.env.NODE_ENV === "development";
+
   if (isLoading) {
     return <LoadingScreen />;
+  }
+
+  if (inTestMode) {
+    return (
+      <NavigationContainer theme={scheme === "dark" ? MyDarkTheme : MyTheme}>
+        <TestStack />
+      </NavigationContainer>
+    );
   }
 
   return (

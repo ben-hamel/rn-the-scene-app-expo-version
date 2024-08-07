@@ -5,7 +5,6 @@ import {
   collection,
   query,
   where,
-  getDocs,
   limit,
   serverTimestamp,
   onSnapshot,
@@ -18,10 +17,19 @@ import { v4 as uuidv4 } from "uuid";
 import sizeIsLessThanMB from "../utils/sizeIsLessThanMB";
 import getImageBlob from "../utils/getImageBlob";
 import compressImage from "../utils/compressImage";
+import {
+  USERNAMES_COLLECTION,
+  USERS_COLLECTION,
+  IMAGES_COLLECTION,
+} from "../constants";
 
-const USER_COLLECTION = "users";
-const IMAGE_COLLECTION = "images";
+//TODO add to a constants file
 const MAX_FILE_SIZE_MB = 1;
+const MEDIA_URL = "mediaUrl";
+const MEDIA_TYPE = "mediaType";
+const CREATED_AT = "createdAt";
+const CAPTION = "caption";
+const LIKES = "likes";
 
 export const uploadImageAndGetDownloadURL = async (uri) => {
   try {
@@ -54,7 +62,12 @@ export const uploadImageAndGetDownloadURL = async (uri) => {
 };
 
 export const uploadUserImage = async (user, photoUrl) => {
-  const docCol = await collection(db, USER_COLLECTION, user, IMAGE_COLLECTION);
+  const docCol = await collection(
+    db,
+    USERS_COLLECTION,
+    user,
+    IMAGES_COLLECTION
+  );
 
   const docRef = await addDoc(docCol, {
     imageUrl: photoUrl,
@@ -66,7 +79,7 @@ export const uploadUserImage = async (user, photoUrl) => {
 
 export const updateProfilePhoto = (DocId, image) => {
   try {
-    const docRef = doc(db, USER_COLLECTION, DocId);
+    const docRef = doc(db, USERS_COLLECTION, DocId);
     updateDoc(docRef, {
       profileImage: image,
     });
@@ -77,7 +90,7 @@ export const updateProfilePhoto = (DocId, image) => {
 };
 
 export function getUserWithUsername(username, setUserData) {
-  const usersRef = collection(db, USER_COLLECTION);
+  const usersRef = collection(db, USERS_COLLECTION);
   const userQuery = query(
     usersRef,
     where("username", "==", username),
@@ -98,7 +111,7 @@ export function getUserWithUsername(username, setUserData) {
 }
 
 export function getUserWithEmail(email, setUserData) {
-  const usersRef = collection(db, USER_COLLECTION);
+  const usersRef = collection(db, USERS_COLLECTION);
   const userQuery = query(usersRef, where("email", "==", email), limit(1));
 
   const unsubscribe = onSnapshot(userQuery, (snapshot) => {
@@ -114,24 +127,8 @@ export function getUserWithEmail(email, setUserData) {
   return unsubscribe;
 }
 
-// export const getUserImages = async (id) => {
-//   const docCol = collection(db, USER_COLLECTION, id, IMAGE_COLLECTION);
-//   const q = query(docCol, limit(10));
-//   const querySnapshot = await getDocs(q);
-//   const images = querySnapshot.docs.map((doc) => ({
-//     ...doc.data(),
-//     id: doc.id,
-//   }));
-
-//   if (images.length > 0) {
-//     return images;
-//   }
-
-//   return null;
-// };
-
 export const getUserImages = (id, setImages) => {
-  const docCol = collection(db, USER_COLLECTION, id, IMAGE_COLLECTION);
+  const docCol = collection(db, USERS_COLLECTION, id, IMAGES_COLLECTION);
   const q = query(docCol, limit(10));
 
   const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -149,29 +146,6 @@ export const getUserImages = (id, setImages) => {
 
   return unsubscribe;
 };
-
-//TODO add to a constants file
-const MEDIA_URL = "mediaUrl";
-const MEDIA_TYPE = "mediaType";
-const CREATED_AT = "createdAt";
-const CAPTION = "caption";
-const LIKES = "likes";
-
-// export const getUserVideos = async (id) => {
-//   const docCol = collection(db, "users", id, "videos");
-//   const q = query(docCol, limit(10));
-//   const querySnapshot = await getDocs(q);
-//   const videos = querySnapshot.docs.map((doc) => ({
-//     ...doc.data(),
-//     id: doc.id,
-//   }));
-
-//   if (videos.length > 0) {
-//     return videos;
-//   }
-
-//   return null;
-// };
 
 export const getUserVideos = (id, setVideos) => {
   const docCol = collection(db, "users", id, "videos"); // Assuming VIDEO_COLLECTION is the name of your videos collection
@@ -248,7 +222,7 @@ const getRandomPic = async () => {
 
 export const storeSignupData = async (userID, username, email) => {
   try {
-    const docRef = doc(db, "users", userID);
+    const docRef = doc(db, USERS_COLLECTION, userID);
 
     await setDoc(docRef, {
       uid: userID,
@@ -263,7 +237,7 @@ export const storeSignupData = async (userID, username, email) => {
   }
 
   try {
-    const docRef = doc(db, "usernames", username);
+    const docRef = doc(db, USERNAMES_COLLECTION, username);
 
     await setDoc(docRef, {
       uid: userID,

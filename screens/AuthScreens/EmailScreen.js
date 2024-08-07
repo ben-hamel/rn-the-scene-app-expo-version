@@ -3,13 +3,13 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   View,
-  Text,
 } from "react-native";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "@react-navigation/native";
 import { useForm } from "react-hook-form";
 import { getFunctions, httpsCallable } from "firebase/functions";
+import { EMAIL_CHECK_URL, EMAIL_REGEX } from "../../constants";
 
 import TsButton from "../../components/TsButton";
 import BaseInput from "../../components/BaseInput/BaseInput";
@@ -24,18 +24,8 @@ const EmailScreen = ({ navigation }) => {
   const {
     control,
     handleSubmit,
-    formState: {
-      errors,
-      isValid,
-      submitCount,
-      isSubmitSuccessful,
-      isSubmitted,
-      isSubmitting,
-      isValidating,
-    },
-    clearErrors,
+    formState: { errors, isValid, isSubmitted, isValidating },
     setError,
-    watch,
   } = useForm({ mode: "onSubmit" });
 
   // const watchEmail = watch("email");
@@ -60,23 +50,26 @@ const EmailScreen = ({ navigation }) => {
   // }, [watchEmail]);
 
   const onSubmit = async (data) => {
-    if (isValid && submitCount > 0) {
-      console.log("navigate withpout checking");
-      navigation.navigate("Password");
-      return;
-    }
+    const { email } = data;
 
-    /** ORIGINAL */
-    console.log("checking email from submit");
-    const isEmailUsed = await checkEmailAvailability(data.email);
-    if (isEmailUsed) {
-      setError("email", {
-        type: "isEmailUsed",
-        message: "Email is already in use.",
-      });
-    } else {
-      clearErrors("email");
+    setIsLoading(true); // Set loading state to true before the async call
+
+    try {
+      const isEmailUsed = await checkEmailAvailability(email);
+
+      if (isEmailUsed) {
+        setError("email", {
+          type: "isEmailUsed",
+          message: "Email is already in use.",
+        });
+        return;
+      }
+
       navigation.navigate("Password", { email: data.email });
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    } finally {
+      setIsLoading(false); // Set loading state back to false after the async call completes
     }
   };
 
@@ -158,29 +151,18 @@ const EmailScreen = ({ navigation }) => {
               },
               validate: {
                 isEmailUsed: async (email) => {
-                  // Check if the form has been submitted and validation is ongoing
-                  if (!isSubmitted) {
-                    return true;
+                  if (isSubmitted) {
+                    setIsLoading(true);
+                    try {
+                      const isEmailUsed = await checkEmailAvailability(email);
+
+                      if (isEmailUsed) {
+                        return "Email is already in use.";
+                      }
+                    } finally {
+                      setIsLoading(false);
+                    }
                   }
-
-                  console.log("isEmailused coming up");
-                  const isEmailUsed = await checkEmailAvailability(email);
-
-                  if (isEmailUsed) {
-                    console.log("Validation failed: email is already in use");
-                    return "Email is already in use.";
-                  }
-
-                  //TODO : Log issue to React Native Form
-                  // if (isValidating) {
-                  //   console.log("isEmailused coming up");
-                  //   const isEmailUsed = await checkEmailAvailability(email);
-
-                  //   if (isEmailUsed) {
-                  //     console.log("Validation failed: email is already in use");
-                  //     return "Email is already in use.";
-                  //   }
-                  // }
                 },
               },
             }}
@@ -194,6 +176,7 @@ const EmailScreen = ({ navigation }) => {
             onPress={handleSubmit(onSubmit)}
             disabled={!isValid || isLoading}
           />
+          {}
         </View>
       </TouchableWithoutFeedback>
     </SafeAreaView>

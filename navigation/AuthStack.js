@@ -2,7 +2,6 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import {
   LoginScreen,
-  SignUpScreen,
   WelcomeScreen,
   EmailScreen,
   PasswordScreen,
@@ -31,7 +30,6 @@ export const AuthStack = () => {
           headerTitle: "Log in",
         }}
       />
-      <Stack.Screen name="SignUp" component={SignUpScreen} />
       <Stack.Screen
         name="Email"
         component={EmailScreen}

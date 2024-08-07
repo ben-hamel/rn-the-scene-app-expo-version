@@ -11,12 +11,14 @@ import React, { useState } from "react";
 import TsButton from "../../components/TsButton";
 import BaseInput from "../../components/BaseInput/BaseInput";
 import { getFunctions, httpsCallable } from "firebase/functions";
+import { USERNAME_CHECK_URL } from "../../constants";
 
 const UsernameScreen = ({ route }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const functions = getFunctions();
   const checkForUsername = httpsCallable(functions, "isUsernameUsed");
+  const { email, password } = route.params;
 
   const {
     control,
@@ -50,9 +52,10 @@ const UsernameScreen = ({ route }) => {
       setIsLoading(false);
     }
   };
+
   const onSubmit = async (data) => {
     if (isValid && submitCount > 0) {
-      await signup(route.params.email, route.params.password, data);
+      await signup(email, password, data);
     }
 
     const isUsernameUsed = await fetchUsername(data.username);
@@ -64,7 +67,7 @@ const UsernameScreen = ({ route }) => {
       });
     } else {
       clearErrors("username");
-      await signup(route.params.email, route.params.password, data.username);
+      await signup(email, password, data.username);
     }
   };
 
@@ -76,7 +79,7 @@ const UsernameScreen = ({ route }) => {
             name="username"
             control={control}
             errors={errors}
-            handleSubmit={(handleSubmit, { shouldValidate: false })}
+            handleSubmit={handleSubmit}
             label="Choose your username"
             rules={{
               required: "Username is required",

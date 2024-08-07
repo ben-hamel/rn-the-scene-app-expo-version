@@ -1,25 +1,22 @@
-import { HomeScreen } from "./HomeScreen";
-import TestScreen from "./TestScreen";
-import ProfileScreen from "./ProfileScreen";
-import CategoryDetailScreen from "./CategoryDetailScreen";
-import UserDetailScreen from "./UserDetailScreen";
-import EditProfileScreen from "./EditProfileScreen";
-import EditSkillsScreen from "./EditSkillsScreen";
-import AddContentScreen from "./AddContentScreen";
-import LoadingScreen from "./LoadingScreen";
-import WelcomeScreen from "./WelcomeScreen";
-import EditBioScreen from "./EditBioScreen";
+import { HomeScreen } from "./AppScreens/HomeScreen";
+import ProfileScreen from "./AppScreens/ProfileScreen";
+import CategoryDetailScreen from "./AppScreens/CategoryDetailScreen";
+import UserDetailScreen from "./AppScreens/UserDetailScreen";
+import EditProfileScreen from "./AppScreens/EditProfileScreen";
+import EditSkillsScreen from "./AppScreens/EditSkillsScreen";
+import AddContentScreen from "./AppScreens/AddContentScreen";
+import LoadingScreen from "./AppScreens/LoadingScreen";
+import WelcomeScreen from "./AuthScreens/WelcomeScreen";
+import EditBioScreen from "./AppScreens/EditBioScreen";
 import EmailScreen from "./AuthScreens/EmailScreen";
 import PasswordScreen from "./AuthScreens/PasswordScreen";
 import UsernameScreen from "./AuthScreens/UsernameScreen";
-import { LoginScreen } from "./AuthScreens//LoginScreen";
-import { SignUpScreen } from "./SignUpScreen";
+import { LoginScreen } from "./AuthScreens/LoginScreen";
+import AuthTestScreen from "./TestScreens/AuthTestScreen";
 
 export {
   LoginScreen,
   HomeScreen,
-  SignUpScreen,
-  TestScreen,
   ProfileScreen,
   CategoryDetailScreen,
   UserDetailScreen,
@@ -32,4 +29,5 @@ export {
   EditBioScreen,
   EmailScreen,
   PasswordScreen,
+  AuthTestScreen,
 };
