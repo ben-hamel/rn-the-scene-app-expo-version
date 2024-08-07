@@ -15,10 +15,13 @@ web-build/
 .env
 
 # firebase emulators
-firebase-debug.log.json
-firebase-debug.log
-firebase-debug.*.log
-firestore-debug.log
-firestore-debug.*.log
-ui-debug.log
-storage.rules
+# firebase-debug.log.json
+# firebase-debug.log
+# firebase-debug.*.log
+# firestore-debug.log
+# firestore-debug.*.log
+# ui-debug.log
+
+firebase-debug.log*
+firestore-debug.log*
+ui-debug.log*

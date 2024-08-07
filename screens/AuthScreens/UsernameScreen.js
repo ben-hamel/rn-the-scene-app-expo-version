@@ -10,56 +10,64 @@ import { signup } from "../../firebase/auth";
 import React, { useState } from "react";
 import TsButton from "../../components/TsButton";
 import BaseInput from "../../components/BaseInput/BaseInput";
+import { getFunctions, httpsCallable } from "firebase/functions";
 import { USERNAME_CHECK_URL } from "../../constants";
 
 const UsernameScreen = ({ route }) => {
   const [isLoading, setIsLoading] = useState(false);
+
+  const functions = getFunctions();
+  const checkForUsername = httpsCallable(functions, "isUsernameUsed");
   const { email, password } = route.params;
 
   const {
     control,
     handleSubmit,
-    formState: { errors, isValid, isSubmitted, isSubmitting, isValidating },
+    formState: {
+      errors,
+      isValid,
+      submitCount,
+      isSubmitted,
+      isSubmitting,
+      isValidating,
+    },
+    clearErrors,
     setError,
   } = useForm({});
 
   const fetchUsername = async (username) => {
+    setIsLoading(true);
     try {
-      const response = await fetch(`${USERNAME_CHECK_URL}=${username}`);
-
-      if (!response.ok) {
-        throw new Error(
-          `Error checking username availability: ${response.statusText}`
-        );
+      if (!username) {
+        return null;
       }
 
-      return await response.json();
+      const result = await checkForUsername({ username });
+
+      return result.data.isUsernameUsed;
     } catch (error) {
-      console.error("Error checking username availability:", error);
+      console.error("Error checking email availability:", error.message);
+      return false;
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const onSubmit = async (data) => {
-    const { username } = data;
+    if (isValid && submitCount > 0) {
+      await signup(email, password, data);
+    }
 
-    setIsLoading(true);
+    const isUsernameUsed = await fetchUsername(data.username);
 
-    try {
-      const isUsernameUsed = await fetchUsername(username);
-
-      if (isUsernameUsed) {
-        setError("username", {
-          type: "isUsernameUsed",
-          message: "Username is already in use.",
-        });
-        return;
-      }
-
-      await signup(email, password, username);
-    } catch (error) {
-      console.error("Error during username fetch or signup:", error);
-    } finally {
-      setIsLoading(false); // Ensure isLoading is set to false whether there's an error or not
+    if (isUsernameUsed) {
+      setError("username", {
+        type: "isUsernameUsed",
+        message: "Username is already in use.",
+      });
+    } else {
+      clearErrors("username");
+      await signup(email, password, data.username);
     }
   };
 
