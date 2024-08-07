@@ -13,9 +13,6 @@ const UsernameForm = () => {
   const { colors } = useTheme();
 
   const onSubmit = async () => {
-    //log on submit
-    console.log("onSubmit");
-
     // update user doc
     try {
       const docRef = doc(db, "users", user.uid);
@@ -42,7 +39,6 @@ const UsernameForm = () => {
   };
 
   const onChange = (e) => {
-    console.log(e);
     // Force form value typed in form to match correct format
     const val = e.toLowerCase();
     const re = /^(?=[a-zA-Z0-9._]{3,15}$)(?!.*[_.]{2})[^_.].*[^_.]$/; //handle special characters
@@ -68,9 +64,6 @@ const UsernameForm = () => {
   const checkUsername = useCallback(
     debounce(async (username) => {
       if (username.length >= 3) {
-        // log username
-        console.log(username);
-
         const response = await fetch(
           `http://127.0.0.1:5001/the-scene-social-app/us-central1/isUsernameUsed?username=${username}`
         );

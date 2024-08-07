@@ -82,7 +82,6 @@ export const signup = async (email, password, username) => {
     );
 
     const More = await getAdditionalUserInfo(userCredential);
-    console.log("🚀 ~ file: auth.js:85 ~ signup ~ More:", More);
 
     if (userCredential) {
       const user = userCredential.user;
