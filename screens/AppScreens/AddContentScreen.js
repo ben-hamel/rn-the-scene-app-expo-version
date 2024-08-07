@@ -72,10 +72,6 @@ const AddVideo = () => {
 
   const handleVideo = async () => {
     const result = await pickImage();
-    console.log(
-      "🚀 ~ file: AddContentScreen.js:79 ~ handleVideo ~ result:",
-      result
-    );
 
     //if ( result )  then upload video
     if (result) {
