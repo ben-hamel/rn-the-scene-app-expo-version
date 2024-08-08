@@ -9,6 +9,13 @@ jest.mock("@react-navigation/native", () => ({
   }),
 }));
 
+jest.mock("../../firebase/auth", () => ({
+  useAuth: jest.fn(() => ({
+    username: "testUser",
+    authUser: { uid: "testUid" },
+  })),
+}));
+
 // Mock the useFetchCategories hook
 jest.mock("../../hooks/useFetchCategories", () => ({
   __esModule: true,
@@ -36,6 +43,6 @@ jest.mock("../../hooks/useFetchCategories", () => ({
 describe("<HomeScreen />", () => {
   it("has 1 child", () => {
     const tree = render(<HomeScreen />).toJSON();
-    expect(tree.children.length).toBe(1);
+    expect(tree.children.length).toBe(2);
   });
 });

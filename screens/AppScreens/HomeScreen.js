@@ -1,14 +1,16 @@
 import React from "react";
-import { StyleSheet, Pressable, Text } from "react-native";
+import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CategorySectionList from "../../components/CategorySectionList/CategorySectionList.js";
 import useFetchCategories from "../../hooks/useFetchCategories.js";
+import Header from "../../components/home/Header/Header.js";
 
 export function HomeScreen() {
   const { categories, loading } = useFetchCategories();
 
   return (
     <SafeAreaView style={styles.container}>
+      <Header />
       <CategorySectionList categories={categories} loading={loading} />
     </SafeAreaView>
   );
