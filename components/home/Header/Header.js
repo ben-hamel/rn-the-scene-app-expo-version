@@ -1,29 +1,33 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  Pressable,
+} from "react-native";
 import React from "react";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
-import logo from "./../../../assets/icons8-shortcuts-50.png";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { useTheme } from "@react-navigation/native";
+import logo from "./../../../assets/The-Scene-Logo-White.png";
+import { useAuth } from "../../../firebase/auth";
 
 export default function Header({ navigatation }) {
-  const navigation = useNavigation();
+  const { colors } = useTheme();
+  const { signOut } = useAuth();
+
   return (
     <View style={styles.container}>
-      <TouchableOpacity>
-        <Image
-          style={styles.logo}
-          // source={require("../../../assets/splash.png")}
-          source={logo}
-        />
-      </TouchableOpacity>
       <View style={styles.iconContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate("ProfileScreen")}>
-          <FontAwesome5
-            name="bars"
-            size={24}
-            color="black"
-            style={styles.icon}
-          />
-        </TouchableOpacity>
+        <Image style={styles.logo} source={logo} />
+        <Text style={{ color: colors.text, fontSize: 24, margin: 0 }}>
+          The Scene
+        </Text>
+      </View>
+      <View style={styles.hamburgerIcon}>
+        <Pressable onPress={signOut}>
+          <FontAwesome name="sign-out" size={24} color={colors.text} />
+        </Pressable>
       </View>
     </View>
   );
@@ -34,21 +38,18 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    // marginHorizontal: 10,
-    // borderColor: "red",
-    // borderWidth: 1,
-    // borderStyle: "solid",
+  },
+  hamburgerIcon: {
+    flexDirection: "row",
+    marginRight: 10,
+  },
+  logo: {
+    width: 60,
+    height: 60,
+    resizeMode: "contain",
   },
   iconContainer: {
     flexDirection: "row",
-    marginRight: 10,
-    // justifyContent: "space-between",
+    alignItems: "center",
   },
-  logo: {
-    width: 40,
-    height: 40,
-    resizeMode: "contain",
-    marginLeft: 10
-  },
-  // icon: { marginLeft: 10 },
 });
