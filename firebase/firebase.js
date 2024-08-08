@@ -19,15 +19,6 @@ const firebaseConfig = {
   appId: Constants.expoConfig.extra.appId,
 };
 
-// const firebaseConfig = {
-//   apiKey: "any",
-//   authDomain: "any",
-//   projectId: "demo-the-scene",
-//   storageBucket: "any",
-//   messagingSenderId: "any",
-//   appId: "any",
-// };
-
 const app = initializeApp(firebaseConfig);
 const auth = initializeAuth(app, {
   persistence: getReactNativePersistence(ReactNativeAsyncStorage),
@@ -36,12 +27,12 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 const functions = getFunctions(app);
 
-// if (process.env.NODE_ENV === "development") {
-//   console.log("Enabling emulators since in development mode");
-//   connectAuthEmulator(auth, "http://127.0.0.1:9099");
-//   connectFirestoreEmulator(db, "127.0.0.1", 8080);
-//   connectStorageEmulator(storage, "127.0.0.1", 9199);
-//   connectFunctionsEmulator(functions, "127.0.0.1", 5001);
-// }
+if (process.env.NODE_ENV === "development") {
+  console.log("Enabling emulators since in development mode");
+  connectAuthEmulator(auth, "http://127.0.0.1:9099");
+  connectFirestoreEmulator(db, "127.0.0.1", 8080);
+  connectStorageEmulator(storage, "127.0.0.1", 9199);
+  connectFunctionsEmulator(functions, "127.0.0.1", 5001);
+}
 
 export { auth, db, storage, functions };
