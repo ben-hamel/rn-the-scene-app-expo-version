@@ -13,3 +13,5 @@ This app is designed to help you find local creatives and collaborators, this ap
 ## Emulator
 
 firebase emulators:start --project demo-the-scene
+
+Test
