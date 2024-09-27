@@ -16,6 +16,7 @@ import {
   LoadingScreen,
   UsernameScreen,
   EditBioScreen,
+  SavedScreen,
 } from "../screens";
 
 const HomeStack = createStackNavigator();
@@ -131,6 +132,7 @@ export const AppStack = () => {
   const iconNames = {
     Home: { focused: "home", unfocused: "home-outline" },
     AddContent: { focused: "add-circle", unfocused: "add-circle-outline" },
+    Saved: { focused: "bookmark", unfocused: "bookmark-outline" },
     Profile: { focused: "person", unfocused: "person-outline" },
   };
 
@@ -151,6 +153,7 @@ export const AppStack = () => {
       >
         <Tab.Screen name="Home" component={HomeStackScreen} />
         <Tab.Screen name="AddContent" component={AddContentScreen} />
+        <Tab.Screen name="Saved" component={SavedScreen} />
         <Tab.Screen name="Profile" component={ProfileStackScreen} />
       </Tab.Navigator>
     );

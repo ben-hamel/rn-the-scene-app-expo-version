@@ -17,7 +17,7 @@ export const audioCategoryData = {
       uri: "https://picsum.photos/id/1/200",
     },
   ],
-  title: "Audio",
+  title: "audio",
 };
 
 export const visualCategoryData = {
@@ -31,5 +31,5 @@ export const visualCategoryData = {
       uri: "https://picsum.photos/id/1/200",
     },
   ],
-  title: "Visual",
+  title: "visual",
 };
