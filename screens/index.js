@@ -13,6 +13,7 @@ import PasswordScreen from "./AuthScreens/PasswordScreen";
 import UsernameScreen from "./AuthScreens/UsernameScreen";
 import { LoginScreen } from "./AuthScreens/LoginScreen";
 import AuthTestScreen from "./TestScreens/AuthTestScreen";
+import SavedScreen from "./AppScreens/SavedScreen";
 
 export {
   LoginScreen,
@@ -30,4 +31,5 @@ export {
   EmailScreen,
   PasswordScreen,
   AuthTestScreen,
+  SavedScreen,
 };
