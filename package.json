@@ -10,7 +10,9 @@
     "eject": "expo eject",
     "update-nvmrc": "node -v > .nvmrc",
     "test": "jest",
-    "updateSnapshots": "jest -u --coverage=false"
+    "updateSnapshots": "jest -u --coverage=false",
+    "emulator:seed": "firebase emulators:start --import='./seed/firebase-emulator-data'",
+    "emulator:export": "firebase emulators:export './seed/firebase-emulator-data'"
   },
   "dependencies": {
     "@expo/config-plugins": "~8.0.0",
