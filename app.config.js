@@ -37,6 +37,7 @@ export default {
       messagingSenderId: process.env.MESSAGING_SENDER_ID,
       appId: process.env.APP_ID,
       testMode: process.env.TEST_MODE,
+      emulatorIPAddress: process.env.DEV_EMULATOR_IP_ADDRESS,
     },
   },
 };

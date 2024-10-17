@@ -44,6 +44,7 @@ export default function ProfileHero(props) {
           ],
           height: 300, // specify the height of the image explicitly
           width: "100%", // the image should fill the width of its
+          marginBottom: 18,
         }}
       />
       {/* USERNAME */}
@@ -58,7 +59,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     zIndex: 1,
     top: 230,
-    left: 30,
+    left: 10,
     justifyContent: "center",
     alignItems: "center",
     fontSize: 24,

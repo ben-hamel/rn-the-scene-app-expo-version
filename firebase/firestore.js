@@ -9,6 +9,9 @@ import {
   serverTimestamp,
   onSnapshot,
   setDoc,
+  getDoc,
+  getDocs,
+  deleteDoc,
 } from "firebase/firestore";
 import { db, storage } from "./firebase";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
@@ -21,6 +24,7 @@ import {
   USERNAMES_COLLECTION,
   USERS_COLLECTION,
   IMAGES_COLLECTION,
+  FOLLOWERS_COLLECTION,
 } from "../constants";
 
 //TODO add to a constants file
@@ -30,6 +34,8 @@ const MEDIA_TYPE = "mediaType";
 const CREATED_AT = "createdAt";
 const CAPTION = "caption";
 const LIKES = "likes";
+const FOLLOWED_ID = "_f"; // person to be followed
+const FOLLOWER_ID = "_t"; // person that is following
 
 export const uploadImageAndGetDownloadURL = async (uri) => {
   try {
@@ -246,5 +252,138 @@ export const storeSignupData = async (userID, username, email) => {
     console.log("Document written with ID: ", docRef.id);
   } catch (error) {
     console.error("Error adding document: ", error);
+  }
+};
+
+export const getUserWithId = async (id) => {
+  const docRef = doc(db, USERS_COLLECTION, id);
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    return docSnap.data();
+  } else {
+    console.log("No such document!");
+  }
+
+  return null;
+};
+
+export const getFollowers = async (user, limit) => {
+  let followers = [];
+
+  const followersRef = collection(db, FOLLOWERS_COLLECTION);
+  const q = query(followersRef, where(FOLLOWED_ID, "==", user));
+  const querySnapshot = await getDocs(q);
+
+  for (const doc of querySnapshot.docs) {
+    const from = doc.data()[FOLLOWER_ID];
+
+    const follower = await getUserWithId(from);
+
+    if (follower) {
+      followers.push(follower);
+    }
+  }
+
+  return followers;
+};
+
+export const subscribeToFollowers = (authUser, setFollowers) => {
+  const followersRef = collection(db, FOLLOWERS_COLLECTION);
+  const filterCondition = where(FOLLOWED_ID, "==", authUser);
+  const q = query(followersRef, filterCondition);
+
+  const unsubscribe = onSnapshot(q, async (querySnapshot) => {
+    const followers = [];
+
+    for (const doc of querySnapshot.docs) {
+      const from = doc.data()[FOLLOWER_ID];
+
+      // Get user info from Firestore using getUserWithId
+      const follower = await getUserWithId(from);
+
+      if (follower) {
+        followers.push(follower);
+      }
+    }
+
+    // Call the setFollowers function passed as a callback
+    setFollowers(followers);
+  });
+
+  // Return the unsubscribe function for cleanup
+  return unsubscribe;
+};
+
+export const subscribeToScene = (authUser, setFollowers) => {
+  const followersRef = collection(db, FOLLOWERS_COLLECTION);
+  const filterCondition = where(FOLLOWER_ID, "==", authUser);
+  const q = query(followersRef, filterCondition);
+
+  const unsubscribe = onSnapshot(q, async (querySnapshot) => {
+    const followers = [];
+
+    for (const doc of querySnapshot.docs) {
+      const from = doc.data()[FOLLOWED_ID];
+
+      // Get user info from Firestore using getUserWithId
+      const follower = await getUserWithId(from);
+
+      if (follower) {
+        followers.push(follower);
+      }
+    }
+
+    // Call the setFollowers function passed as a callback
+    setFollowers(followers);
+  });
+
+  // Return the unsubscribe function for cleanup
+  return unsubscribe;
+};
+
+/**
+ * Establishes a follow relationship between two users. If the relationship
+ * does not already exist, a document is added to the followers collection.
+ * @param {string} followedUser - The user being followed.
+ * @param {string} followingUser - The user doing the following.
+ */
+export const follow = async (followedUser, followingUser) => {
+  const followersRef = collection(db, FOLLOWERS_COLLECTION);
+
+  const q = query(
+    followersRef,
+    where(FOLLOWED_ID, "==", followedUser),
+    where(FOLLOWER_ID, "==", followingUser)
+  );
+
+  const querySnapshot = await getDocs(q);
+
+  if (querySnapshot.empty) {
+    await addDoc(followersRef, {
+      [FOLLOWED_ID]: followedUser,
+      [FOLLOWER_ID]: followingUser,
+    });
+  } else {
+    console.log("Follow relationship already exists.");
+  }
+};
+
+export const unfollow = async (followedUser, followingUser) => {
+  const followersRef = collection(db, FOLLOWERS_COLLECTION);
+
+  const q = query(
+    followersRef,
+    where(FOLLOWED_ID, "==", followedUser),
+    where(FOLLOWER_ID, "==", followingUser)
+  );
+
+  const querySnapshot = await getDocs(q);
+
+  if (!querySnapshot.empty) {
+    console.log("Follow relationship exists");
+    await deleteDoc(doc(followersRef, querySnapshot.docs[0].id));
+  } else {
+    console.log("Follow relationship does not exist.");
   }
 };
