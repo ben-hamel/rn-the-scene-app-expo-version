@@ -27,6 +27,7 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 const functions = getFunctions(app);
 
+// this is to allow the emulator pics to work on the emulator and a real device
 const ipAddress = Constants.expoConfig.extra.emulatorIPAddress;
 
 if (process.env.NODE_ENV === "development") {
